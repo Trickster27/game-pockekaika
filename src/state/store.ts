@@ -20,12 +20,13 @@ export type ScreenId =
   | 'quests'
   | 'account'
   | 'friends'
+  | 'clan'
   | 'chat'
   | 'settings'
   | 'placeholder';
 
 export interface RewardLine {
-  icon: 'gold' | 'shards' | 'xp' | 'energy' | 'level' | 'star' | 'item';
+  icon: 'gold' | 'shards' | 'xp' | 'energy' | 'level' | 'star' | 'item' | 'coin';
   label: string;
   value: string;
 }
@@ -38,8 +39,12 @@ export interface BattleRequest {
   setup: BattleSetup;
   /** Экран, куда вернуться после боя. */
   returnTo: ScreenId;
-  /** Применить результат к сейву и вернуть строки наград для экрана итогов. */
-  finish: (result: BattleResult) => RewardLine[];
+  /** Применить результат к сейву и вернуть строки наград для экрана итогов (может ждать сервер). */
+  finish: (result: BattleResult) => RewardLine[] | Promise<RewardLine[]>;
+  /** Бой с боссом на время: показывает ходы босса и урон, выход засчитывает урон. */
+  mode?: 'boss';
+  /** Свой заголовок итогов. */
+  resultTitle?: (result: BattleResult) => string;
   /** Следующий бой (например, следующий этап), если есть. */
   next?: () => boolean;
   nextLabel?: string;

@@ -660,6 +660,18 @@ export class BattleView {
             );
           } else this.label(v, 'Сопротивление', '#b8b0c4', labelN++);
           break;
+        case 'immune':
+          this.label(
+            v,
+            e.what === 'stun' ? 'Иммунитет к оглушению' : 'Иммунитет к сбиву',
+            '#d8d0e6',
+            labelN++,
+          );
+          break;
+        case 'enrage':
+          this.label(v, `Ярость ×${e.stacks}`, '#ff6a4a', labelN++);
+          this.ring(v.x, v.y - v.top * 0.5, '#ff5a3a', 70 * v.scale, 4, 420);
+          break;
         case 'cleanse':
           v.statuses = v.statuses.filter((s) => !e.removed.includes(s));
           this.label(v, 'Очищение', '#bff7ff', labelN++);

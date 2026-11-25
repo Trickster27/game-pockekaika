@@ -9,6 +9,9 @@ import {
   type OnlineEvent,
   type Profile,
 } from './types';
+import type { ClanCreateInput, ClanMessage, ClanPatch } from './clanTypes';
+import { ClanSim, emptyClanDB, type ClanDB } from './clanSim';
+import { bossHp, type DonationId, type WeeklyGoalId } from '@/game/clan';
 
 /**
  * Демо-«сервер» внутри браузера: позволяет потрогать аккаунт, друзей и чат без настоящего бэкенда.
@@ -39,6 +42,7 @@ interface DB {
   messages: Message[];
   session: string | null;
   seq: number;
+  clans?: ClanDB;
 }
 
 const KEY = 'kaelmor:demo-online';
@@ -74,6 +78,110 @@ const BOTS: Profile[] = [
     lastSeen: 0,
   },
 ];
+/** Боты, которые живут только в кланах. */
+const CLAN_BOTS: [string, string, string, number, number][] = [
+  ['bot-ratmir', 'Ратмир', 'knight', 17, 11200],
+  ['bot-ulyana', 'Ульяна', 'veila', 12, 8100],
+  ['bot-efim', 'Ефим', 'grimsa', 8, 5200],
+  ['bot-vera', 'Вера', 'saira', 23, 16400],
+  ['bot-gleb', 'Глеб', 'azgar', 15, 9900],
+  ['bot-demid', 'Демид', 'torvald', 30, 22800],
+  ['bot-rostislav', 'Ростислав', 'ragna', 27, 19700],
+];
+const CLAN_REPLIES = [
+  'Отметьтесь сегодня, до нового уровня клана чуть-чуть!',
+  'Стража сегодня лучше бить героями, которые сильны против его стихии.',
+  'Ключи потратил, урон неплохой 💪',
+  'Кто знает, как пережить ярость к 25-му ходу?',
+  'Добьём сегодня — завтра будет уровень выше.',
+  'Не забудьте забрать недельные награды!',
+];
+
+function seedClans(now: number): ClanDB {
+  const c = emptyClanDB();
+  const day = Math.floor(now / 86_400_000);
+  const mk = (
+    id: string,
+    name: string,
+    tag: string,
+    emblem: string,
+    color: string,
+    description: string,
+    joinMode: 'open' | 'request' | 'closed',
+    minLevel: number,
+    xp: number,
+    bossLevel: number,
+    members: [string, 'leader' | 'officer' | 'member'][],
+  ) => {
+    c.clans.push({
+      id,
+      name,
+      tag,
+      emblem,
+      color,
+      description,
+      joinMode,
+      minLevel,
+      xp,
+      bossLevel,
+      bossHp: Math.round(bossHp(bossLevel) * 0.62),
+      bossKills: bossLevel - 1,
+      createdAt: now - 20 * 86_400_000,
+      botDay: day,
+    });
+    members.forEach(([userId, role], i) =>
+      c.members.push({
+        userId,
+        clanId: id,
+        role,
+        joinedAt: now - (19 - i) * 86_400_000,
+        contribution: 400 - i * 40,
+      }),
+    );
+  };
+  mk(
+    'clan-dawn',
+    'Рассветный Дозор',
+    'ДОЗР',
+    'sun',
+    '#d9a94a',
+    'Дружный клан: каждый день бьём Стража и помогаем новичкам.',
+    'open',
+    1,
+    1250,
+    4,
+    [
+      ['bot-agata', 'leader'],
+      ['bot-zlata', 'officer'],
+      ['bot-ratmir', 'member'],
+      ['bot-ulyana', 'member'],
+      ['bot-efim', 'member'],
+    ],
+  );
+  mk(
+    'clan-crows',
+    'Пепельные Вороны',
+    'ПВ',
+    'skull',
+    '#5fbfb2',
+    'Берём активных. Две атаки на Стража в день обязательны.',
+    'request',
+    5,
+    3100,
+    7,
+    [
+      ['bot-tikhon', 'leader'],
+      ['bot-vera', 'officer'],
+      ['bot-gleb', 'member'],
+    ],
+  );
+  mk('clan-north', 'Кузня Севера', 'КУЗН', 'anvil', '#c98a45', 'Только для своих.', 'closed', 20, 7600, 12, [
+    ['bot-demid', 'leader'],
+    ['bot-rostislav', 'officer'],
+  ]);
+  return c;
+}
+
 const REPLIES = [
   'Привет, Хранитель! Как поход?',
   'Я застряла на боссе главы. Советуешь кого взять?',
@@ -82,6 +190,19 @@ const REPLIES = [
   'Пойду фармить Склеп, мне нужен сет Быстроты.',
   'Удачи в башне!',
 ];
+
+function clanBotProfiles(): Profile[] {
+  return CLAN_BOTS.map(([id, nickname, avatar, level, power]) => ({
+    id,
+    nickname,
+    friendCode: id.slice(4, 10).toUpperCase().padEnd(6, '7'),
+    avatar,
+    level,
+    power,
+    arenaRating: 1000 + level * 20,
+    lastSeen: 0,
+  }));
+}
 
 function hash(s: string): string {
   let h = 5381;
@@ -130,7 +251,7 @@ export class DemoOnlineBackend implements OnlineBackend {
     }
     return {
       accounts: [],
-      profiles: BOTS.map((b) => ({ ...b })),
+      profiles: [...BOTS.map((b) => ({ ...b })), ...clanBotProfiles()],
       saves: {},
       friendships: [],
       messages: [],
@@ -380,6 +501,117 @@ export class DemoOnlineBackend implements OnlineBackend {
     const out: Record<string, number> = {};
     for (const m of db.messages) if (m.to === me && !m.readAt) out[m.from] = (out[m.from] ?? 0) + 1;
     return out;
+  }
+
+  // ———————————————————— кланы ————————————————————
+
+  /** Открывает клановую часть базы, даёт ботам «сыграть» и сохраняет изменения. */
+  private clan<T>(fn: (sim: ClanSim, me: string, db: DB) => T, opts: { auth?: boolean } = {}): T {
+    const db = this.load();
+    const me = opts.auth === false ? (db.session ?? '') : this.me(db);
+    for (const p of clanBotProfiles()) if (!db.profiles.some((x) => x.id === p.id)) db.profiles.push(p);
+    db.clans ??= seedClans(this.now());
+    const before = db.clans.messages.length;
+    const sim = new ClanSim(db.clans, (id) => db.profiles.find((x) => x.id === id));
+    sim.simulateBots((id) => id.startsWith('bot-'), this.now());
+    const out = fn(sim, me, db);
+    const fresh = db.clans.messages.slice(before);
+    this.save(db);
+    for (const m of fresh) this.emit({ type: 'clanMessage', message: m });
+    return out;
+  }
+
+  async myClan() {
+    return this.clan((sim, me) => sim.state(me, this.now()));
+  }
+  async browseClans(query: string) {
+    return this.clan((sim, me) => sim.browse(me, query));
+  }
+  async createClan(input: ClanCreateInput) {
+    return this.clan((sim, me) => sim.create(me, input, this.now()));
+  }
+  async joinClan(clanId: string) {
+    const r = this.clan((sim, me) => sim.join(me, clanId, this.now()));
+    // Глава клана-бота принимает заявку через пару секунд.
+    if (r === 'requested')
+      setTimeout(
+        () => {
+          try {
+            this.clan((sim, me) => {
+              const leader = sim.db.members.find((m) => m.clanId === clanId && m.role === 'leader');
+              if (leader?.userId.startsWith('bot-')) sim.respond(leader.userId, me, true, this.now());
+            });
+          } catch {
+            /* заявку уже отменили */
+          }
+        },
+        (this.opts.botDelayMs ?? 1500) * 2,
+      );
+    return r;
+  }
+  async cancelClanRequest(clanId: string) {
+    this.clan((sim, me) => sim.cancelRequest(me, clanId));
+  }
+  async leaveClan() {
+    this.clan((sim, me) => sim.leave(me, this.now()));
+  }
+  async respondClanRequest(userId: string, accept: boolean) {
+    this.clan((sim, me) => sim.respond(me, userId, accept, this.now()));
+  }
+  async kickClanMember(userId: string) {
+    this.clan((sim, me) => sim.kick(me, userId, this.now()));
+  }
+  async setClanRole(userId: string, role: 'officer' | 'member') {
+    this.clan((sim, me) => sim.setRole(me, userId, role, this.now()));
+  }
+  async transferClanLeader(userId: string) {
+    this.clan((sim, me) => sim.transfer(me, userId, this.now()));
+  }
+  async updateClan(patch: ClanPatch) {
+    this.clan((sim, me) => sim.update(me, patch));
+  }
+  async clanCheckin() {
+    this.clan((sim, me) => sim.checkin(me, this.now()));
+  }
+  async clanDonate(kind: DonationId) {
+    this.clan((sim, me) => sim.donate(me, kind, this.now()));
+  }
+  async bossBegin() {
+    return this.clan((sim, me) => sim.bossBegin(me, this.now()));
+  }
+  async bossFinish(attemptId: string, damage: number) {
+    return this.clan((sim, me) => sim.bossFinish(me, attemptId, damage, this.now()));
+  }
+  async claimClanKill(level: number) {
+    this.clan((sim, me) => sim.claimKill(me, level));
+  }
+  async claimClanWeekly(goal: WeeklyGoalId, step: number) {
+    this.clan((sim, me) => sim.claimWeekly(me, goal, step, this.now()));
+  }
+  async claimClanRank() {
+    return this.clan((sim, me) => sim.claimRank(me, this.now()));
+  }
+  async clanMessages(limit = 60) {
+    return this.clan((sim, me) => sim.messages(me, limit));
+  }
+  async sendClanMessage(body: string): Promise<ClanMessage> {
+    const msg = this.clan((sim, me) => sim.send(me, body.slice(0, MAX_MESSAGE), this.now()));
+    // Кто-нибудь из ботов клана отзывается.
+    setTimeout(() => {
+      try {
+        this.clan((sim, me) => {
+          const st = sim.state(me, this.now());
+          const bots = st?.members.filter((m) => m.profile.id.startsWith('bot-')) ?? [];
+          if (!bots.length) return;
+          const n = sim.db.messages.filter((m) => m.kind === 'chat').length;
+          const bot = bots[n % bots.length]!;
+          sim.send(bot.profile.id, CLAN_REPLIES[n % CLAN_REPLIES.length]!, this.now());
+        });
+      } catch {
+        /* игрок уже вышел из клана */
+      }
+    }, this.opts.botDelayMs ?? 1500);
+    return msg;
   }
 
   subscribe(cb: (e: OnlineEvent) => void) {

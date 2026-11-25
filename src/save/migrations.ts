@@ -67,6 +67,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   }),
   // v7: рунная руда для Кузни.
   7: (s) => ({ ...s, version: 7, materials: { ...(s.materials as Record<string, number>), ore: 20 } }),
+  // v8: клановые монеты и покупки в клановом магазине.
+  8: (s) => ({ ...s, version: 8, clan: { coins: 0, bought: {} } }),
 };
 
 export class SaveVersionError extends Error {}

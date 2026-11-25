@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Battle, chooseAction, type Action, type BattleResult, type BattleUnit } from '@/core/battle';
 import { db } from '@/content';
-import { useT } from '@/i18n';
+import { formatNumber, useT } from '@/i18n';
 import { useGame, type RewardLine } from '@/state/store';
 import { platform } from '@/state/services';
 import type { BattleView } from '@/render/pixi/battle/BattleView';
@@ -65,6 +65,8 @@ export default function BattleScreen() {
   const [wave, setWave] = useState({ n: 1, max: 1 });
   const [, force] = useState(0);
   const [result, setResult] = useState<{ r: BattleResult; lines: RewardLine[] } | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [bossHud, setBossHud] = useState({ turn: 0, dmg: 0 });
 
   const showTargets = useCallback((u: BattleUnit, idx: number) => {
     const b = battleRef.current;
@@ -102,6 +104,7 @@ export default function BattleScreen() {
     let alive = true;
     const el = host.current;
     setResult(null);
+    setBossHud({ turn: 0, dmg: 0 });
     setAskExit(false);
     setPaused(false);
     const p = platform();
@@ -174,16 +177,21 @@ export default function BattleScreen() {
           await view.wait(u.side === 'enemy' ? 260 : 160);
           action = chooseAction(battle, u);
         }
-        if (!alive) break;
+        // Игрок мог сдаться (бой на время): ход уже не нужен.
+        if (!alive || battle.result) break;
         battle.act(u.uid, action.skillIndex, action.targetUid);
         force((n) => n + 1);
+        if (req.mode === 'boss') setBossHud({ turn: battle.bossTurns, dmg: battle.damage });
         await flush();
       }
       if (!alive || !battle.result) return;
       setActor(null);
       view.setActive(null);
       const r = battle.result;
-      const lines = req.finish(r);
+      setSubmitting(true);
+      const lines = await Promise.resolve(req.finish(r)).finally(() => {
+        if (alive) setSubmitting(false);
+      });
       if (r.winner === 'ally') {
         p.audio.play('victory');
         p.haptics.notify('success');
@@ -252,7 +260,14 @@ export default function BattleScreen() {
         <div className="bs__title">
           <b>{req.title}</b>
           <span>
-            {req.subtitle} · {t('battle.wave', { n: wave.n, max: wave.max })}
+            {req.subtitle} ·{' '}
+            {req.mode === 'boss'
+              ? t('battle.bossHud', {
+                  turn: bossHud.turn,
+                  max: req.setup.bossTurns ?? 0,
+                  dmg: formatNumber(bossHud.dmg),
+                })
+              : t('battle.wave', { n: wave.n, max: wave.max })}
           </span>
         </div>
         <button
@@ -330,30 +345,59 @@ export default function BattleScreen() {
         <div className="overlay">
           <div className="res res--lose">
             <h2 style={{ fontSize: 22 }}>{t('battle.exit')}</h2>
-            <p>{t('battle.exitConfirm')}</p>
+            <p>{req.mode === 'boss' ? t('battle.exitBoss') : t('battle.exitConfirm')}</p>
             <div className="btns">
               <button type="button" className="btn" onClick={() => setAskExit(false)}>
                 {t('battle.stay')}
               </button>
-              <button type="button" className="btn btn--danger" onClick={() => go(req.returnTo)}>
-                {t('battle.leave')}
+              <button
+                type="button"
+                className="btn btn--danger"
+                onClick={() => {
+                  const b = battleRef.current;
+                  if (req.mode === 'boss' && b && !b.result) {
+                    // Бой на время: выход засчитывает уже нанесённый урон.
+                    b.surrender();
+                    setAskExit(false);
+                    const p = pendingRef.current;
+                    if (p) {
+                      pendingRef.current = null;
+                      setPending(null);
+                      p.resolve({ skillIndex: 0 });
+                    }
+                    return;
+                  }
+                  go(req.returnTo);
+                }}
+              >
+                {req.mode === 'boss' ? t('battle.leaveBoss') : t('battle.leave')}
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {submitting && !result && (
+        <div className="overlay">
+          <div className="res">
+            <p>{t('battle.submitting')}</p>
+          </div>
+        </div>
+      )}
+
       {result && (
         <div className="overlay">
-          <div className={`res${result.r.winner === 'ally' ? '' : ' res--lose'}`}>
+          <div className={`res${result.r.winner === 'ally' || req.mode === 'boss' ? '' : ' res--lose'}`}>
             <h2>
-              {result.r.winner === 'ally'
-                ? t('battle.victory')
-                : result.r.winner === 'draw'
-                  ? t('battle.draw')
-                  : t('battle.defeat')}
+              {req.resultTitle
+                ? req.resultTitle(result.r)
+                : result.r.winner === 'ally'
+                  ? t('battle.victory')
+                  : result.r.winner === 'draw'
+                    ? t('battle.draw')
+                    : t('battle.defeat')}
             </h2>
-            {result.r.winner === 'ally' ? (
+            {req.mode === 'boss' ? null : result.r.winner === 'ally' ? (
               <div className="stars">
                 {[1, 2, 3].map((n) => (
                   <Star key={n} on={result.r.stars >= n} />

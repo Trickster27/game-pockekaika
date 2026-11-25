@@ -4,8 +4,9 @@ import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
 import campMap from '@/assets/art/camp.svg?url';
 import { heroDef } from '@/content';
-import { canClaimLogin, currentStage, IDLE_CAP_MS, pendingIdle, questsReady, teamHeroes } from '@/game';
+import { CLAN, canClaimLogin, currentStage, IDLE_CAP_MS, pendingIdle, questsReady, teamHeroes } from '@/game';
 import { formatDuration, useNow } from '../hooks';
+import { useClan } from '@/state/clan';
 import './screens.css';
 import './camp.css';
 
@@ -18,6 +19,7 @@ const BUILDINGS: { id: string; screen: ScreenId; box: [number, number, number, n
   { id: 'dungeon', screen: 'dungeons', box: [26, 482, 134, 576] },
   { id: 'shop', screen: 'shop', box: [142, 484, 238, 584] },
   { id: 'quests', screen: 'quests', box: [254, 484, 338, 584] },
+  { id: 'clan', screen: 'clan', box: [146, 240, 250, 336] },
 ];
 const MAP_W = 360,
   MAP_TOP = 130,
@@ -43,7 +45,15 @@ export default function CampScreen() {
   const now = useNow(5000);
   const idle = pendingIdle(save, now);
   const team = teamHeroes(save).slice(0, 3);
+  const clan = useClan((s) => s.state);
   const badge: Record<string, boolean> = {
+    clan:
+      !!clan &&
+      (!clan.me.today.checkin ||
+        clan.me.today.keys < CLAN.keysPerDay ||
+        clan.pendingKills.length > 0 ||
+        !!clan.yesterday ||
+        (clan.me.role !== 'member' && clan.requests.length > 0)),
     quests: questsReady(save, now) > 0 || canClaimLogin(save, now),
     summon: save.materials.scroll > 0,
   };

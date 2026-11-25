@@ -3,6 +3,7 @@ import {
   createOnlineBackend,
   decideSync,
   OnlineError,
+  type ClanMessage,
   type CloudSave,
   type Friend,
   type Message,
@@ -57,6 +58,17 @@ export const useOnline = create<OnlineState>(() => ({
 }));
 
 let backend: OnlineBackend | null = null;
+const clanListeners = new Set<(m: ClanMessage) => void>();
+
+/** Текущий онлайн-бэкенд (после initOnline). */
+export function onlineBackend(): OnlineBackend | null {
+  return backend;
+}
+/** Подписка на сообщения клана (их слушает src/state/clan.ts). */
+export function onClanMessage(cb: (m: ClanMessage) => void): () => void {
+  clanListeners.add(cb);
+  return () => clanListeners.delete(cb);
+}
 let unsub: (() => void) | null = null;
 let timer: ReturnType<typeof setInterval> | null = null;
 let syncing = false;
@@ -109,6 +121,7 @@ async function afterLogin(uid: string) {
   unsub?.();
   unsub = backend!.subscribe((ev) => {
     if (ev.type === 'friends') void refreshSocial();
+    else if (ev.type === 'clanMessage') for (const l of clanListeners) l(ev.message);
     else {
       const st = useOnline.getState();
       if (st.chatWith === ev.message.from) {

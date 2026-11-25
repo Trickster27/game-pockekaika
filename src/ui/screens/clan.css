@@ -1,0 +1,780 @@
+.clan-hero {
+  display: grid;
+  gap: 8px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, #5fbfb2 22%, transparent), transparent 70%),
+    var(--card, #17121f);
+}
+.clan-hero h2 {
+  font-size: 22px;
+}
+.clan-hero p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.clan-tabs2 {
+  margin: 10px 0;
+}
+.clan-warn {
+  color: #f0b45a;
+  font-size: 13px;
+  margin: 6px 0;
+}
+.clan-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+.clan-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.clan-row__main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.clan-row__main small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.clan-row__main p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #cfc6dc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.clan-row .btn {
+  padding-inline: 10px;
+  font-size: 13px;
+}
+.clan-tag {
+  color: var(--gold);
+  font-family: var(--body);
+  font-size: 0.8em;
+  font-weight: 700;
+}
+.clan-form {
+  display: grid;
+  gap: 10px;
+}
+.clan-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.clan-form input:not([type='range']),
+.clan-form textarea,
+.clan-chat__input input {
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: #120e18;
+  color: inherit;
+  font: 14px var(--body);
+  resize: vertical;
+}
+.clan-form input[type='range'] {
+  accent-color: var(--gold);
+}
+.clan-lbl {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.clan-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.clan-pick button {
+  padding: 3px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: #120e18;
+  line-height: 0;
+}
+.clan-pick button[aria-pressed='true'] {
+  border-color: var(--gold);
+}
+.clan-swatch {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #0a0710;
+}
+.clan-preview {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  background: #120e18;
+}
+.clan-preview > div {
+  display: grid;
+}
+.clan-preview small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* шапка клана */
+.clan-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--cc) 50%, transparent);
+  background:
+    radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--cc) 22%, transparent), transparent 70%),
+    #17121f;
+}
+.clan-head__main {
+  display: grid;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+.clan-head h2 {
+  font-size: 20px;
+  line-height: 1.1;
+}
+.clan-head small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.pbar {
+  height: 6px;
+  border-radius: 3px;
+  background: #2a2236;
+  overflow: hidden;
+}
+.pbar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #d9a94a, #ffe08a);
+}
+.clan-xp i {
+  background: linear-gradient(90deg, var(--cc), #ffe08a);
+}
+.clan-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin: 10px 0;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(10, 8, 16, 0.6);
+  border: 1px solid var(--line-2);
+}
+.clan-tabs button {
+  position: relative;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  font: 700 12px var(--display);
+  color: var(--muted);
+}
+.clan-tabs button[aria-selected='true'] {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 35%, #2a2030), #1d1626);
+  color: var(--gold);
+}
+.clan-badge {
+  position: absolute;
+  top: -4px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: #e0503a;
+  color: #fff;
+  font: 700 10px/16px var(--body);
+  font-style: normal;
+}
+.clan-dot {
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e0503a;
+}
+
+/* обзор */
+.clan-ready {
+  display: grid;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
+  animation: clan-glow 2s ease-in-out infinite alternate;
+}
+@keyframes clan-glow {
+  to {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 35%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clan-ready {
+    animation: none;
+  }
+}
+.clan-daily {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid var(--line-2);
+}
+.clan-daily:first-of-type {
+  border-top: 0;
+}
+.clan-daily > div {
+  display: grid;
+  gap: 2px;
+}
+.clan-daily small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.clan-daily .btn {
+  flex: none;
+  min-width: 96px;
+}
+.clan-daily .btn svg {
+  width: 22px;
+  height: 22px;
+}
+.clan-goal {
+  display: grid;
+  gap: 5px;
+  padding: 8px 0;
+}
+.clan-goal__top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.clan-goal__top span {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.clan-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.clan-step {
+  display: grid;
+  gap: 1px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: #120e18;
+  color: inherit;
+}
+.clan-step small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.clan-step.is-ready {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 18%, #120e18);
+}
+.clan-step:disabled:not(.is-ready) {
+  opacity: 0.6;
+}
+.clan-events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.clan-events li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+.clan-events time {
+  color: var(--muted);
+  font-size: 11px;
+  flex: none;
+}
+
+/* босс */
+.clan-boss {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ec) 55%, transparent);
+  background:
+    radial-gradient(90% 90% at 25% 70%, color-mix(in srgb, var(--ec) 28%, transparent), transparent 70%),
+    #120e18;
+}
+.clan-boss__art img {
+  width: 130px;
+  display: block;
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--ec) 60%, transparent));
+  animation: clan-breathe 3.2s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+@keyframes clan-breathe {
+  50% {
+    transform: scale(1.03, 0.98);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clan-boss__art img {
+    animation: none;
+  }
+}
+.clan-boss__info {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+}
+.clan-boss__info h3 {
+  font-size: 18px;
+}
+.clan-boss__info .tag {
+  justify-self: start;
+}
+.clan-boss__info small {
+  font-size: 12px;
+}
+.clan-boss__hp {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 3px;
+}
+.clan-hpbar {
+  position: relative;
+  height: 18px;
+  border-radius: 9px;
+  background: #2a1a22;
+  border: 1px solid #0a0710;
+  overflow: hidden;
+}
+.clan-hpbar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #a8302a, #e0503a 60%, color-mix(in srgb, var(--ec) 60%, #ff8a6a));
+  transition: width 0.6s ease;
+}
+.clan-hpbar span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font: 700 11px var(--body);
+  text-shadow: 0 1px 2px #000;
+  font-variant-numeric: tabular-nums;
+}
+.clan-keys {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+.clan-keys > div {
+  display: grid;
+  gap: 3px;
+}
+.clan-keys small {
+  font-size: 12px;
+}
+.clan-fight {
+  min-width: 120px;
+  font-size: 17px;
+  padding-block: 12px;
+}
+.clan-keydots {
+  display: inline-flex;
+  gap: 5px;
+}
+.clan-keydots i {
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg);
+  border: 2px solid #0a0710;
+  background: #2a2236;
+}
+.clan-keydots i.on {
+  background: linear-gradient(135deg, #ffe08a, #d9a94a);
+}
+.clan-keydots.sm i {
+  width: 8px;
+  height: 8px;
+  border-width: 1.5px;
+}
+.clan-team {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.clan-team__row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.clan-team__row img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  background: #1a1530;
+  border: 2px solid var(--line-2);
+}
+.clan-team__row .btn {
+  margin-left: auto;
+  padding-inline: 10px;
+  font-size: 13px;
+}
+.clan-picks {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.clan-pick-hero {
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  min-width: 0;
+  text-align: center;
+}
+.clan-pick-hero img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  border: 2px solid;
+  background: #1a1530;
+}
+.clan-pick-hero b {
+  font-size: 11px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.clan-pick-hero small {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.15;
+}
+.clan-mech {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
+}
+.clan-mech li::marker {
+  color: var(--gold);
+}
+.clan-chests {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.clan-chest {
+  display: grid;
+  gap: 2px;
+  padding: 7px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: #120e18;
+  text-align: center;
+}
+.clan-chest b {
+  font-size: 12px;
+}
+.clan-chest small {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.clan-chest.t0 b {
+  color: #c98a5a;
+}
+.clan-chest.t1 b {
+  color: #d9a066;
+}
+.clan-chest.t2 b {
+  color: #d8dce6;
+}
+.clan-chest.t3 b {
+  color: #f0c860;
+}
+.clan-chest.t4 b {
+  color: #c79cff;
+}
+.clan-chest.t5 b {
+  color: #ff8a6a;
+}
+.clan-chest.is-mine {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.clan-rank {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: r;
+  display: grid;
+  gap: 6px;
+}
+.clan-rank li {
+  counter-increment: r;
+  display: grid;
+  grid-template-columns: 22px 30px 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+}
+.clan-rank li::before {
+  content: counter(r);
+  font: 700 13px var(--display);
+  color: var(--muted);
+  text-align: center;
+}
+.clan-rank li:nth-child(1)::before {
+  color: #f0c860;
+}
+.clan-rank li:nth-child(2)::before {
+  color: #d8dce6;
+}
+.clan-rank li:nth-child(3)::before {
+  color: #d9a066;
+}
+.clan-rank img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  background: #1a1530;
+}
+.clan-rank b {
+  font-variant-numeric: tabular-nums;
+}
+
+/* состав */
+.clan-member {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--line-2);
+}
+.clan-member:first-of-type {
+  border-top: 0;
+}
+.clan-member > img,
+.clan-ava img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  background: #1a1530;
+  border: 2px solid var(--line-2);
+}
+.clan-ava {
+  position: relative;
+  line-height: 0;
+}
+.clan-ava i {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #5fcf6f;
+  border: 2px solid #17121f;
+}
+.clan-member > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.clan-member small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.clan-today {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.clan-role {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font: 700 10px var(--body);
+  vertical-align: middle;
+}
+.clan-role.r-leader {
+  background: color-mix(in srgb, var(--gold) 30%, transparent);
+  color: var(--gold);
+}
+.clan-role.r-officer {
+  background: rgba(95, 191, 178, 0.2);
+  color: #7fdcd0;
+}
+.clan-member__acts {
+  display: grid;
+  gap: 4px;
+}
+.clan-member__acts .btn,
+.clan-more {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* чат */
+.clan-chat {
+  display: grid;
+  gap: 8px;
+}
+.clan-chat__list {
+  display: grid;
+  gap: 6px;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.clan-msg {
+  display: grid;
+  gap: 1px;
+  max-width: 82%;
+  justify-self: start;
+  padding: 6px 10px;
+  border-radius: 12px 12px 12px 4px;
+  background: #221b2e;
+  font-size: 14px;
+}
+.clan-msg b {
+  font-size: 11px;
+  color: #7fdcd0;
+}
+.clan-msg time {
+  font-size: 10px;
+  color: var(--muted);
+  justify-self: end;
+}
+.clan-msg.is-me {
+  justify-self: end;
+  border-radius: 12px 12px 4px 12px;
+  background: color-mix(in srgb, var(--gold) 22%, #221b2e);
+}
+.clan-msg.is-sys {
+  justify-self: center;
+  max-width: 100%;
+  background: transparent;
+  color: var(--gold);
+  font-size: 12px;
+  text-align: center;
+  margin: 2px 0;
+}
+.clan-chat__input {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+}
+
+/* магазин */
+.clan-coins {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.clan-coins svg {
+  width: 34px;
+  height: 34px;
+}
+.clan-coins div {
+  display: grid;
+}
+.clan-coins b {
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+.clan-coins small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.clan-shop {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.clan-offer {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.clan-offer__ic svg {
+  width: 36px;
+  height: 36px;
+}
+.clan-offer b {
+  font-size: 13px;
+}
+.clan-offer small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.clan-offer .btn {
+  width: 100%;
+  font-size: 13px;
+  padding-inline: 6px;
+}
+.clan-offer.is-locked {
+  opacity: 0.55;
+}
+.sheet2 .rw-list {
+  display: grid;
+  gap: 6px;
+}
+.sheet2 .rw-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a1522;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.sheet2 .rw-line svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+.sheet2 .rw-line span {
+  flex: 1;
+  color: var(--muted);
+  font-size: 13px;
+}

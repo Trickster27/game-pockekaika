@@ -21,6 +21,15 @@ export interface UnitSpec {
   tier?: EnemyTier;
   /** Стартовое HP (доля), например для продолжения после волны. */
   hpFrac?: number;
+  /** Точный запас здоровья (босс клана: общий пул). Перекрывает расчёт и hpFrac. */
+  hpMax?: number;
+  hpNow?: number;
+  /** Перекрыть стихию (босс клана меняет стихию по дням). */
+  element?: Element;
+  /** Иммунитет к оглушению и сбиву шкалы хода. */
+  ccImmune?: boolean;
+  /** Ярость: прибавка к атаке за каждый свой ход (0.04 = +4%). */
+  enrage?: number;
 }
 
 export interface BattleSetup {
@@ -29,6 +38,8 @@ export interface BattleSetup {
   seed: number;
   /** Ограничение на число ходов, после которого бой считается проигранным. */
   maxTurns?: number;
+  /** Бой с боссом на время: после стольких ходов босса бой заканчивается (ничья, урон засчитывается). */
+  bossTurns?: number;
   factionBonus?: boolean;
 }
 
@@ -66,6 +77,12 @@ export interface BattleUnit {
   cooldowns: number[];
   statuses: StatusInst[];
   alive: boolean;
+  ccImmune: boolean;
+  /** Здоровье из общего пула (босс клана): яд ограничен атакой отравителя. */
+  pooled: boolean;
+  /** Прирост атаки за ход и сколько раз он уже сработал. */
+  enrage: number;
+  enrageStacks: number;
 }
 
 export type BattleEvent =
@@ -92,6 +109,8 @@ export type BattleEvent =
   | { t: 'stunned'; uid: string }
   | { t: 'tm'; uid: string; delta: number; tm: number }
   | { t: 'death'; uid: string }
+  | { t: 'immune'; uid: string; what: 'stun' | 'tm' }
+  | { t: 'enrage'; uid: string; stacks: number; atk: number }
   | { t: 'end'; winner: Side | 'draw'; stars: number; turns: number };
 
 export interface BattleResult {
@@ -99,4 +118,12 @@ export interface BattleResult {
   stars: 0 | 1 | 2 | 3;
   turns: number;
   alliesAlive: number;
+  /** Урон союзников по врагам (реально снятое здоровье, с ядом). */
+  damage?: number;
+  /** Урон по каждому союзнику (uid → урон). */
+  damageBy?: Record<string, number>;
+  /** Сколько ходов сделал босс (для боя на время). */
+  bossTurns?: number;
+  /** Игрок сам вышел из боя. */
+  surrendered?: boolean;
 }

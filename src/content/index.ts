@@ -2,13 +2,15 @@ import type { ContentDb, EnemyDef, HeroDef, SkillDef } from '@/core/content';
 import { HEROES, STARTER_HEROES } from './heroes';
 import { ENEMIES } from './enemies';
 import { SKILLS } from './skills';
+import { CLAN_BOSSES, CLAN_BOSS_SKILLS } from './clanBoss';
 
 export { HEROES, STARTER_HEROES, ENEMIES, SKILLS };
 export * from './campaign';
+export * from './clanBoss';
 
 const heroMap = new Map(HEROES.map((h) => [h.id, h]));
-const enemyMap = new Map(ENEMIES.map((e) => [e.id, e]));
-const skillMap = new Map(SKILLS.map((s) => [s.id, s]));
+const enemyMap = new Map([...ENEMIES, ...CLAN_BOSSES].map((e) => [e.id, e]));
+const skillMap = new Map([...SKILLS, ...CLAN_BOSS_SKILLS].map((s) => [s.id, s]));
 
 /** База контента для движка. */
 export const db: ContentDb = {
@@ -45,9 +47,10 @@ export function validateContent(): string[] {
   };
   dup(HEROES, 'героя');
   dup(ENEMIES, 'врага');
-  dup(SKILLS, 'навыка');
-  for (const h of [...HEROES, ...ENEMIES]) {
-    if (h.skills.length < 2 || h.skills.length > 3) errors.push(`${h.id}: навыков должно быть 2–3`);
+  dup([...SKILLS, ...CLAN_BOSS_SKILLS], 'навыка');
+  for (const h of [...HEROES, ...ENEMIES, ...CLAN_BOSSES]) {
+    const max = 'boss' in h && h.boss ? 4 : 3;
+    if (h.skills.length < 2 || h.skills.length > max) errors.push(`${h.id}: навыков должно быть 2–${max}`);
     for (const s of h.skills) if (!skillMap.has(s)) errors.push(`${h.id}: нет навыка ${s}`);
     const first = skillMap.get(h.skills[0] ?? '');
     if (first && first.cooldown !== 0) errors.push(`${h.id}: первый навык должен быть без перезарядки`);

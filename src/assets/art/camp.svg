@@ -225,4 +225,22 @@
           <rect x="0" y="0" width="60" height="740" fill="url(#g-mistL)" class="drift" style="pointer-events:none"></rect>
           <rect x="300" y="0" width="60" height="740" fill="url(#g-mistR)" class="drift" style="pointer-events:none;animation-delay:-7s"></rect>
           <rect x="0" y="0" width="360" height="740" fill="url(#g-vig)" style="pointer-events:none"></rect>
-        </svg>
+        <g id="clanhall" stroke="#0a0710" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<path d="M148 334 L248 334 L241 322 L155 322 Z" fill="#4a4258"/>
+<path d="M162 322 L162 283 L234 283 L234 322 Z" fill="#3b3350"/>
+<path d="M162 322 L162 283 L198 283 L198 322 Z" fill="#463d5e" stroke="none"/>
+<path d="M162 322 L162 283 L234 283 L234 322 Z" fill="none"/>
+<path d="M154 286 L198 248 L242 286 Z" fill="#7a2f2a"/>
+<path d="M154 286 L198 248 L198 286 Z" fill="#94403a" stroke="none"/>
+<path d="M154 286 L198 248 L242 286 Z" fill="none"/>
+<path d="M189 322 L189 305 Q198 294 207 305 L207 322 Z" fill="#1a1424"/>
+<path d="M189 305 Q198 294 207 305" fill="none" stroke="#e8c060" stroke-width="1.6"/>
+<path d="M170 296 L178 296 L178 306 L170 306 Z M218 296 L226 296 L226 306 L218 306 Z" fill="#ffcf6a" class="pulse"/>
+<circle cx="198" cy="272" r="7" fill="#e8c060"/>
+<path d="M194 268 L202 268 L202 274 L198 278 L194 274 Z" fill="#7a2f2a" stroke-width="1.2"/>
+<path d="M150 334 L150 250 M246 334 L246 250" stroke-width="2.4"/>
+<g class="bob"><path d="M151 252 L170 252 L170 284 L160.5 278 L151 284 Z" fill="#5fbfb2"/><path d="M156 262 L165 262 L160.5 270 Z" fill="#d9fff6" stroke-width="1"/></g>
+<g class="bob"><path d="M245 252 L226 252 L226 284 L235.5 278 L245 284 Z" fill="#d9a94a"/><path d="M231 262 L240 262 L235.5 270 Z" fill="#fff3c8" stroke-width="1"/></g>
+<circle cx="150" cy="248" r="2.6" fill="#e8c060"/><circle cx="246" cy="248" r="2.6" fill="#e8c060"/>
+</g>
+</svg>

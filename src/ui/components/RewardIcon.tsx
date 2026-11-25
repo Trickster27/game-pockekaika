@@ -32,6 +32,18 @@ export function RewardIcon({ icon }: { icon: RewardLine['icon'] }) {
           />
         </svg>
       );
+    case 'coin':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" fill="#5fbfb2" stroke="#0a0710" strokeWidth="1.6" />
+          <path
+            d="M8 9 L12 6 L16 9 L16 14 L12 18 L8 14 Z"
+            fill="#d9fff6"
+            stroke="#0a0710"
+            strokeWidth="1.2"
+          />
+        </svg>
+      );
     case 'item':
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true">

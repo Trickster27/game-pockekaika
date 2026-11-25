@@ -1,4 +1,5 @@
-/** Онлайн-часть игры: аккаунт, облачный сейв, друзья, сообщения. Провайдер прячется за этим интерфейсом. */
+/** Онлайн-часть игры: аккаунт, облачный сейв, друзья, сообщения, кланы. Провайдер прячется за этим интерфейсом. */
+import type { ClanApi, ClanMessage } from './clanTypes';
 
 export interface Profile {
   id: string;
@@ -37,7 +38,8 @@ export interface CloudSave {
   device?: string;
 }
 
-export type OnlineEvent = { type: 'message'; message: Message } | { type: 'friends' };
+export type OnlineEvent =
+  { type: 'message'; message: Message } | { type: 'friends' } | { type: 'clanMessage'; message: ClanMessage };
 
 export type OnlineErrorCode =
   | 'auth'
@@ -47,7 +49,38 @@ export type OnlineErrorCode =
   | 'not_found'
   | 'network'
   | 'invalid'
-  | 'confirm_email';
+  | 'confirm_email'
+  | 'clan_none'
+  | 'clan_in'
+  | 'clan_full'
+  | 'clan_level'
+  | 'clan_closed'
+  | 'clan_cooldown'
+  | 'clan_rights'
+  | 'clan_taken'
+  | 'clan_officers'
+  | 'no_keys'
+  | 'no_gold'
+  | 'expired';
+
+/** Коды, которые сервер присылает текстом исключения. */
+export const SERVER_ERROR_CODES: readonly OnlineErrorCode[] = [
+  'already',
+  'not_found',
+  'invalid',
+  'clan_none',
+  'clan_in',
+  'clan_full',
+  'clan_level',
+  'clan_closed',
+  'clan_cooldown',
+  'clan_rights',
+  'clan_taken',
+  'clan_officers',
+  'no_keys',
+  'no_gold',
+  'expired',
+];
 
 export class OnlineError extends Error {
   constructor(
@@ -58,7 +91,7 @@ export class OnlineError extends Error {
   }
 }
 
-export interface OnlineBackend {
+export interface OnlineBackend extends ClanApi {
   readonly kind: 'supabase' | 'demo';
   /** Текущий пользователь (если сессия сохранена). */
   currentUserId(): Promise<string | null>;

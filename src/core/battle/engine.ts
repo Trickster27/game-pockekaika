@@ -18,6 +18,8 @@ import { chooseAction } from './ai';
 
 export const TM_FULL = 1000;
 const DEFAULT_MAX_TURNS = 300;
+/** Яд по боссу с общим пулом здоровья: не больше стольких атак отравителя за тик. */
+export const POOLED_POISON_ATK = 1.2;
 /** Множители боссов поверх обычного роста. */
 const BOSS_MULT = { hp: 3.2, atk: 1.15, def: 1.2 };
 /** Ранги врагов: элита и чемпионы заметно крепче обычных. */
@@ -72,6 +74,7 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     if (!s) throw new Error(`Нет навыка ${id} у ${def.id}`);
     return s;
   });
+  if (spec.hpMax) stats = { ...stats, hp: Math.round(spec.hpMax) };
   return {
     uid,
     side,
@@ -80,14 +83,17 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     kind: spec.kind,
     name: def.name,
     art: def.art,
-    element: def.element,
+    element: spec.element ?? def.element,
     faction: 'faction' in def ? def.faction : undefined,
     role: def.role,
     level: spec.level,
     boss,
     tier,
     stats,
-    hp: Math.max(1, Math.round(stats.hp * (spec.hpFrac ?? 1))),
+    hp:
+      spec.hpNow != null
+        ? Math.max(1, Math.min(stats.hp, Math.round(spec.hpNow)))
+        : Math.max(1, Math.round(stats.hp * (spec.hpFrac ?? 1))),
     shield: 0,
     shieldTurns: 0,
     tm: 0,
@@ -95,6 +101,10 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     cooldowns: skills.map(() => 0),
     statuses: [],
     alive: true,
+    ccImmune: spec.ccImmune ?? false,
+    pooled: spec.hpMax != null,
+    enrage: spec.enrage ?? 0,
+    enrageStacks: 0,
   };
 }
 
@@ -125,6 +135,11 @@ export class Battle {
   result: BattleResult | null = null;
   private uidSeq = 0;
   private readonly maxTurns: number;
+  /** Урон союзников: всего и по каждому. */
+  damage = 0;
+  readonly damageBy: Record<string, number> = {};
+  /** Ходы босса (для боя на время). */
+  bossTurns = 0;
 
   constructor(
     readonly setup: BattleSetup,
@@ -202,7 +217,9 @@ export class Battle {
       // Яд срабатывает в начале хода носителя и игнорирует защиту и щит.
       for (const p of best.statuses.filter((s) => s.id === 'poison')) {
         if (!best.alive) break;
+        const lost = Math.min(best.hp, p.value);
         best.hp = Math.max(0, best.hp - p.value);
+        this.tally(this.unit(p.source), best, lost);
         this.emit({ t: 'poison', uid: best.uid, amount: p.value, hp: best.hp });
         if (best.hp <= 0) this.kill(best);
       }
@@ -213,6 +230,7 @@ export class Battle {
       if (best.statuses.some((s) => s.id === 'stun')) {
         this.emit({ t: 'stunned', uid: best.uid });
         this.endTurn(best);
+        this.afterTurn(best);
         continue;
       }
       return best;
@@ -297,6 +315,7 @@ export class Battle {
     u.cooldowns[skillIndex] = skill.cooldown;
     this.endTurn(u);
     this.checkEnd();
+    this.afterTurn(u);
     return this.log.slice(from);
   }
 
@@ -372,6 +391,10 @@ export class Battle {
       case 'turnMeter': {
         const before = dst.tm;
         let delta = eff.amount * TM_FULL;
+        if (delta < 0 && dst.side !== src.side && dst.ccImmune) {
+          this.emit({ t: 'immune', uid: dst.uid, what: 'tm' });
+          return;
+        }
         // Сбить шкалу хода врагу — это дебафф: проверяем сопротивление.
         if (delta < 0 && dst.side !== src.side) {
           const ch = debuffChance(
@@ -397,6 +420,10 @@ export class Battle {
 
   private applyStatus(src: BattleUnit, dst: BattleUnit, id: StatusId, turns: number, baseChance: number) {
     if (!dst.alive) return;
+    if (id === 'stun' && dst.ccImmune && dst.side !== src.side) {
+      this.emit({ t: 'immune', uid: dst.uid, what: 'stun' });
+      return;
+    }
     const isDebuff = DEBUFFS.includes(id);
     if (isDebuff && dst.side !== src.side) {
       const ch = debuffChance(
@@ -422,7 +449,14 @@ export class Battle {
         dst.statuses.push({
           id,
           turns,
-          value: Math.max(1, Math.round(dst.stats.hp * STATUS_POWER.poison)),
+          value: Math.max(
+            1,
+            Math.round(
+              dst.pooled
+                ? Math.min(dst.stats.hp * STATUS_POWER.poison, src.stats.atk * POOLED_POISON_ATK)
+                : dst.stats.hp * STATUS_POWER.poison,
+            ),
+          ),
           source: src.uid,
           fresh,
         });
@@ -457,7 +491,9 @@ export class Battle {
       left -= absorbed;
       if (dst.shield <= 0) dst.shieldTurns = 0;
     }
+    const lost = Math.min(dst.hp, left);
     dst.hp = Math.max(0, dst.hp - left);
+    this.tally(src, dst, lost);
     this.emit({
       t: 'damage',
       uid: dst.uid,
@@ -469,6 +505,32 @@ export class Battle {
       hp: dst.hp,
     });
     if (dst.hp <= 0) this.kill(dst);
+  }
+
+  /** Учёт урона союзников по врагам. */
+  private tally(src: BattleUnit | undefined, dst: BattleUnit, lost: number) {
+    if (!src || src.side !== 'ally' || dst.side !== 'enemy' || lost <= 0) return;
+    this.damage += lost;
+    this.damageBy[src.uid] = (this.damageBy[src.uid] ?? 0) + lost;
+  }
+
+  /** После хода: ярость босса и лимит ходов босса. */
+  private afterTurn(u: BattleUnit) {
+    if (u.side !== 'enemy' || !u.boss) return;
+    this.bossTurns += 1;
+    if (u.alive && u.enrage > 0) {
+      u.enrageStacks += 1;
+      u.stats = { ...u.stats, atk: Math.round(u.stats.atk * (1 + u.enrage)) };
+      this.emit({ t: 'enrage', uid: u.uid, stacks: u.enrageStacks, atk: u.stats.atk });
+    }
+    const limit = this.setup.bossTurns;
+    if (limit && this.bossTurns >= limit && !this.result) this.finish('draw');
+  }
+
+  /** Игрок сдаётся (бой на время: урон засчитывается). */
+  surrender() {
+    if (this.result) return;
+    this.finish('enemy', true);
   }
 
   private kill(u: BattleUnit) {
@@ -516,11 +578,20 @@ export class Battle {
     }
   }
 
-  private finish(winner: Side | 'draw') {
+  private finish(winner: Side | 'draw', surrendered = false) {
     const alliesAlive = this.aliveOf('ally').length;
     const lost = this.setup.allies.length - alliesAlive;
     const stars = winner === 'ally' ? (Math.max(1, 3 - lost) as 1 | 2 | 3) : 0;
-    this.result = { winner, stars, turns: this.turn, alliesAlive };
+    this.result = {
+      winner,
+      stars,
+      turns: this.turn,
+      alliesAlive,
+      damage: this.damage,
+      damageBy: { ...this.damageBy },
+      bossTurns: this.bossTurns,
+      ...(surrendered ? { surrendered } : {}),
+    };
     this.emit({ t: 'end', winner, stars, turns: this.turn });
   }
 

@@ -26,6 +26,7 @@ export function TopBar() {
     dungeons: 'dungeons.title',
     shop: 'shop.title',
     codex: 'codex.title',
+    clan: 'clan.title',
   };
   const titleKey = titled[screen];
   return (

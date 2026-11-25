@@ -16,3 +16,4 @@ export * from './login';
 export * from './forge';
 export * from './compare';
 export * from './synergy';
+export * from './clan';

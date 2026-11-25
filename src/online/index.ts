@@ -2,6 +2,7 @@ import type { OnlineBackend } from './types';
 import { DemoOnlineBackend } from './demo';
 
 export * from './types';
+export * from './clanTypes';
 export { decideSync, type SyncAction } from './sync';
 
 /**

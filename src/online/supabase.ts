@@ -1,5 +1,19 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { DonationId, JoinMode, ClanRole, WeeklyGoalId } from '@/game/clan';
+import type {
+  BossAttempt,
+  BossOutcome,
+  ClanBrowse,
+  ClanCreateInput,
+  ClanInfo,
+  ClanMessage,
+  ClanPatch,
+  ClanState,
+  ClanToday,
+} from './clanTypes';
 import {
+  SERVER_ERROR_CODES,
+  type OnlineErrorCode,
   OnlineError,
   MAX_MESSAGE,
   validateNickname,
@@ -50,10 +64,76 @@ const toMessage = (r: MessageRow): Message => ({
 });
 
 function fail(e: { code?: string; message?: string } | null): never {
+  // Клановые функции сообщают причину кодом в тексте исключения (raise exception 'clan_full').
+  const known = SERVER_ERROR_CODES.find((c) => e?.message === c);
+  if (known) throw new OnlineError(known as OnlineErrorCode, e?.message);
   if (e?.code === '23505') throw new OnlineError('already', e.message);
   if (e?.code === '42501') throw new OnlineError('not_friends', e.message);
   throw new OnlineError('network', e?.message ?? 'Ошибка сервера');
 }
+
+// ———————————————————— кланы: разбор ответов ————————————————————
+
+interface ClanJson {
+  id: string;
+  name: string;
+  tag: string;
+  emblem: string;
+  color: string;
+  description: string;
+  join_mode: JoinMode;
+  min_level: number;
+  xp: number;
+  members: number;
+  boss_level: number;
+  boss_kills: number;
+  created_at: string;
+}
+interface TodayJson {
+  keys: number;
+  damage: number;
+  checkin: boolean;
+  donations: DonationId[];
+}
+interface ClanMsgJson {
+  id: number;
+  clan_id: string;
+  sender: string | null;
+  nickname: string | null;
+  body: string;
+  kind: 'chat' | 'system';
+  created_at: string;
+}
+const toClan = (c: ClanJson): ClanInfo => ({
+  id: c.id,
+  name: c.name,
+  tag: c.tag,
+  emblem: c.emblem,
+  color: c.color,
+  description: c.description,
+  joinMode: c.join_mode,
+  minLevel: c.min_level,
+  xp: c.xp,
+  members: Number(c.members),
+  bossLevel: c.boss_level,
+  bossKills: c.boss_kills,
+  createdAt: Date.parse(c.created_at),
+});
+const toToday = (t: TodayJson): ClanToday => ({
+  keys: t.keys,
+  damage: Number(t.damage),
+  checkin: t.checkin,
+  donations: t.donations ?? [],
+});
+const toClanMsg = (m: ClanMsgJson): ClanMessage => ({
+  id: String(m.id),
+  clanId: m.clan_id,
+  from: m.sender,
+  nickname: m.nickname,
+  body: m.body,
+  kind: m.kind,
+  at: Date.parse(m.created_at),
+});
 
 /** Бэкенд на Supabase: Auth (почта+пароль), Postgres с RLS (supabase/migrations), Realtime для чата. */
 export class SupabaseOnlineBackend implements OnlineBackend {
@@ -284,6 +364,175 @@ export class SupabaseOnlineBackend implements OnlineBackend {
     return out;
   }
 
+  // ———————————————————— кланы ————————————————————
+
+  private async rpc<T>(fn: string, args?: Record<string, unknown>): Promise<T> {
+    await this.uid();
+    const { data, error } = await this.sb.rpc(fn, args);
+    if (error) fail(error);
+    return data as T;
+  }
+
+  async myClan(): Promise<ClanState | null> {
+    type J = {
+      clan: ClanJson;
+      me: { role: ClanRole; joined_at: string; today: TodayJson };
+      members: {
+        profile: ProfileRow;
+        role: ClanRole;
+        joined_at: string;
+        contribution: number;
+        today: TodayJson;
+      }[];
+      boss: { level: number; hp: number; hp_max: number; kills: number; day: number };
+      requests: { profile: ProfileRow; at: string }[];
+      week: { week: number; attacks: number; checkins: number; kills: number; claimed: string[] };
+      pending_kills: number[];
+      yesterday: { rank: number; damage: number; of: number } | null;
+    };
+    const j = await this.rpc<J | null>('clan_state');
+    if (!j) return null;
+    const order: Record<ClanRole, number> = { leader: 0, officer: 1, member: 2 };
+    return {
+      clan: toClan(j.clan),
+      me: { role: j.me.role, joinedAt: Date.parse(j.me.joined_at), today: toToday(j.me.today) },
+      members: j.members
+        .map((m) => ({
+          profile: toProfile(m.profile),
+          role: m.role,
+          joinedAt: Date.parse(m.joined_at),
+          contribution: m.contribution,
+          today: toToday(m.today),
+        }))
+        .sort((a, b) => order[a.role] - order[b.role] || b.contribution - a.contribution),
+      boss: {
+        level: j.boss.level,
+        hp: Number(j.boss.hp),
+        hpMax: Number(j.boss.hp_max),
+        kills: j.boss.kills,
+        day: j.boss.day,
+      },
+      requests: j.requests.map((r) => ({ profile: toProfile(r.profile), at: Date.parse(r.at) })),
+      week: j.week,
+      pendingKills: j.pending_kills,
+      yesterday: j.yesterday
+        ? { ...j.yesterday, damage: Number(j.yesterday.damage), of: Number(j.yesterday.of) }
+        : null,
+    };
+  }
+
+  async browseClans(query: string): Promise<ClanBrowse> {
+    const j = await this.rpc<{ clans: ClanJson[]; requested: string[]; cooldown_until: string | null }>(
+      'search_clans',
+      { p_query: query.trim().replace(/[%_]/g, '') },
+    );
+    return {
+      clans: j.clans.map(toClan),
+      requested: j.requested,
+      cooldownUntil: j.cooldown_until ? Date.parse(j.cooldown_until) : null,
+    };
+  }
+
+  async createClan(i: ClanCreateInput) {
+    return this.rpc<string>('create_clan', {
+      p_name: i.name,
+      p_tag: i.tag,
+      p_emblem: i.emblem,
+      p_color: i.color,
+      p_description: i.description,
+      p_join_mode: i.joinMode,
+      p_min_level: i.minLevel,
+    });
+  }
+  async joinClan(clanId: string) {
+    return this.rpc<'joined' | 'requested'>('join_clan', { p_clan: clanId });
+  }
+  async cancelClanRequest(clanId: string) {
+    await this.rpc('cancel_clan_request', { p_clan: clanId });
+  }
+  async leaveClan() {
+    await this.rpc('leave_clan');
+  }
+  async respondClanRequest(userId: string, accept: boolean) {
+    await this.rpc('respond_clan_request', { p_user: userId, p_accept: accept });
+  }
+  async kickClanMember(userId: string) {
+    await this.rpc('kick_clan_member', { p_user: userId });
+  }
+  async setClanRole(userId: string, role: 'officer' | 'member') {
+    await this.rpc('set_clan_role', { p_user: userId, p_role: role });
+  }
+  async transferClanLeader(userId: string) {
+    await this.rpc('transfer_clan_leader', { p_user: userId });
+  }
+  async updateClan(p: ClanPatch) {
+    await this.rpc('update_clan', {
+      p_description: p.description ?? null,
+      p_join_mode: p.joinMode ?? null,
+      p_min_level: p.minLevel ?? null,
+      p_emblem: p.emblem ?? null,
+      p_color: p.color ?? null,
+    });
+  }
+  async clanCheckin() {
+    await this.rpc('clan_checkin');
+  }
+  async clanDonate(kind: DonationId) {
+    await this.rpc('clan_donate', { p_kind: kind });
+  }
+  async bossBegin(): Promise<BossAttempt> {
+    const j = await this.rpc<{
+      attempt_id: number;
+      seed: number;
+      level: number;
+      hp: number;
+      hp_max: number;
+      day: number;
+    }>('boss_begin');
+    return {
+      attemptId: String(j.attempt_id),
+      seed: Number(j.seed) >>> 0,
+      level: j.level,
+      hp: Number(j.hp),
+      hpMax: Number(j.hp_max),
+      day: j.day,
+    };
+  }
+  async bossFinish(attemptId: string, damage: number): Promise<BossOutcome> {
+    const j = await this.rpc<{
+      damage: number;
+      level: number;
+      killed: boolean;
+      boss_level: number;
+      boss_hp: number;
+    }>('boss_finish', { p_attempt: Number(attemptId), p_damage: Math.max(0, Math.floor(damage)) });
+    return {
+      damage: Number(j.damage),
+      level: j.level,
+      killed: j.killed,
+      bossLevel: j.boss_level,
+      bossHp: Number(j.boss_hp),
+    };
+  }
+  async claimClanKill(level: number) {
+    await this.rpc('claim_clan_kill', { p_level: level });
+  }
+  async claimClanWeekly(goal: WeeklyGoalId, step: number) {
+    await this.rpc('claim_clan_weekly', { p_goal: goal, p_step: step });
+  }
+  async claimClanRank() {
+    const j = await this.rpc<{ rank: number; damage: number; of: number } | null>('claim_clan_rank');
+    return j ? { rank: Number(j.rank), damage: Number(j.damage), of: Number(j.of) } : null;
+  }
+  async clanMessages(limit = 60) {
+    const j = await this.rpc<ClanMsgJson[]>('clan_messages_list', { p_limit: limit });
+    return j.map(toClanMsg);
+  }
+  async sendClanMessage(body: string) {
+    const j = await this.rpc<ClanMsgJson>('send_clan_message', { p_body: body.slice(0, MAX_MESSAGE) });
+    return toClanMsg(j);
+  }
+
   subscribe(cb: (e: OnlineEvent) => void) {
     let ch: ReturnType<SupabaseClient['channel']> | null = null;
     let closed = false;
@@ -300,6 +549,22 @@ export class SupabaseOnlineBackend implements OnlineBackend {
           .on('postgres_changes', { event: '*', schema: 'public', table: 'friendships' }, () =>
             cb({ type: 'friends' }),
           )
+          // RLS пропускает только сообщения своего клана.
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'clan_messages' }, (p) => {
+            const row = p.new as Omit<ClanMsgJson, 'nickname'>;
+            const nick = row.sender
+              ? this.sb.from('profiles').select('nickname').eq('id', row.sender).maybeSingle()
+              : Promise.resolve({ data: null });
+            void nick.then(({ data }) =>
+              cb({
+                type: 'clanMessage',
+                message: toClanMsg({
+                  ...row,
+                  nickname: (data as { nickname: string } | null)?.nickname ?? null,
+                }),
+              }),
+            );
+          })
           .subscribe();
       })
       .catch(() => undefined);

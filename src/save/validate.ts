@@ -193,6 +193,21 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
         claimed: Math.floor(num(l.claimed, 0, 0)),
       };
     })(),
+    clan: (() => {
+      const c = isObj(raw.clan) ? raw.clan : {};
+      const b = isObj(c.bought) ? c.bought : {};
+      return {
+        coins: Math.floor(num(c.coins, 0, 0)),
+        bought: Object.fromEntries(
+          Object.entries(b)
+            .filter(([, v]) => isObj(v) && typeof v.period === 'string' && typeof v.count === 'number')
+            .map(([k, v]) => {
+              const r = v as { period: string; count: number };
+              return [k, { period: r.period, count: Math.floor(num(r.count, 0, 0)) }];
+            }),
+        ),
+      };
+    })(),
     gearRng: Math.floor(num(raw.gearRng, base.gearRng, 0)) >>> 0,
     dungeons: Object.fromEntries(
       Object.entries(isObj(raw.dungeons) ? raw.dungeons : {})

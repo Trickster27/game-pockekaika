@@ -1,4 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
+import { useOnline } from '@/state/online';
+import { refreshClan } from '@/state/clan';
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { TopBar } from './components/TopBar';
@@ -27,6 +29,7 @@ const ArenaScreen = lazy(() => import('./screens/ArenaScreen'));
 const QuestsScreen = lazy(() => import('./screens/QuestsScreen'));
 const AccountScreen = lazy(() => import('./screens/AccountScreen'));
 const FriendsScreen = lazy(() => import('./screens/FriendsScreen'));
+const ClanScreen = lazy(() => import('./screens/ClanScreen'));
 const ChatScreen = lazy(() => import('./screens/ChatScreen'));
 const PlaceholderScreen = lazy(() => import('./screens/PlaceholderScreen'));
 
@@ -73,6 +76,8 @@ function Screen() {
       return <QuestsScreen />;
     case 'account':
       return <AccountScreen />;
+    case 'clan':
+      return <ClanScreen />;
     case 'friends':
       return <FriendsScreen />;
     case 'chat':
@@ -93,6 +98,12 @@ export function App() {
   useEffect(() => {
     if (loadSource === 'backup') showToast(t('app.loadFromBackup'));
   }, [loadSource, showToast, t]);
+
+  // Клан подгружается после входа: нужен для отметок на карте лагеря и наград.
+  const userId = useOnline((s) => s.userId);
+  useEffect(() => {
+    if (userId) void refreshClan();
+  }, [userId]);
 
   if (!ready) {
     return (
