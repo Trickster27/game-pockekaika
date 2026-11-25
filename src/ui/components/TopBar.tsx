@@ -15,7 +15,12 @@ export function TopBar() {
   const energy = { ...save.currencies };
   regenEnergy(energy, now);
   const nextIn = nextEnergyIn(energy, now);
-  const titled: Record<string, string> = { settings: 'settings.title', campaign: 'nav.campaign' };
+  const titled: Record<string, string> = {
+    settings: 'settings.title',
+    campaign: 'nav.campaign',
+    dungeons: 'dungeons.title',
+    shop: 'shop.title',
+  };
   const titleKey = titled[screen];
   return (
     <header className="topbar">

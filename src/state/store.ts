@@ -5,7 +5,17 @@ import type { SceneKey } from '@/render/pixi/battle/background';
 import { saves } from './services';
 
 export type ScreenId =
-  'camp' | 'campaign' | 'battle' | 'heroes' | 'team' | 'summon' | 'bag' | 'shop' | 'settings' | 'placeholder';
+  | 'camp'
+  | 'campaign'
+  | 'battle'
+  | 'heroes'
+  | 'team'
+  | 'summon'
+  | 'bag'
+  | 'shop'
+  | 'dungeons'
+  | 'settings'
+  | 'placeholder';
 
 export interface RewardLine {
   icon: 'gold' | 'shards' | 'xp' | 'energy' | 'level' | 'star' | 'item';

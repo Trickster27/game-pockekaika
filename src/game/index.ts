@@ -7,3 +7,5 @@ export * from './heroes';
 export * from './idle';
 export * from './summon';
 export * from './shop';
+export * from './gear';
+export * from './dungeon';

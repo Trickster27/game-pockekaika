@@ -48,6 +48,14 @@ export const MIGRATIONS: Record<number, Migration> = {
       shop: { bought: {} },
     };
   },
+  // v5: снаряжение и подземелья.
+  5: (s) => ({
+    ...s,
+    version: 5,
+    items: [],
+    gearRng: ((typeof s.updatedAt === 'number' ? s.updatedAt : 1) ^ 0x51ed270b) >>> 0,
+    dungeons: {},
+  }),
 };
 
 export class SaveVersionError extends Error {}

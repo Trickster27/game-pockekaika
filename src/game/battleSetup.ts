@@ -1,9 +1,23 @@
 import type { BattleSetup, UnitSpec } from '@/core/battle';
 import type { StageEnemy } from '@/content/campaign';
 import type { OwnedHero, SaveData } from '@/save/schema';
+import { gearBonus, heroItems } from './gear';
 
-export function heroSpec(h: OwnedHero): UnitSpec {
-  return { defId: h.heroId, kind: 'hero', level: h.level, stars: h.stars, awakened: h.awakened };
+/** Боец для движка: уровень, звёзды и бонусы надетого снаряжения. */
+export function heroSpec(h: OwnedHero, save?: SaveData): UnitSpec {
+  const spec: UnitSpec = {
+    defId: h.heroId,
+    kind: 'hero',
+    level: h.level,
+    stars: h.stars,
+    awakened: h.awakened,
+  };
+  if (save) {
+    const b = gearBonus(heroItems(save, h.uid));
+    spec.bonus = b.flat;
+    spec.bonusPct = b.pct;
+  }
+  return spec;
 }
 
 export function teamHeroes(save: SaveData): OwnedHero[] {

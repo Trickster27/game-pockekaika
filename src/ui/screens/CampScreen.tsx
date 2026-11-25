@@ -84,6 +84,7 @@ export default function CampScreen() {
               if (l.id === 'campaign') go('campaign');
               else if (l.id === 'summon') go('summon');
               else if (l.id === 'shop') go('shop');
+              else if (l.id === 'dungeon') go('dungeons');
               else openPlaceholder(`camp.locations.${l.id}.title`, l.stage);
             }}
           >

@@ -23,6 +23,7 @@ import type { OwnedHero, SaveData } from '@/save/schema';
 import { HeroTile, Stars } from '../components/HeroTile';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
 import { SkillIcon } from '../components/SkillIcon';
+import { HeroGear } from '../components/HeroGear';
 import './screens.css';
 import './heroes.css';
 
@@ -152,7 +153,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
   const showToast = useGame((s) => s.showToast);
   const [starSheet, setStarSheet] = useState(false);
   const d = heroDef(hero.heroId);
-  const stats = heroStats(hero);
+  const stats = heroStats(hero, save);
   const cap = maxLevel(hero.stars);
   const inTeam = save.team.includes(hero.uid);
   const p = platform();
@@ -201,7 +202,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
           </div>
           <p style={{ margin: '10px 0 0', fontSize: 13 }}>
             {t('heroes.level', { n: hero.level })} <span style={{ color: 'var(--muted)' }}>/ {cap}</span> ·{' '}
-            {t('heroes.power', { n: formatNumber(heroPower(hero)) })}
+            {t('heroes.power', { n: formatNumber(heroPower(hero, save)) })}
           </p>
           <div className="xpbar">
             <i style={{ width: `${xpProgress(hero) * 100}%` }} />
@@ -297,17 +298,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
         })}
       </section>
 
-      <section className="card">
-        <h3 style={{ fontSize: 16, marginBottom: 8 }}>{t('heroes.gear')}</h3>
-        <div className="gear6">
-          {['⚔', '⛨', '⛑', '✋', '◈', '⚙'].map((c) => (
-            <span key={c}>{c}</span>
-          ))}
-        </div>
-        <p className="screen-sub" style={{ margin: '8px 0 0' }}>
-          {t('heroes.gearSoon')}
-        </p>
-      </section>
+      <HeroGear hero={hero} />
 
       {d.lore && (
         <section className="card">

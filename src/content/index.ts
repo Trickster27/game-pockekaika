@@ -55,3 +55,5 @@ export function validateContent(): string[] {
   for (const id of STARTER_HEROES) if (!heroMap.has(id)) errors.push(`Стартовый герой не найден: ${id}`);
   return errors;
 }
+export * from './gear';
+export * from './dungeons';

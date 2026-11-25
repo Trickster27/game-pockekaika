@@ -237,7 +237,9 @@
   padding: 10px 16px;
   border-radius: 10px;
   font-size: 14px;
+  width: max-content;
   max-width: calc(100% - 32px);
+  text-align: center;
   z-index: 50;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   animation: toast-in 0.25s ease-out;

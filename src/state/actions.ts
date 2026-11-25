@@ -1,5 +1,26 @@
-import { stageById, nextStage, CHAPTERS } from '@/content';
-import { applyStageResult, isStageUnlocked, makeSetup, heroSpec, spendEnergy, teamHeroes } from '@/game';
+import {
+  stageById,
+  nextStage,
+  CHAPTERS,
+  dungeonDef,
+  dungeonEnergy,
+  dungeonWaves,
+  DUNGEON_LEVELS,
+  SETS,
+  SLOT_NAME,
+  type DungeonId,
+  type Slot,
+} from '@/content';
+import {
+  applyStageResult,
+  applyDungeonResult,
+  isDungeonLevelUnlocked,
+  isStageUnlocked,
+  makeSetup,
+  heroSpec,
+  spendEnergy,
+  teamHeroes,
+} from '@/game';
 import { formatNumber, tr } from '@/i18n';
 import { useGame, type RewardLine } from './store';
 
@@ -33,7 +54,11 @@ export function startCampaignStage(stageId: string): boolean {
     title: `${stage.id} · ${stage.name}`,
     subtitle: chapter.name,
     scene: SCENES[stage.chapter - 1] ?? 'mist',
-    setup: makeSetup(team.map(heroSpec), stage.waves, newSeed()),
+    setup: makeSetup(
+      team.map((h) => heroSpec(h, save)),
+      stage.waves,
+      newSeed(),
+    ),
     returnTo: 'campaign',
     finish: (result) => {
       const lines: RewardLine[] = [];
@@ -56,6 +81,61 @@ export function startCampaignStage(stageId: string): boolean {
     },
     nextLabel: tr('battle.next'),
     retry: () => startCampaignStage(stageId),
+  });
+  return true;
+}
+
+/** Запуск уровня подземелья. */
+export function startDungeon(id: DungeonId, level: number): boolean {
+  const g = useGame.getState();
+  const save = g.save!;
+  const d = dungeonDef(id);
+  if (!isDungeonLevelUnlocked(save, id, level)) return false;
+  const team = teamHeroes(save);
+  if (team.length === 0) {
+    g.showToast(tr('campaign.noTeam'));
+    return false;
+  }
+  const cost = dungeonEnergy(level);
+  let ok = false;
+  g.updateSave((s) => {
+    ok = spendEnergy(s.currencies, cost, Date.now());
+  });
+  if (!ok) {
+    g.showToast(tr('campaign.noEnergy', { n: cost }));
+    return false;
+  }
+  g.startBattle({
+    title: `${d.name} · ${tr('dungeons.level', { n: level })}`,
+    subtitle: tr('dungeons.title'),
+    scene: d.scene,
+    setup: makeSetup(
+      team.map((h) => heroSpec(h, save)),
+      dungeonWaves(d, level),
+      newSeed(),
+    ),
+    returnTo: 'dungeons',
+    finish: (result) => {
+      const lines: RewardLine[] = [];
+      useGame.getState().updateSave((s) => {
+        const r = applyDungeonResult(s, id, level, result);
+        if (r.gold)
+          lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
+        for (const it of r.items)
+          lines.push({
+            icon: 'item',
+            label: `${SLOT_NAME[it.slot as Slot]} · ${SETS.find((x) => x.id === it.set)?.name ?? ''}`,
+            value: tr(`labels.rarity.${it.rarity}`),
+          });
+        for (const [m, n] of Object.entries(r.materials))
+          lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
+        if (r.firstClear) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: '+20' });
+      });
+      return lines;
+    },
+    next: () => startDungeon(id, Math.min(DUNGEON_LEVELS, level + 1)),
+    nextLabel: tr('battle.next'),
+    retry: () => startDungeon(id, level),
   });
   return true;
 }

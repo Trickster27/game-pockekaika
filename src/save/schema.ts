@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -74,6 +74,18 @@ export interface ShopState {
   bought: Record<string, { period: string; count: number }>;
 }
 
+/** Предмет снаряжения. Типы слотов/сетов/характеристик — строки, описанные в content/gear. */
+export interface Item {
+  uid: string;
+  slot: string;
+  set: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  level: number;
+  main: string;
+  subs: { stat: string; value: number; rolls: number }[];
+  heroUid: string | null;
+}
+
 export interface SaveData {
   version: number;
   /** Случайный id сейва: пригодится облачной синхронизации. */
@@ -97,6 +109,11 @@ export interface SaveData {
   idle: { lastClaimAt: number };
   summon: SummonState;
   shop: ShopState;
+  items: Item[];
+  /** Состояние RNG выпадения и улучшения снаряжения. */
+  gearRng: number;
+  /** Подземелья: максимальный пройденный уровень. */
+  dungeons: Record<string, number>;
   stats: { battlesWon: number; battlesLost: number };
 }
 
@@ -154,6 +171,9 @@ export function createNewSave(now: number = Date.now()): SaveData {
     idle: { lastClaimAt: now },
     summon: newSummonState(now),
     shop: { bought: {} },
+    items: [],
+    gearRng: (now ^ 0x51ed270b) >>> 0,
+    dungeons: {},
     stats: { battlesWon: 0, battlesLost: 0 },
   };
 }

@@ -3,18 +3,21 @@ import { enemyDef, heroDef } from '@/content';
 import type { StageDef } from '@/content/campaign';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { teamHeroes } from './battleSetup';
+import { applyGear, gearBonus, heroItems } from './gear';
 
-export function heroStats(h: OwnedHero) {
+/** Характеристики героя; если передан сейв — вместе со снаряжением. */
+export function heroStats(h: OwnedHero, save?: SaveData) {
   const d = heroDef(h.heroId);
-  return statsAt(baseStats(d.role, d.rarity, d.mod), h.level, h.stars, h.awakened);
+  const s = statsAt(baseStats(d.role, d.rarity, d.mod), h.level, h.stars, h.awakened);
+  return save ? applyGear(s, gearBonus(heroItems(save, h.uid))) : s;
 }
 
-export function heroPower(h: OwnedHero): number {
-  return power(heroStats(h));
+export function heroPower(h: OwnedHero, save?: SaveData): number {
+  return power(heroStats(h, save));
 }
 
 export function teamPower(save: SaveData): number {
-  return teamHeroes(save).reduce((a, h) => a + heroPower(h), 0);
+  return teamHeroes(save).reduce((a, h) => a + heroPower(h, save), 0);
 }
 
 /** Рекомендуемая сила: самая сильная волна этапа (боссы с множителем). */

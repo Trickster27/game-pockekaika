@@ -3,6 +3,7 @@ import {
   DEFAULT_SETTINGS,
   MATERIAL_IDS,
   MAX_TEAM,
+  type Item,
   type OwnedHero,
   type SaveData,
   type TeamPreset,
@@ -17,6 +18,50 @@ const str = (v: unknown, d: string) => (typeof v === 'string' && v.length > 0 ? 
 const bool = (v: unknown, d: boolean) => (typeof v === 'boolean' ? v : d);
 
 export class SaveFormatError extends Error {}
+
+const RARITIES = ['common', 'rare', 'epic', 'legendary'] as const;
+
+function normalizeItems(v: unknown, heroUids: Set<string>): Item[] {
+  if (!Array.isArray(v)) return [];
+  const out: Item[] = [];
+  const seen = new Set<string>();
+  const slotTaken = new Set<string>();
+  for (const it of v) {
+    if (
+      !isObj(it) ||
+      typeof it.uid !== 'string' ||
+      seen.has(it.uid) ||
+      typeof it.slot !== 'string' ||
+      typeof it.main !== 'string'
+    )
+      continue;
+    seen.add(it.uid);
+    let heroUid = typeof it.heroUid === 'string' && heroUids.has(it.heroUid) ? it.heroUid : null;
+    // Один предмет на слот героя.
+    if (heroUid && slotTaken.has(`${heroUid}:${it.slot}`)) heroUid = null;
+    if (heroUid) slotTaken.add(`${heroUid}:${it.slot}`);
+    out.push({
+      uid: it.uid,
+      slot: it.slot,
+      set: str(it.set, 'fury'),
+      rarity: (RARITIES as readonly unknown[]).includes(it.rarity) ? (it.rarity as Item['rarity']) : 'common',
+      level: Math.round(num(it.level, 0, 0, 15)),
+      main: it.main,
+      subs: Array.isArray(it.subs)
+        ? it.subs
+            .filter((x): x is Record<string, unknown> => isObj(x) && typeof x.stat === 'string')
+            .slice(0, 4)
+            .map((x) => ({
+              stat: x.stat as string,
+              value: num(x.value, 0, 0),
+              rolls: Math.round(num(x.rolls, 1, 1, 6)),
+            }))
+        : [],
+      heroUid,
+    });
+  }
+  return out;
+}
 
 function normalizeHeroes(v: unknown, now: number): OwnedHero[] | null {
   if (!Array.isArray(v)) return null;
@@ -113,6 +158,13 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
       total: Math.floor(num(sm.total, 0, 0)),
     },
     shop: { bought },
+    items: normalizeItems(raw.items, heroUids),
+    gearRng: Math.floor(num(raw.gearRng, base.gearRng, 0)) >>> 0,
+    dungeons: Object.fromEntries(
+      Object.entries(isObj(raw.dungeons) ? raw.dungeons : {})
+        .filter(([, v]) => typeof v === 'number')
+        .map(([k, v]) => [k, Math.round(num(v, 0, 0, 10))]),
+    ),
     seq: Math.max(Math.round(num(raw.seq, base.seq, 1)), (heroes?.length ?? 0) + 1),
     stats: {
       battlesWon: Math.floor(num(st.battlesWon, 0, 0)),

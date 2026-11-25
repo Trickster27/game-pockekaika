@@ -19,6 +19,7 @@ const TeamScreen = lazy(() => import('./screens/TeamScreen'));
 const SummonScreen = lazy(() => import('./screens/SummonScreen'));
 const ShopScreen = lazy(() => import('./screens/ShopScreen'));
 const BagScreen = lazy(() => import('./screens/BagScreen'));
+const DungeonsScreen = lazy(() => import('./screens/DungeonsScreen'));
 const PlaceholderScreen = lazy(() => import('./screens/PlaceholderScreen'));
 
 function Splash() {
@@ -52,6 +53,8 @@ function Screen() {
       return <ShopScreen />;
     case 'bag':
       return <BagScreen />;
+    case 'dungeons':
+      return <DungeonsScreen />;
     case 'placeholder':
       return <PlaceholderScreen />;
   }
