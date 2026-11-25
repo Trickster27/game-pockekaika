@@ -1,0 +1,505 @@
+import { affinity } from '../elements';
+import { applyBonus, activeFactionBonus, factionCounts } from '../factions';
+import { debuffChance, rollDamage } from '../formulas';
+import { Rng } from '../rng';
+import { baseStats, statsAt } from '../stats';
+import {
+  DEBUFFS,
+  STATUS_POWER,
+  type ContentDb,
+  type EffectDef,
+  type Scope,
+  type SkillDef,
+  type StatusId,
+} from '../content';
+import type { Stats } from '../types';
+import type { BattleEvent, BattleResult, BattleSetup, BattleUnit, Side, UnitSpec } from './types';
+import { chooseAction } from './ai';
+
+export const TM_FULL = 1000;
+const DEFAULT_MAX_TURNS = 300;
+/** Множители боссов поверх обычного роста. */
+const BOSS_MULT = { hp: 3.2, atk: 1.15, def: 1.2 };
+
+function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid: string): BattleUnit {
+  const def = spec.kind === 'hero' ? db.hero(spec.defId) : db.enemy(spec.defId);
+  if (!def) throw new Error(`Нет описания бойца: ${spec.kind}/${spec.defId}`);
+  const rarity = 'rarity' in def ? def.rarity : 'common';
+  let stats = statsAt(
+    baseStats(def.role, rarity, def.mod),
+    spec.level,
+    spec.stars ?? 1,
+    spec.awakened ?? false,
+  );
+  const boss = spec.boss ?? ('boss' in def && def.boss === true);
+  if (boss) {
+    stats = {
+      ...stats,
+      hp: Math.round(stats.hp * BOSS_MULT.hp),
+      atk: Math.round(stats.atk * BOSS_MULT.atk),
+      def: Math.round(stats.def * BOSS_MULT.def),
+    };
+  }
+  if (spec.bonusPct) {
+    stats = { ...stats };
+    for (const [k, v] of Object.entries(spec.bonusPct) as [keyof Stats, number][])
+      stats[k] = Math.round(stats[k] * (1 + v));
+  }
+  if (spec.bonus) {
+    stats = { ...stats };
+    for (const [k, v] of Object.entries(spec.bonus) as [keyof Stats, number][]) stats[k] += v;
+  }
+  const skills = def.skills.map((id) => {
+    const s = db.skill(id);
+    if (!s) throw new Error(`Нет навыка ${id} у ${def.id}`);
+    return s;
+  });
+  return {
+    uid,
+    side,
+    slot,
+    defId: def.id,
+    kind: spec.kind,
+    name: def.name,
+    art: def.art,
+    element: def.element,
+    faction: 'faction' in def ? def.faction : undefined,
+    role: def.role,
+    level: spec.level,
+    boss,
+    stats,
+    hp: Math.max(1, Math.round(stats.hp * (spec.hpFrac ?? 1))),
+    shield: 0,
+    shieldTurns: 0,
+    tm: 0,
+    skills,
+    cooldowns: skills.map(() => 0),
+    statuses: [],
+    alive: true,
+  };
+}
+
+/** Действующие характеристики с учётом баффов и дебаффов. */
+export function effective(u: BattleUnit): Stats {
+  const has = (id: StatusId) => u.statuses.some((s) => s.id === id);
+  const s = { ...u.stats };
+  if (has('atkUp')) s.atk *= 1 + STATUS_POWER.atkUp;
+  if (has('atkDown')) s.atk *= 1 - STATUS_POWER.atkDown;
+  if (has('defUp')) s.def *= 1 + STATUS_POWER.defUp;
+  if (has('defDown')) s.def *= 1 - STATUS_POWER.defDown;
+  if (has('haste')) s.spd *= 1 + STATUS_POWER.haste;
+  if (has('slow')) s.spd *= 1 - STATUS_POWER.slow;
+  return s;
+}
+
+/**
+ * Пошаговый бой. Логика полностью детерминирована seed-ом.
+ * Использование: nextActor() → (ручной выбор или chooseAction) → act(); или run() для авто-боя.
+ * Всё, что происходит, складывается в log — его проигрывает рендер.
+ */
+export class Battle {
+  readonly rng: Rng;
+  readonly log: BattleEvent[] = [];
+  units: BattleUnit[] = [];
+  wave = 0;
+  turn = 0;
+  result: BattleResult | null = null;
+  private uidSeq = 0;
+  private readonly maxTurns: number;
+
+  constructor(
+    readonly setup: BattleSetup,
+    readonly db: ContentDb,
+  ) {
+    this.rng = new Rng(setup.seed);
+    this.maxTurns = setup.maxTurns ?? DEFAULT_MAX_TURNS;
+    const allies = setup.allies.map((s, i) => buildUnit(s, 'ally', i, db, `a${i}`));
+    if (setup.factionBonus !== false) {
+      const counts = factionCounts(allies.map((a) => a.faction));
+      for (const a of allies) {
+        if (!a.faction) continue;
+        const bonus = activeFactionBonus(a.faction, counts.get(a.faction) ?? 0);
+        if (bonus) {
+          a.stats = applyBonus(a.stats, bonus);
+          a.hp = Math.round(a.stats.hp * (setup.allies[a.slot]?.hpFrac ?? 1));
+        }
+      }
+    }
+    this.units = allies;
+    this.spawnWave(0);
+    this.emit({ t: 'start', wave: 1, waves: setup.waves.length });
+  }
+
+  get allies() {
+    return this.units.filter((u) => u.side === 'ally');
+  }
+  get enemies() {
+    return this.units.filter((u) => u.side === 'enemy');
+  }
+  unit(uid: string): BattleUnit | undefined {
+    return this.units.find((u) => u.uid === uid);
+  }
+  aliveOf(side: Side): BattleUnit[] {
+    return this.units.filter((u) => u.side === side && u.alive);
+  }
+
+  private emit(e: BattleEvent) {
+    this.log.push(e);
+  }
+
+  private spawnWave(index: number) {
+    const specs = this.setup.waves[index] ?? [];
+    this.units = this.units.filter((u) => u.side === 'ally');
+    const spawned = specs.map((s, i) => buildUnit(s, 'enemy', i, this.db, `e${index}_${i}_${this.uidSeq++}`));
+    this.units.push(...spawned);
+    this.wave = index;
+    if (index > 0) this.emit({ t: 'wave', wave: index + 1, spawned: spawned.map((u) => u.uid) });
+  }
+
+  /** Продвигает шкалу хода до следующего бойца. Обрабатывает яд и оглушение. null — бой окончен. */
+  nextActor(): BattleUnit | null {
+    while (!this.result) {
+      const alive = this.units.filter((u) => u.alive);
+      let best: BattleUnit | null = null;
+      let bestT = Infinity;
+      for (const u of alive) {
+        const spd = Math.max(1, effective(u).spd);
+        const t = Math.max(0, (TM_FULL - u.tm) / spd);
+        if (t < bestT - 1e-9 || (Math.abs(t - bestT) <= 1e-9 && best && this.tieBreak(u, best))) {
+          bestT = t;
+          best = u;
+        }
+      }
+      if (!best) return null;
+      for (const u of alive) u.tm += Math.max(1, effective(u).spd) * bestT;
+      best.tm = 0;
+      this.turn += 1;
+      if (this.turn > this.maxTurns) {
+        this.finish('draw');
+        return null;
+      }
+      this.emit({ t: 'turn', uid: best.uid, turn: this.turn });
+
+      // Яд срабатывает в начале хода носителя и игнорирует защиту и щит.
+      for (const p of best.statuses.filter((s) => s.id === 'poison')) {
+        if (!best.alive) break;
+        best.hp = Math.max(0, best.hp - p.value);
+        this.emit({ t: 'poison', uid: best.uid, amount: p.value, hp: best.hp });
+        if (best.hp <= 0) this.kill(best);
+      }
+      if (!best.alive) {
+        this.checkEnd();
+        continue;
+      }
+      if (best.statuses.some((s) => s.id === 'stun')) {
+        this.emit({ t: 'stunned', uid: best.uid });
+        this.endTurn(best);
+        continue;
+      }
+      return best;
+    }
+    return null;
+  }
+
+  private tieBreak(a: BattleUnit, b: BattleUnit): boolean {
+    const sa = effective(a).spd,
+      sb = effective(b).spd;
+    if (sa !== sb) return sa > sb;
+    if (a.side !== b.side) return a.side === 'ally';
+    return a.slot < b.slot;
+  }
+
+  isReady(u: BattleUnit, skillIndex: number): boolean {
+    return (u.cooldowns[skillIndex] ?? 1) <= 0;
+  }
+
+  /** Куда можно направить навык. Провокация заставляет бить по себе. */
+  validTargets(u: BattleUnit, skill: SkillDef): BattleUnit[] {
+    if (skill.target === 'none') return [];
+    const side: Side = skill.target === 'enemy' ? (u.side === 'ally' ? 'enemy' : 'ally') : u.side;
+    const list = this.aliveOf(side);
+    if (skill.target === 'enemy') {
+      const taunters = list.filter((x) => x.statuses.some((s) => s.id === 'taunt'));
+      if (taunters.length) return taunters;
+    }
+    return list;
+  }
+
+  /** Выполнить ход. Возвращает события этого хода. */
+  act(uid: string, skillIndex: number, targetUid?: string): BattleEvent[] {
+    const from = this.log.length;
+    const u = this.unit(uid);
+    if (!u || !u.alive || this.result) throw new Error('act: этот боец не может ходить');
+    const skill = u.skills[skillIndex];
+    if (!skill) throw new Error('act: нет такого навыка');
+    if (!this.isReady(u, skillIndex)) throw new Error('act: навык на перезарядке');
+
+    let target: BattleUnit | undefined;
+    if (skill.target !== 'none') {
+      const valid = this.validTargets(u, skill);
+      target = valid.find((x) => x.uid === targetUid) ?? valid[0];
+      if (!target) throw new Error('act: нет доступной цели');
+    }
+
+    const touched = new Set<string>();
+    const allTargets = (scope: Scope): BattleUnit[] => this.resolveScope(u, scope, target);
+    for (const eff of skill.effects) for (const x of allTargets(eff.to ?? 'target')) touched.add(x.uid);
+    this.emit({ t: 'skill', uid: u.uid, skill: skill.id, skillIndex, targets: [...touched], fx: skill.fx });
+
+    for (const eff of skill.effects) {
+      for (const x of allTargets(eff.to ?? 'target')) {
+        if (!x.alive && eff.kind !== 'heal') continue;
+        this.applyEffect(u, x, eff);
+      }
+    }
+    u.cooldowns[skillIndex] = skill.cooldown;
+    this.endTurn(u);
+    this.checkEnd();
+    return this.log.slice(from);
+  }
+
+  private resolveScope(u: BattleUnit, scope: Scope, target?: BattleUnit): BattleUnit[] {
+    const foes = this.aliveOf(u.side === 'ally' ? 'enemy' : 'ally');
+    const friends = this.aliveOf(u.side);
+    switch (scope) {
+      case 'target':
+        return target ? [target] : [];
+      case 'self':
+        return [u];
+      case 'allEnemies':
+        return foes;
+      case 'allAllies':
+        return friends;
+      case 'otherAllies':
+        return friends.filter((f) => f !== u);
+      case 'lowestAlly':
+        return friends.length
+          ? [friends.reduce((a, b) => (a.hp / a.stats.hp <= b.hp / b.stats.hp ? a : b))]
+          : [];
+      case 'randomEnemies3': {
+        const out: BattleUnit[] = [];
+        for (let i = 0; i < 3 && foes.length; i++) out.push(this.rng.pick(foes));
+        return out;
+      }
+    }
+  }
+
+  private applyEffect(src: BattleUnit, dst: BattleUnit, eff: EffectDef) {
+    switch (eff.kind) {
+      case 'damage': {
+        const hits = eff.hits ?? 1;
+        const se = effective(src);
+        const de = effective(dst);
+        const powerStat = eff.stat ?? 'atk';
+        const power = powerStat === 'hp' ? src.stats.hp : se[powerStat];
+        for (let h = 0; h < hits && dst.alive; h++) {
+          const r = rollDamage(
+            {
+              power,
+              multiplier: eff.mult / hits,
+              def: de.def,
+              critRate: se.critRate,
+              critDmg: se.critDmg,
+              affinity: affinity(src.element, dst.element),
+              defIgnore: eff.defIgnore,
+            },
+            this.rng,
+          );
+          this.dealDamage(src, dst, r.amount, r.crit);
+        }
+        return;
+      }
+      case 'heal': {
+        if (!dst.alive) return;
+        const amount = Math.round(dst.stats.hp * eff.pct);
+        const before = dst.hp;
+        dst.hp = Math.min(dst.stats.hp, dst.hp + amount);
+        this.emit({ t: 'heal', uid: dst.uid, amount: dst.hp - before, hp: dst.hp });
+        return;
+      }
+      case 'shield': {
+        const amount = Math.round(src.stats.hp * eff.pct);
+        dst.shield = Math.max(dst.shield, amount);
+        dst.shieldTurns = Math.max(dst.shieldTurns, eff.turns);
+        this.emit({ t: 'shield', uid: dst.uid, amount: dst.shield });
+        return;
+      }
+      case 'status':
+        this.applyStatus(src, dst, eff.status, eff.turns, eff.chance ?? 1);
+        return;
+      case 'turnMeter': {
+        const before = dst.tm;
+        let delta = eff.amount * TM_FULL;
+        // Сбить шкалу хода врагу — это дебафф: проверяем сопротивление.
+        if (delta < 0 && dst.side !== src.side) {
+          const ch = debuffChance(
+            1,
+            effective(src).acc,
+            effective(dst).res,
+            affinity(src.element, dst.element),
+          );
+          if (!this.rng.chance(ch)) delta = 0;
+        }
+        dst.tm = Math.max(0, Math.min(TM_FULL, dst.tm + delta));
+        this.emit({ t: 'tm', uid: dst.uid, delta: dst.tm - before, tm: dst.tm });
+        return;
+      }
+      case 'cleanse': {
+        const removed = dst.statuses.filter((s) => DEBUFFS.includes(s.id)).map((s) => s.id);
+        dst.statuses = dst.statuses.filter((s) => !DEBUFFS.includes(s.id));
+        if (removed.length) this.emit({ t: 'cleanse', uid: dst.uid, removed });
+        return;
+      }
+    }
+  }
+
+  private applyStatus(src: BattleUnit, dst: BattleUnit, id: StatusId, turns: number, baseChance: number) {
+    if (!dst.alive) return;
+    const isDebuff = DEBUFFS.includes(id);
+    if (isDebuff && dst.side !== src.side) {
+      const ch = debuffChance(
+        baseChance,
+        effective(src).acc,
+        effective(dst).res,
+        affinity(src.element, dst.element),
+      );
+      if (!this.rng.chance(ch)) {
+        this.emit({ t: 'status', uid: dst.uid, status: id, turns, landed: false });
+        return;
+      }
+    } else if (baseChance < 1 && !this.rng.chance(baseChance)) {
+      return;
+    }
+    const fresh = src.uid === dst.uid;
+    if (id === 'poison') {
+      const stacks = dst.statuses.filter((s) => s.id === 'poison');
+      if (stacks.length >= STATUS_POWER.poisonStacks) {
+        const oldest = stacks.reduce((a, b) => (a.turns <= b.turns ? a : b));
+        oldest.turns = Math.max(oldest.turns, turns);
+      } else {
+        dst.statuses.push({
+          id,
+          turns,
+          value: Math.max(1, Math.round(dst.stats.hp * STATUS_POWER.poison)),
+          source: src.uid,
+          fresh,
+        });
+      }
+    } else {
+      // Противоположные статусы гасят друг друга.
+      const opposite: Partial<Record<StatusId, StatusId>> = {
+        atkUp: 'atkDown',
+        atkDown: 'atkUp',
+        defUp: 'defDown',
+        defDown: 'defUp',
+        haste: 'slow',
+        slow: 'haste',
+      };
+      const opp = opposite[id];
+      if (opp) dst.statuses = dst.statuses.filter((s) => s.id !== opp);
+      const cur = dst.statuses.find((s) => s.id === id);
+      if (cur) {
+        cur.turns = Math.max(cur.turns, turns);
+        cur.fresh = cur.fresh || fresh;
+      } else dst.statuses.push({ id, turns, value: 0, source: src.uid, fresh });
+    }
+    this.emit({ t: 'status', uid: dst.uid, status: id, turns, landed: true });
+  }
+
+  private dealDamage(src: BattleUnit, dst: BattleUnit, amount: number, crit: boolean) {
+    let left = amount;
+    let absorbed = 0;
+    if (dst.shield > 0) {
+      absorbed = Math.min(dst.shield, left);
+      dst.shield -= absorbed;
+      left -= absorbed;
+      if (dst.shield <= 0) dst.shieldTurns = 0;
+    }
+    dst.hp = Math.max(0, dst.hp - left);
+    this.emit({
+      t: 'damage',
+      uid: dst.uid,
+      from: src.uid,
+      amount,
+      absorbed,
+      crit,
+      affinity: affinity(src.element, dst.element),
+      hp: dst.hp,
+    });
+    if (dst.hp <= 0) this.kill(dst);
+  }
+
+  private kill(u: BattleUnit) {
+    if (!u.alive) return;
+    u.alive = false;
+    u.hp = 0;
+    u.statuses = [];
+    u.shield = 0;
+    u.tm = 0;
+    this.emit({ t: 'death', uid: u.uid });
+  }
+
+  /** Конец хода: тикают длительности статусов, щита и перезарядки. */
+  private endTurn(u: BattleUnit) {
+    for (let i = 0; i < u.cooldowns.length; i++) u.cooldowns[i] = Math.max(0, (u.cooldowns[i] ?? 0) - 1);
+    const keep = [];
+    for (const s of u.statuses) {
+      if (s.fresh) {
+        s.fresh = false;
+        keep.push(s);
+        continue;
+      }
+      s.turns -= 1;
+      if (s.turns > 0) keep.push(s);
+      else this.emit({ t: 'statusEnd', uid: u.uid, status: s.id });
+    }
+    u.statuses = keep;
+    if (u.shieldTurns > 0) {
+      u.shieldTurns -= 1;
+      if (u.shieldTurns === 0 && u.shield > 0) u.shield = 0;
+    }
+  }
+
+  private checkEnd() {
+    if (this.result) return;
+    if (this.aliveOf('ally').length === 0) return this.finish('enemy');
+    if (this.aliveOf('enemy').length === 0) {
+      if (this.wave + 1 < this.setup.waves.length) {
+        // Новая волна: союзники сохраняют HP, но шкала хода обнуляется у всех.
+        this.spawnWave(this.wave + 1);
+        for (const a of this.allies) a.tm = 0;
+        return;
+      }
+      this.finish('ally');
+    }
+  }
+
+  private finish(winner: Side | 'draw') {
+    const alliesAlive = this.aliveOf('ally').length;
+    const lost = this.setup.allies.length - alliesAlive;
+    const stars = winner === 'ally' ? (Math.max(1, 3 - lost) as 1 | 2 | 3) : 0;
+    this.result = { winner, stars, turns: this.turn, alliesAlive };
+    this.emit({ t: 'end', winner, stars, turns: this.turn });
+  }
+
+  /** Авто-бой до конца. */
+  run(): BattleResult {
+    for (;;) {
+      const u = this.nextActor();
+      if (!u) break;
+      const a = chooseAction(this, u);
+      this.act(u.uid, a.skillIndex, a.targetUid);
+    }
+    return this.result!;
+  }
+}
+
+/** Удобный запуск авто-боя целиком. */
+export function simulate(
+  setup: BattleSetup,
+  db: ContentDb,
+): { result: BattleResult; log: BattleEvent[]; battle: Battle } {
+  const battle = new Battle(setup, db);
+  const result = battle.run();
+  return { result, log: battle.log, battle };
+}

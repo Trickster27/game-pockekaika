@@ -1,0 +1,87 @@
+import type { EnemyDef } from '@/core/content';
+
+export const ENEMIES: EnemyDef[] = [
+  // Глава 1: Мглистые пустоши
+  {
+    id: 'wraith',
+    name: 'Призрак Мглы',
+    element: 'dark',
+    role: 'attacker',
+    art: 'wraith',
+    skills: ['wraith_touch', 'wraith_wail'],
+    mod: { hp: -0.15 },
+  },
+  {
+    id: 'hound',
+    name: 'Мглистая гончая',
+    element: 'dark',
+    role: 'attacker',
+    art: 'hound',
+    skills: ['hound_bite', 'hound_frenzy'],
+    mod: { hp: -0.2, spd: 8 },
+  },
+  {
+    id: 'colossus',
+    name: 'Колосс Мглы',
+    element: 'dark',
+    role: 'defender',
+    art: 'mglaboss',
+    skills: ['colossus_slam', 'colossus_maw', 'colossus_veil'],
+    boss: true,
+  },
+  // Глава 2: Затонувший собор
+  {
+    id: 'drowned',
+    name: 'Утопленник',
+    element: 'tide',
+    role: 'defender',
+    art: 'drowned',
+    skills: ['drowned_spear', 'drowned_grip'],
+    mod: { hp: -0.1 },
+  },
+  {
+    id: 'eel',
+    name: 'Глубинный угорь',
+    element: 'tide',
+    role: 'attacker',
+    art: 'eel',
+    skills: ['eel_bite', 'eel_lure'],
+    mod: { hp: -0.15, spd: 6 },
+  },
+  {
+    id: 'abbess',
+    name: 'Утопленная Настоятельница',
+    element: 'tide',
+    role: 'support',
+    art: 'abbess',
+    skills: ['abbess_strike', 'abbess_bell', 'abbess_lantern'],
+    boss: true,
+  },
+  // Глава 3: Горнило Бездны
+  {
+    id: 'imp',
+    name: 'Бес Горнила',
+    element: 'fire',
+    role: 'attacker',
+    art: 'imp',
+    skills: ['imp_fork', 'imp_spark'],
+    mod: { hp: -0.25, spd: 10 },
+  },
+  {
+    id: 'golem',
+    name: 'Магмовый голем',
+    element: 'stone',
+    role: 'defender',
+    art: 'golem',
+    skills: ['golem_fist', 'golem_harden'],
+  },
+  {
+    id: 'emberlord',
+    name: 'Владыка Углей',
+    element: 'fire',
+    role: 'attacker',
+    art: 'emberlord',
+    skills: ['ember_whip', 'ember_meteor', 'ember_heat'],
+    boss: true,
+  },
+];
