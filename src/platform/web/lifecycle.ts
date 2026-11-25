@@ -20,4 +20,10 @@ export class WebLifecycle implements LifecycleAdapter {
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
   }
+  onBackButton(_cb: () => void): Unsubscribe {
+    return () => undefined;
+  }
+  exit() {
+    /* в браузере закрывать нечего */
+  }
 }

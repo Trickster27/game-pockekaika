@@ -88,6 +88,15 @@ export async function boot(): Promise<void> {
     checkIdle();
   });
 
+  // Кнопка «Назад» на Android: закрыть окно → вернуться в лагерь → выйти из игры.
+  platform.lifecycle.onBackButton(() => {
+    const g = useGame.getState();
+    if (g.idleOpen) return g.setIdleOpen(false);
+    if (g.screen === 'battle') return; // из боя выходят через ✕, чтобы случайно не потерять бой
+    if (g.screen === 'camp') return platform.lifecycle.exit();
+    g.go('camp');
+  });
+
   // Браузер разрешает звук только после первого жеста пользователя.
   const unlock = () => {
     platform.audio.unlock();

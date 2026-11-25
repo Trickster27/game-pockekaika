@@ -1,0 +1,95 @@
+.campmap {
+  position: relative;
+  width: calc(100% + 28px);
+  margin: 0 -14px 12px;
+  aspect-ratio: 360 / 480;
+  max-width: none;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.campmap__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+.campmap__hero {
+  position: absolute;
+  pointer-events: none;
+  max-width: none;
+}
+.campmap__b {
+  position: absolute;
+  background: none;
+  border: 0;
+  padding: 0;
+  border-radius: 14px;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  transition: background 0.2s;
+}
+.campmap__b:active,
+.campmap__b:focus-visible {
+  background: radial-gradient(closest-side, rgba(240, 200, 96, 0.28), transparent);
+}
+.campmap__b .plq {
+  transform: translateY(55%);
+  background: #1a1422;
+  border: 1.5px solid #d9a94a;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font: 700 12px var(--display);
+  color: #f3e6c8;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.campmap__b--camp .plq {
+  transform: translateY(40%);
+}
+.campmap__b .dot {
+  position: absolute;
+  top: 8%;
+  right: 8%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 2px solid var(--lead);
+  animation: node-pulse 1.4s ease-in-out infinite;
+  --c: var(--red);
+}
+.go-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--mgla) 22%, var(--panel)), var(--panel));
+  padding: 8px 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.go-card img {
+  width: 56px;
+  flex: none;
+}
+.go-card b {
+  display: block;
+  font-family: var(--display);
+  font-size: 17px;
+  color: var(--fg);
+}
+.go-card span {
+  flex: 1;
+}
+.go-card__arrow {
+  flex: none !important;
+  font-size: 28px;
+  color: var(--gold);
+}

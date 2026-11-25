@@ -66,7 +66,7 @@ const SPECS: ChapterSpec[] = [
     scene: 'cathedral',
     minions: ['drowned', 'eel'],
     boss: 'abbess',
-    baseLevel: 14,
+    baseLevel: 15,
     energy: 8,
     stageNames: [
       'Затопленная паперть',
@@ -87,7 +87,7 @@ const SPECS: ChapterSpec[] = [
     scene: 'forge',
     minions: ['imp', 'golem'],
     boss: 'emberlord',
-    baseLevel: 28,
+    baseLevel: 31,
     energy: 10,
     stageNames: [
       'Пепельный тракт',
@@ -110,7 +110,7 @@ function buildStage(spec: ChapterSpec, chapter: number, index: number): StageDef
   const id = `${chapter}-${index}`;
   const rng = new Rng(hashSeed(`stage:${id}`));
   const g = (chapter - 1) * STAGES_PER_CHAPTER + index; // сквозной номер этапа 1..30
-  const level = Math.round(spec.baseLevel + (index - 1) * 1.25);
+  const level = Math.round(spec.baseLevel + (index - 1) * (chapter === 1 ? 1.25 : 1.4));
   const boss = index === STAGES_PER_CHAPTER;
   const waveCount = index <= 3 ? 2 : 3;
   const waves: StageEnemy[][] = [];
@@ -124,7 +124,9 @@ function buildStage(spec: ChapterSpec, chapter: number, index: number): StageDef
       ]);
       continue;
     }
-    const size = Math.min(5, (index <= 2 ? 2 : index <= 5 ? 3 : 4) + (last && index >= 7 ? 1 : 0));
+    // В первой главе волны маленькие (обучение), дальше — сразу плотнее.
+    const baseSize = chapter === 1 ? (index <= 2 ? 2 : index <= 5 ? 3 : 4) : index <= 3 ? 4 : 5;
+    const size = Math.min(5, baseSize + (last && index >= 7 ? 1 : 0));
     const wave: StageEnemy[] = [];
     for (let i = 0; i < size; i++)
       wave.push({ id: rng.pick(spec.minions), level: Math.max(1, level - (w === 0 ? 1 : 0)) });

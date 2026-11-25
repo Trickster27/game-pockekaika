@@ -55,6 +55,10 @@ export type Unsubscribe = () => void;
 export interface LifecycleAdapter {
   onPause(cb: () => void): Unsubscribe;
   onResume(cb: () => void): Unsubscribe;
+  /** Системная кнопка «Назад» (Android). В браузере не срабатывает. */
+  onBackButton(cb: () => void): Unsubscribe;
+  /** Закрыть приложение (только на телефоне). */
+  exit(): void;
 }
 
 export type PlatformName = 'web' | 'android' | 'ios';

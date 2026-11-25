@@ -90,8 +90,10 @@ export function arenaOpponents(save: SaveData): ArenaOpponent[] {
   const myPower = Math.max(1, teamPower(save));
   const team = teamHeroes(save);
   const avgLevel = team.length ? team.reduce((a, h) => a + h.level, 0) / team.length : 1;
-  return [0.82, 1, 1.18].map((mult, i) => {
-    const picks = rng.shuffle(HEROES).slice(0, 5);
+  const teams = [0.82, 1, 1.18].map((mult) => {
+    // Для слабого соперника не берём легендарных: на низких уровнях он иначе оказывается сильнее.
+    const pool = mult < 1 ? HEROES.filter((h) => h.rarity !== 'legendary') : HEROES;
+    const picks = rng.shuffle(pool).slice(0, 5);
     // Подбираем уровень так, чтобы сила была близка к целевой.
     let level = Math.max(1, Math.round(avgLevel * mult));
     const specs = () =>
@@ -118,13 +120,21 @@ export function arenaOpponents(save: SaveData): ArenaOpponent[] {
     for (let k = 0; k < 40 && pw() < myPower * mult * 0.97 && level < 60; k++) level++;
     for (let k = 0; k < 40 && pw() > myPower * mult * 1.03 && level > 1; k++) level--;
     return {
-      id: `o${save.arena.refresh}_${i}`,
       name: `${rng.pick(TITLES)} ${rng.pick(NAMES)}`,
-      rating: Math.max(0, save.arena.rating + Math.round((mult - 1) * 400) + rng.int(-25, 25)),
       power: pw(),
       team: specs(),
+      jitter: rng.int(-25, 25),
     };
   });
+  // Порядок всегда «слабее → равный → сильнее», рейтинг раздаём после сортировки.
+  teams.sort((a, b) => a.power - b.power);
+  return teams.map((t, i) => ({
+    id: `o${save.arena.refresh}_${i}`,
+    name: t.name,
+    rating: Math.max(0, save.arena.rating + (i - 1) * 70 + t.jitter),
+    power: t.power,
+    team: t.team,
+  }));
 }
 
 /** Изменение рейтинга по Эло (K = 32). Победа даёт минимум +5. */

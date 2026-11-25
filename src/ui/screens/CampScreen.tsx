@@ -1,41 +1,59 @@
 import { useT } from '@/i18n';
-import { useGame } from '@/state/store';
+import { useGame, type ScreenId } from '@/state/store';
 import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
-import { canClaimLogin, currentStage, IDLE_CAP_MS, pendingIdle, questsReady } from '@/game';
+import campMap from '@/assets/art/camp.svg?url';
+import { heroDef } from '@/content';
+import { canClaimLogin, currentStage, IDLE_CAP_MS, pendingIdle, questsReady, teamHeroes } from '@/game';
 import { formatDuration, useNow } from '../hooks';
 import './screens.css';
+import './camp.css';
 
-/** Локации лагеря и этап плана, на котором каждая станет рабочей. */
-const LOCATIONS = [
-  { id: 'campaign', color: 'var(--mgla)', stage: 3 },
-  { id: 'tower', color: 'var(--gold)', stage: 7 },
-  { id: 'arena', color: 'var(--red)', stage: 7 },
-  { id: 'dungeon', color: '#7fe7ff', stage: 6 },
-  { id: 'summon', color: 'var(--mgla)', stage: 5 },
-  { id: 'shop', color: 'var(--f-abyss)', stage: 5 },
-  { id: 'quests', color: 'var(--f-forge)', stage: 7 },
-] as const;
+/** Постройки на карте: прямоугольник в координатах карты (360×480, верх карты = 130). */
+const BUILDINGS: { id: string; screen: ScreenId; box: [number, number, number, number] }[] = [
+  { id: 'campaign', screen: 'campaign', box: [30, 190, 142, 345] },
+  { id: 'tower', screen: 'tower', box: [250, 130, 334, 360] },
+  { id: 'summon', screen: 'summon', box: [20, 346, 112, 480] },
+  { id: 'arena', screen: 'arena', box: [236, 392, 348, 482] },
+  { id: 'dungeon', screen: 'dungeons', box: [26, 482, 134, 576] },
+  { id: 'shop', screen: 'shop', box: [142, 484, 238, 584] },
+  { id: 'quests', screen: 'quests', box: [254, 484, 338, 584] },
+];
+const MAP_W = 360,
+  MAP_TOP = 130,
+  MAP_H = 480;
+const pct = (box: [number, number, number, number]) => ({
+  left: `${(box[0] / MAP_W) * 100}%`,
+  top: `${((box[1] - MAP_TOP) / MAP_H) * 100}%`,
+  width: `${((box[2] - box[0]) / MAP_W) * 100}%`,
+  height: `${((box[3] - box[1]) / MAP_H) * 100}%`,
+});
+const HERO_SPOTS: [number, number, number][] = [
+  [146, 446, 0.36],
+  [210, 452, 0.38],
+  [118, 454, 0.34],
+];
 
 export default function CampScreen() {
   const t = useT();
   const go = useGame((s) => s.go);
   const save = useGame((s) => s.save)!;
+  const setIdleOpen = useGame((s) => s.setIdleOpen);
   const cur = currentStage(save);
   const now = useNow(5000);
   const idle = pendingIdle(save, now);
-  const setIdleOpen = useGame((s) => s.setIdleOpen);
-  const tap = () => {
+  const team = teamHeroes(save).slice(0, 3);
+  const badge: Record<string, boolean> = {
+    quests: questsReady(save, now) > 0 || canClaimLogin(save, now),
+    summon: save.materials.scroll > 0,
+  };
+  const open = (s: ScreenId) => {
     platform().haptics.impact('light');
     platform().audio.play('tap');
+    go(s);
   };
   return (
     <>
-      <section className="camp-hero">
-        <h2>{t('camp.greeting')}</h2>
-        <p>{t('camp.subtitle')}</p>
-        <img className="camp-hero__art" src={unitArtUrl('knight')} alt="" />
-      </section>
       <section className="idle-bar">
         <svg viewBox="0 0 40 40" aria-hidden="true">
           <circle cx="20" cy="22" r="18" fill="#f0c860" opacity=".2" />
@@ -56,49 +74,58 @@ export default function CampScreen() {
           {t('idle.collect').split(' ')[0]}
         </button>
       </section>
-      <div className="loc-grid">
+
+      <div className="campmap">
+        <img className="campmap__bg" src={campMap} alt="" />
+        {team.map((h, i) => {
+          const [x, y, s] = HERO_SPOTS[i]!;
+          const d = heroDef(h.heroId);
+          return (
+            <img
+              key={h.uid}
+              className="campmap__hero"
+              src={unitArtUrl(d.art)}
+              alt=""
+              style={{
+                left: `${((x - 60 * s) / MAP_W) * 100}%`,
+                top: `${((y - 130 * s - MAP_TOP) / MAP_H) * 100}%`,
+                width: `${((120 * s) / MAP_W) * 100}%`,
+              }}
+            />
+          );
+        })}
         <button
           type="button"
-          className="loc loc-wide"
-          style={{ ['--c' as string]: 'var(--gold)' }}
-          onClick={() => {
-            tap();
-            go('campaign');
-          }}
+          className="campmap__b campmap__b--camp"
+          style={pct([100, 372, 260, 470])}
+          onClick={() => setIdleOpen(true)}
+          aria-label={t('idle.bar')}
         >
-          <img src={unitArtUrl('mglaboss')} alt="" />
-          <span>
-            <b style={{ display: 'block' }}>{t('camp.campaignGo')}</b>
-            {t('camp.campaignHint', { stage: cur.id, name: cur.name })}
-          </span>
+          <span className="plq">{t('nav.camp')}</span>
         </button>
-        {LOCATIONS.map((l) => (
+        {BUILDINGS.map((b) => (
           <button
-            key={l.id}
+            key={b.id}
             type="button"
-            className="loc"
-            style={{ ['--c' as string]: l.color }}
-            onClick={() => {
-              tap();
-              if (l.id === 'campaign') go('campaign');
-              else if (l.id === 'summon') go('summon');
-              else if (l.id === 'shop') go('shop');
-              else if (l.id === 'dungeon') go('dungeons');
-              else if (l.id === 'tower') go('tower');
-              else if (l.id === 'arena') go('arena');
-              else if (l.id === 'quests') go('quests');
-            }}
+            className="campmap__b"
+            style={pct(b.box)}
+            onClick={() => open(b.screen)}
+            aria-label={t(`camp.locations.${b.id}.title`)}
           >
-            <i />
-            {l.id === 'quests' && (questsReady(save, now) > 0 || canClaimLogin(save, now)) && (
-              <span className="badge-dot" aria-label={t('camp.badgeReady')} />
-            )}
-            <small>{t(`camp.locations.${l.id}.place`)}</small>
-            <b>{t(`camp.locations.${l.id}.title`)}</b>
-            <span>{t(`camp.locations.${l.id}.desc`)}</span>
+            {badge[b.id] && <i className="dot" />}
+            <span className="plq">{t(`camp.locations.${b.id}.title`)}</span>
           </button>
         ))}
       </div>
+
+      <button type="button" className="go-card" onClick={() => open('campaign')}>
+        <img src={unitArtUrl('mglaboss')} alt="" />
+        <span>
+          <b>{t('camp.campaignGo')}</b>
+          {t('camp.campaignHint', { stage: cur.id, name: cur.name })}
+        </span>
+        <span className="go-card__arrow">›</span>
+      </button>
     </>
   );
 }

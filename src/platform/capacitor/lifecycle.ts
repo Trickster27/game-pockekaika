@@ -15,4 +15,11 @@ export class CapacitorLifecycle implements LifecycleAdapter {
   onResume(cb: () => void) {
     return this.listen(true, cb);
   }
+  onBackButton(cb: () => void): Unsubscribe {
+    const handle = App.addListener('backButton', () => cb());
+    return () => void handle.then((h) => h.remove());
+  }
+  exit() {
+    void App.exitApp();
+  }
 }
