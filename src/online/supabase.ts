@@ -97,12 +97,13 @@ export class SupabaseOnlineBackend implements OnlineBackend {
 
   async signUp(email: string, password: string, nickname: string) {
     if (!validateNickname(nickname)) throw new OnlineError('invalid', 'Ник: 2–20 символов');
-    const { data: taken } = await this.sb
+    // До входа чтение профилей может быть запрещено: тогда занятость ника проверит уникальный индекс.
+    const { data: taken, error: takenErr } = await this.sb
       .from('profiles')
       .select('id')
       .ilike('nickname', nickname.trim())
       .maybeSingle();
-    if (taken) throw new OnlineError('nickname_taken');
+    if (!takenErr && taken) throw new OnlineError('nickname_taken');
     const { data, error } = await this.sb.auth.signUp({
       email: email.trim(),
       password,

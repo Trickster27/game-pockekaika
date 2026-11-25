@@ -134,12 +134,13 @@ android/, ios/   нативные проекты Capacitor
 (бесплатный тариф подходит):
 
 1. Создайте проект на [supabase.com](https://supabase.com).
-2. **SQL Editor** → вставьте и выполните файл `supabase/migrations/0001_online.sql`
-   (таблицы профилей, сейвов, дружбы и сообщений с политиками доступа RLS и realtime).
+2. **SQL Editor** → вставьте **содержимое** файла `supabase/migrations/0001_online.sql` и нажмите Run
+   (таблицы профилей, сейвов, дружбы и сообщений с политиками доступа RLS и realtime),
+   затем так же выполните `supabase/migrations/0002_grants.sql` (права ролей на эти таблицы).
 3. **Authentication → Providers → Email**: включено по умолчанию. Для теста с друзьями можно выключить
    «Confirm email», тогда вход работает сразу после регистрации.
-4. **Project Settings → API**: скопируйте `Project URL` и `anon public` ключ в файл `.env.local`
-   (пример — `.env.example`):
+4. **Project Settings → API Keys**: скопируйте `Project URL` и публичный ключ (`anon` или `sb_publishable_...`)
+   в `.env.local` для локальной разработки или в `.env.production` для сборки (пример — `.env.example`):
    ```
    VITE_SUPABASE_URL=https://xxxx.supabase.co
    VITE_SUPABASE_ANON_KEY=eyJ...
