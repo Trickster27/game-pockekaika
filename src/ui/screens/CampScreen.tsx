@@ -2,7 +2,7 @@ import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
-import { currentStage, IDLE_CAP_MS, pendingIdle } from '@/game';
+import { canClaimLogin, currentStage, IDLE_CAP_MS, pendingIdle, questsReady } from '@/game';
 import { formatDuration, useNow } from '../hooks';
 import './screens.css';
 
@@ -20,7 +20,6 @@ const LOCATIONS = [
 export default function CampScreen() {
   const t = useT();
   const go = useGame((s) => s.go);
-  const openPlaceholder = useGame((s) => s.openPlaceholder);
   const save = useGame((s) => s.save)!;
   const cur = currentStage(save);
   const now = useNow(5000);
@@ -85,10 +84,15 @@ export default function CampScreen() {
               else if (l.id === 'summon') go('summon');
               else if (l.id === 'shop') go('shop');
               else if (l.id === 'dungeon') go('dungeons');
-              else openPlaceholder(`camp.locations.${l.id}.title`, l.stage);
+              else if (l.id === 'tower') go('tower');
+              else if (l.id === 'arena') go('arena');
+              else if (l.id === 'quests') go('quests');
             }}
           >
             <i />
+            {l.id === 'quests' && (questsReady(save, now) > 0 || canClaimLogin(save, now)) && (
+              <span className="badge-dot" aria-label={t('camp.badgeReady')} />
+            )}
             <small>{t(`camp.locations.${l.id}.place`)}</small>
             <b>{t(`camp.locations.${l.id}.title`)}</b>
             <span>{t(`camp.locations.${l.id}.desc`)}</span>

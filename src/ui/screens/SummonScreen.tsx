@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { heroDef } from '@/content';
-import { PITY_EPIC, PITY_LEGENDARY, SUMMON_COST, SUMMON_RATES, summon, type SummonPay } from '@/game';
+import {
+  trackQuest,
+  PITY_EPIC,
+  PITY_LEGENDARY,
+  SUMMON_COST,
+  SUMMON_RATES,
+  summon,
+  type SummonPay,
+} from '@/game';
 import { RARITY_ORDER } from '@/core';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
@@ -32,6 +40,7 @@ export default function SummonScreen() {
     let res: ReturnType<typeof summon> = 'noShards';
     updateSave((s) => {
       res = summon(s, count, pay, Date.now());
+      if (typeof res !== 'string') trackQuest(s, 'summon', count);
     });
     if (typeof res === 'string') {
       showToast(t(`summon.${res}`));

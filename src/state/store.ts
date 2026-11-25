@@ -14,6 +14,9 @@ export type ScreenId =
   | 'bag'
   | 'shop'
   | 'dungeons'
+  | 'tower'
+  | 'arena'
+  | 'quests'
   | 'settings'
   | 'placeholder';
 

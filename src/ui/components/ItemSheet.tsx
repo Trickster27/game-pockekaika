@@ -1,5 +1,5 @@
 import { heroDef } from '@/content';
-import { MAX_ITEM_LEVEL, sellItem, sellPrice, unequip, upgradeCost, upgradeItem } from '@/game';
+import { trackQuest, MAX_ITEM_LEVEL, sellItem, sellPrice, unequip, upgradeCost, upgradeItem } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
@@ -23,6 +23,7 @@ export function ItemSheet({ uid, onClose }: { uid: string; onClose: () => void }
     const out: { r: ReturnType<typeof upgradeItem> } = { r: 'notFound' };
     updateSave((s) => {
       out.r = upgradeItem(s, uid);
+      if (typeof out.r !== 'string') trackQuest(s, 'upgrade');
     });
     if (typeof out.r === 'string') {
       showToast(t(`gear.err.${out.r}`));

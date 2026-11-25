@@ -23,6 +23,15 @@ import {
 } from '@/game';
 import { formatNumber, tr } from '@/i18n';
 import { useGame, type RewardLine } from './store';
+import {
+  trackQuest,
+  applyTowerResult,
+  towerWaves,
+  towerScene,
+  startArenaBattle,
+  applyArenaResult,
+  type ArenaOpponent,
+} from '@/game';
 
 const SCENES = ['mist', 'cathedral', 'forge'] as const;
 
@@ -64,6 +73,7 @@ export function startCampaignStage(stageId: string): boolean {
       const lines: RewardLine[] = [];
       useGame.getState().updateSave((s) => {
         const r = applyStageResult(s, stageId, result);
+        if (result.winner === 'ally') trackQuest(s, 'campaign');
         if (r.gold)
           lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
         if (r.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
@@ -119,6 +129,7 @@ export function startDungeon(id: DungeonId, level: number): boolean {
       const lines: RewardLine[] = [];
       useGame.getState().updateSave((s) => {
         const r = applyDungeonResult(s, id, level, result);
+        if (result.winner === 'ally') trackQuest(s, 'dungeon');
         if (r.gold)
           lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
         for (const it of r.items)
@@ -136,6 +147,88 @@ export function startDungeon(id: DungeonId, level: number): boolean {
     next: () => startDungeon(id, Math.min(DUNGEON_LEVELS, level + 1)),
     nextLabel: tr('battle.next'),
     retry: () => startDungeon(id, level),
+  });
+  return true;
+}
+
+/** Этаж башни. Энергию не тратит. */
+export function startTower(floor: number): boolean {
+  const g = useGame.getState();
+  const save = g.save!;
+  if (floor > save.tower.floor + 1) return false;
+  const team = teamHeroes(save);
+  if (team.length === 0) {
+    g.showToast(tr('campaign.noTeam'));
+    return false;
+  }
+  g.startBattle({
+    title: tr('tower.floor', { n: floor }),
+    subtitle: tr('tower.title'),
+    scene: towerScene(floor),
+    setup: makeSetup(
+      team.map((h) => heroSpec(h, save)),
+      towerWaves(floor),
+      newSeed(),
+    ),
+    returnTo: 'tower',
+    finish: (result) => {
+      const lines: RewardLine[] = [];
+      useGame.getState().updateSave((s) => {
+        const r = applyTowerResult(s, floor, result, Date.now());
+        if (result.winner === 'ally') trackQuest(s, 'tower');
+        if (r?.gold)
+          lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
+        if (r?.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
+        for (const [m, n] of Object.entries(r?.materials ?? {}))
+          lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
+      });
+      return lines;
+    },
+    next: () => startTower(floor + 1),
+    nextLabel: tr('tower.next'),
+    retry: () => startTower(floor),
+  });
+  return true;
+}
+
+/** Бой на арене против команды-ИИ. */
+export function startArena(opp: ArenaOpponent): boolean {
+  const g = useGame.getState();
+  const save = g.save!;
+  const team = teamHeroes(save);
+  if (team.length === 0) {
+    g.showToast(tr('campaign.noTeam'));
+    return false;
+  }
+  let res: true | string = true;
+  g.updateSave((s) => {
+    res = startArenaBattle(s, Date.now());
+  });
+  if (res !== true) {
+    g.showToast(tr('arena.noTickets'));
+    return false;
+  }
+  const scenes = ['mist', 'cathedral', 'forge'] as const;
+  g.startBattle({
+    title: opp.name,
+    subtitle: tr('arena.title'),
+    scene: scenes[opp.rating % 3]!,
+    setup: { allies: team.map((h) => heroSpec(h, save)), waves: [opp.team], seed: newSeed() },
+    returnTo: 'arena',
+    finish: (result) => {
+      const lines: RewardLine[] = [];
+      useGame.getState().updateSave((s) => {
+        const r = applyArenaResult(s, opp, result);
+        trackQuest(s, 'arena');
+        lines.push({
+          icon: 'star',
+          label: tr('arena.rating'),
+          value: `${r.delta > 0 ? '+' : ''}${r.delta} → ${s.arena.rating}`,
+        });
+        lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
+      });
+      return lines;
+    },
   });
   return true;
 }

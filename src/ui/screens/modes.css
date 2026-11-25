@@ -1,0 +1,256 @@
+.tower-hero {
+  border-radius: 16px;
+  border: 1px solid var(--line-2);
+  background:
+    radial-gradient(60% 70% at 70% 20%, rgba(240, 200, 96, 0.25), transparent 70%),
+    linear-gradient(180deg, #1f2a55, #141020);
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.tower-hero b {
+  font-family: var(--display);
+  font-size: 34px;
+  display: block;
+  color: var(--gold-hi);
+}
+.tower-hero span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.tower-hero svg {
+  width: 80px;
+  height: 120px;
+}
+.floors {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+.floor {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+}
+.floor b {
+  font-family: var(--display);
+  font-size: 17px;
+}
+.floor span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.floor.is-next {
+  border-color: var(--gold);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 14%, var(--panel)), var(--panel));
+}
+.floor.is-done {
+  opacity: 0.6;
+}
+.floor.is-chest b {
+  color: var(--gold);
+}
+.arena-head {
+  border-radius: 16px;
+  border: 1px solid var(--line-2);
+  padding: 14px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--lc) 25%, #1a1530), #141020);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+}
+.league-badge {
+  width: 70px;
+  height: 80px;
+}
+.arena-head b {
+  font-family: var(--display);
+  font-size: 22px;
+  display: block;
+  color: var(--lc);
+}
+.arena-head span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+}
+.arena-head strong {
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+}
+.opp {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+}
+.opp__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+.opp__top b {
+  font-family: var(--display);
+  font-size: 17px;
+}
+.opp__top span {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.opp__team {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+.opp__team .htile {
+  pointer-events: none;
+}
+.opp__team .htile__name {
+  font-size: 10px;
+}
+.qlist {
+  display: grid;
+  gap: 6px;
+}
+.q {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+}
+.q b {
+  font-size: 14px;
+  font-weight: 600;
+}
+.q small {
+  display: block;
+  color: var(--gold);
+  font-size: 11.5px;
+}
+.q .bar {
+  height: 6px;
+  border-radius: 3px;
+  background: #2a2236;
+  overflow: hidden;
+  margin-top: 5px;
+}
+.q .bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #6fb3ff, #a8d4ff);
+}
+.q .btn {
+  min-height: 38px;
+  font-size: 13px;
+}
+.pts {
+  position: relative;
+  margin: 6px 0 16px;
+  padding-top: 8px;
+}
+.pts .track {
+  height: 10px;
+  border-radius: 5px;
+  background: #2a2236;
+  overflow: hidden;
+}
+.pts .track i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #d9a94a, #ffe08a);
+}
+.pts .chests {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.pts .chests button {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+  font-size: 11px;
+  color: var(--muted);
+  min-width: 74px;
+}
+.pts .chests button.ready {
+  border-color: var(--gold);
+  color: var(--gold);
+  animation: node-pulse 1.4s ease-in-out infinite;
+  --c: var(--gold);
+}
+.pts .chests button svg {
+  width: 30px;
+  height: 26px;
+}
+.cal {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+.cal div {
+  aspect-ratio: 0.8;
+  border-radius: 9px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
+  font-size: 10px;
+  color: var(--muted);
+  position: relative;
+}
+.cal div svg {
+  width: 20px;
+  height: 20px;
+}
+.cal div.special {
+  border-color: #b07cff;
+}
+.cal div.big {
+  border-color: var(--gold);
+}
+.cal div.got {
+  opacity: 0.4;
+}
+.cal div.got::after {
+  content: '✓';
+  position: absolute;
+  top: 1px;
+  right: 4px;
+  color: var(--green);
+  font-weight: 700;
+}
+.cal div.today {
+  box-shadow: 0 0 0 2px var(--gold);
+  color: var(--fg);
+}
+.loc .badge-dot {
+  position: absolute;
+  top: 8px;
+  right: 24px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 2px solid var(--lead);
+}

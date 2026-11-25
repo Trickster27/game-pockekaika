@@ -159,6 +159,40 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
     },
     shop: { bought },
     items: normalizeItems(raw.items, heroUids),
+    tower: { floor: Math.floor(num(isObj(raw.tower) ? raw.tower.floor : 0, 0, 0)) },
+    arena: (() => {
+      const a = isObj(raw.arena) ? raw.arena : {};
+      return {
+        rating: Math.round(num(a.rating, 1000, 0, 5000)),
+        wins: Math.floor(num(a.wins, 0, 0)),
+        losses: Math.floor(num(a.losses, 0, 0)),
+        day: typeof a.day === 'string' ? a.day : '',
+        battlesToday: Math.floor(num(a.battlesToday, 0, 0)),
+        leagueClaimedDay: typeof a.leagueClaimedDay === 'string' ? a.leagueClaimedDay : '',
+        refresh: Math.floor(num(a.refresh, 0, 0)),
+      };
+    })(),
+    quests: (() => {
+      const q = isObj(raw.quests) ? raw.quests : {};
+      const pr = isObj(q.progress) ? q.progress : {};
+      return {
+        day: typeof q.day === 'string' ? q.day : '',
+        progress: Object.fromEntries(
+          Object.entries(pr)
+            .filter(([, v]) => typeof v === 'number')
+            .map(([k, v]) => [k, Math.floor(v as number)]),
+        ),
+        claimed: Array.isArray(q.claimed) ? q.claimed.filter((x): x is string => typeof x === 'string') : [],
+        chests: Array.isArray(q.chests) ? q.chests.filter((x): x is number => typeof x === 'number') : [],
+      };
+    })(),
+    login: (() => {
+      const l = isObj(raw.login) ? raw.login : {};
+      return {
+        lastClaimDay: typeof l.lastClaimDay === 'string' ? l.lastClaimDay : '',
+        claimed: Math.floor(num(l.claimed, 0, 0)),
+      };
+    })(),
     gearRng: Math.floor(num(raw.gearRng, base.gearRng, 0)) >>> 0,
     dungeons: Object.fromEntries(
       Object.entries(isObj(raw.dungeons) ? raw.dungeons : {})

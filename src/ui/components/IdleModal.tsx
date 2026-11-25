@@ -1,4 +1,4 @@
-import { claimIdle, idleRates, pendingIdle } from '@/game';
+import { claimIdle, idleRates, pendingIdle, trackQuest } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
@@ -22,6 +22,7 @@ export function IdleModal() {
   const collect = () => {
     updateSave((s) => {
       claimIdle(s, Date.now());
+      trackQuest(s, 'idle');
     });
     platform().audio.play('reward');
     platform().haptics.notify('success');

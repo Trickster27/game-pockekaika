@@ -1,7 +1,15 @@
 import { createPlatform } from '@/platform';
 import { LocalSaveBackend, SaveManager, type SaveData } from '@/save';
 import { tr, useI18n } from '@/i18n';
-import { ENERGY_MAX, ENERGY_REGEN_MS, IDLE_MIN_SHOW_MS, idleFullAt, pendingIdle, regenEnergy } from '@/game';
+import {
+  trackQuest,
+  ENERGY_MAX,
+  ENERGY_REGEN_MS,
+  IDLE_MIN_SHOW_MS,
+  idleFullAt,
+  pendingIdle,
+  regenEnergy,
+} from '@/game';
 import { services } from './services';
 import { useGame } from './store';
 
@@ -87,6 +95,7 @@ export async function boot(): Promise<void> {
   };
   window.addEventListener('pointerdown', unlock);
 
+  manager.update((s) => trackQuest(s, 'login'));
   useGame.setState({ ready: true, save: manager.data, loadSource: source });
   checkIdle();
 }

@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -86,6 +86,32 @@ export interface Item {
   heroUid: string | null;
 }
 
+export interface ArenaState {
+  rating: number;
+  wins: number;
+  losses: number;
+  /** Бои за день (лимит билетов). */
+  day: string;
+  battlesToday: number;
+  leagueClaimedDay: string;
+  /** Номер обновления списка соперников. */
+  refresh: number;
+}
+
+export interface QuestState {
+  day: string;
+  progress: Record<string, number>;
+  claimed: string[];
+  chests: number[];
+}
+
+export interface LoginState {
+  /** День, за который награда уже получена. */
+  lastClaimDay: string;
+  /** Сколько дней всего получено (номер следующей награды = claimed % 28). */
+  claimed: number;
+}
+
 export interface SaveData {
   version: number;
   /** Случайный id сейва: пригодится облачной синхронизации. */
@@ -114,6 +140,11 @@ export interface SaveData {
   gearRng: number;
   /** Подземелья: максимальный пройденный уровень. */
   dungeons: Record<string, number>;
+  /** Башня: максимальный пройденный этаж. */
+  tower: { floor: number };
+  arena: ArenaState;
+  quests: QuestState;
+  login: LoginState;
   stats: { battlesWon: number; battlesLost: number };
 }
 
@@ -174,6 +205,10 @@ export function createNewSave(now: number = Date.now()): SaveData {
     items: [],
     gearRng: (now ^ 0x51ed270b) >>> 0,
     dungeons: {},
+    tower: { floor: 0 },
+    arena: newArena(),
+    quests: { day: '', progress: {}, claimed: [], chests: [] },
+    login: { lastClaimDay: '', claimed: 0 },
     stats: { battlesWon: 0, battlesLost: 0 },
   };
 }
@@ -188,4 +223,8 @@ export function defaultPresets(): TeamPreset[] {
 
 export function newSummonState(seed: number): SummonState {
   return { rng: (seed ^ 0x9e3779b9) >>> 0, sinceLegendary: 0, sinceEpic: 0, total: 0 };
+}
+
+export function newArena(): ArenaState {
+  return { rating: 1000, wins: 0, losses: 0, day: '', battlesToday: 0, leagueClaimedDay: '', refresh: 0 };
 }

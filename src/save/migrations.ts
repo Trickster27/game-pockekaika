@@ -1,4 +1,4 @@
-import { SAVE_VERSION, starterHeroes, defaultPresets, newSummonState } from './schema';
+import { SAVE_VERSION, starterHeroes, defaultPresets, newSummonState, newArena } from './schema';
 
 /** Сырые данные сейва неизвестной версии. */
 export type RawSave = Record<string, unknown> & { version?: unknown };
@@ -55,6 +55,15 @@ export const MIGRATIONS: Record<number, Migration> = {
     items: [],
     gearRng: ((typeof s.updatedAt === 'number' ? s.updatedAt : 1) ^ 0x51ed270b) >>> 0,
     dungeons: {},
+  }),
+  // v6: башня, арена, задания, награды за вход.
+  6: (s) => ({
+    ...s,
+    version: 6,
+    tower: { floor: 0 },
+    arena: newArena(),
+    quests: { day: '', progress: {}, claimed: [], chests: [] },
+    login: { lastClaimDay: '', claimed: 0 },
   }),
 };
 
