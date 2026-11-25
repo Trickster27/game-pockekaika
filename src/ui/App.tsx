@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { useOnline } from '@/state/online';
 import { refreshClan } from '@/state/clan';
 import { SummaryModal } from './components/SummaryModal';
+import { Tutorial } from './Tutorial';
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { TopBar } from './components/TopBar';
@@ -128,6 +129,7 @@ export function App() {
       {!full && <IdleModal />}
       <ConflictModal />
       <SummaryModal />
+      <Tutorial />
       {toast && (
         <div className="toast" role="status">
           {toast}

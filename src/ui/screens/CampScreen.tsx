@@ -4,9 +4,9 @@ import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
 import campMap from '@/assets/art/camp.svg?url';
 import { heroDef } from '@/content';
-import { CLAN, canClaimLogin, currentStage, IDLE_CAP_MS, pendingIdle, questsReady, teamHeroes } from '@/game';
+import { currentStage, IDLE_CAP_MS, pendingIdle, teamHeroes } from '@/game';
 import { formatDuration, useNow } from '../hooks';
-import { useClan } from '@/state/clan';
+import { useBadges } from '../badges';
 import './screens.css';
 import './camp.css';
 
@@ -45,18 +45,14 @@ export default function CampScreen() {
   const now = useNow(5000);
   const idle = pendingIdle(save, now);
   const team = teamHeroes(save).slice(0, 3);
-  const clan = useClan((s) => s.state);
+  const b = useBadges();
   const badge: Record<string, boolean> = {
-    clan:
-      !!clan &&
-      (!clan.me.today.checkin ||
-        clan.me.today.keys < CLAN.keysPerDay ||
-        clan.pendingKills.length > 0 ||
-        !!clan.yesterday ||
-        (clan.me.role !== 'member' && clan.requests.length > 0)),
-    quests: questsReady(save, now) > 0 || canClaimLogin(save, now),
-    summon: save.materials.scroll > 0,
+    quests: !!b?.quests,
+    summon: !!b?.summon,
+    clan: !!b?.clan,
+    arena: !!b?.arena,
   };
+
   const open = (s: ScreenId) => {
     platform().haptics.impact('light');
     platform().audio.play('tap');
@@ -80,7 +76,12 @@ export default function CampScreen() {
             <i style={{ width: `${(idle.ms / IDLE_CAP_MS) * 100}%` }} />
           </div>
         </div>
-        <button type="button" className="btn btn--gold" onClick={() => setIdleOpen(true)}>
+        <button
+          type="button"
+          className="btn btn--gold"
+          data-tut="idle-open"
+          onClick={() => setIdleOpen(true)}
+        >
           {t('idle.collect').split(' ')[0]}
         </button>
       </section>

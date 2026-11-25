@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { heroDef } from '@/content';
 import {
   trackQuest,
   PITY_EPIC,
@@ -14,7 +13,7 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
 import type { OwnedHero } from '@/save/schema';
-import { HeroTile } from '../components/HeroTile';
+import { SummonReveal } from '../components/SummonReveal';
 import { RARITY_COLOR } from '../colors';
 import { IconShard } from '../components/icons';
 import { MaterialIcon } from '../components/MaterialIcon';
@@ -27,7 +26,6 @@ export default function SummonScreen() {
   const save = useGame((s) => s.save)!;
   const updateSave = useGame((s) => s.updateSave);
   const showToast = useGame((s) => s.showToast);
-  const [charging, setCharging] = useState(false);
   const [result, setResult] = useState<{ heroes: OwnedHero[]; newIds: Set<string>; leg: boolean } | null>(
     null,
   );
@@ -35,7 +33,7 @@ export default function SummonScreen() {
   const p = platform();
 
   const doSummon = (count: 1 | 10, pay: SummonPay) => {
-    if (charging) return;
+    if (result) return;
     const ownedBefore = new Set(save.heroes.map((h) => h.heroId));
     let res: ReturnType<typeof summon> = 'noShards';
     updateSave((s) => {
@@ -49,19 +47,11 @@ export default function SummonScreen() {
     }
     const r = res as Exclude<ReturnType<typeof summon>, string>;
     setLast({ count, pay });
-    setCharging(true);
-    p.haptics.impact('medium');
-    setTimeout(() => {
-      const leg = r.rarities.includes('legendary');
-      setCharging(false);
-      setResult({
-        heroes: r.heroes,
-        newIds: new Set(r.heroes.map((h) => h.heroId).filter((id) => !ownedBefore.has(id))),
-        leg,
-      });
-      p.audio.play(leg ? 'victory' : 'reward');
-      if (leg) p.haptics.notify('success');
-    }, 900);
+    setResult({
+      heroes: r.heroes,
+      newIds: new Set(r.heroes.map((h) => h.heroId).filter((id) => !ownedBefore.has(id))),
+      leg: r.rarities.includes('legendary'),
+    });
   };
 
   const legLeft = PITY_LEGENDARY - save.summon.sinceLegendary;
@@ -71,7 +61,7 @@ export default function SummonScreen() {
     <>
       <h2 className="screen-title">{t('summon.title')}</h2>
       <p className="screen-sub">{t('summon.subtitle')}</p>
-      <section className={`altar${charging ? ' is-charging' : ''}`}>
+      <section className="altar">
         <svg className="crystal" viewBox="0 0 100 120" aria-hidden="true">
           <g stroke="#0a0710" strokeWidth="3" strokeLinejoin="round">
             <path d="M50 4 L20 50 L50 116 L80 50 Z" fill="#a37cff" />
@@ -105,6 +95,7 @@ export default function SummonScreen() {
           type="button"
           className="btn"
           disabled={save.materials.scroll < 1}
+          data-tut="summon-scroll"
           onClick={() => doSummon(1, 'scroll')}
         >
           {t('summon.scroll1')}
@@ -141,38 +132,15 @@ export default function SummonScreen() {
       </section>
 
       {result && (
-        <div className={`reveal${result.leg ? ' is-leg' : ''}`}>
-          <div className={`reveal-grid${result.heroes.length === 1 ? ' one' : ''}`}>
-            {result.heroes.map((h, i) => {
-              const d = heroDef(h.heroId);
-              return (
-                <div
-                  key={h.uid}
-                  className={`rcard rcard--${d.rarity}`}
-                  style={{ animationDelay: `${i * 0.12}s`, ['--rc' as string]: RARITY_COLOR[d.rarity] }}
-                >
-                  {result.newIds.has(h.heroId) && <span className="new">{t('summon.new')}</span>}
-                  <HeroTile def={d} owned={h} />
-                </div>
-              );
-            })}
-          </div>
-          <div className="btns">
-            <button type="button" className="btn" onClick={() => setResult(null)}>
-              {t('summon.done')}
-            </button>
-            <button
-              type="button"
-              className="btn btn--gold"
-              onClick={() => {
-                setResult(null);
-                if (last) doSummon(last.count, last.pay);
-              }}
-            >
-              {t('summon.again')}
-            </button>
-          </div>
-        </div>
+        <SummonReveal
+          heroes={result.heroes}
+          newIds={result.newIds}
+          onClose={() => setResult(null)}
+          onAgain={() => {
+            setResult(null);
+            if (last) doSummon(last.count, last.pay);
+          }}
+        />
       )}
     </>
   );

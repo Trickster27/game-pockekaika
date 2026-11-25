@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 9;
+export const SAVE_VERSION = 10;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -155,6 +155,8 @@ export interface SaveData {
   login: LoginState;
   /** Клан: монеты клана и покупки в клановом магазине (сам клан живёт на сервере). */
   clan: ClanSaveState;
+  /** Обучение: текущий шаг; done — пройдено или пропущено. */
+  tutorial: { step: number; done: boolean; rewarded?: boolean };
   stats: { battlesWon: number; battlesLost: number };
 }
 
@@ -209,6 +211,7 @@ export function createNewSave(now: number = Date.now()): SaveData {
     seq: STARTER_HERO_IDS.length + 1,
     materials: { xpTome: 5, starDust: 0, awakenStone: 0, scroll: 3, ore: 20 },
     clan: { coins: 0, bought: {} },
+    tutorial: { step: 0, done: false },
     presets: defaultPresets(),
     idle: { lastClaimAt: now },
     summon: newSummonState(now),

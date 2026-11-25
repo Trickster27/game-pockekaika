@@ -71,7 +71,13 @@ export function IdleModal() {
         <p style={{ fontSize: 12 }}>
           {t('idle.rates', { gold: formatNumber(rates.gold), xp: formatNumber(rates.heroXp) })}
         </p>
-        <button type="button" className="btn btn--gold" disabled={r.gold <= 0} onClick={collect}>
+        <button
+          data-tut="idle-claim"
+          type="button"
+          className="btn btn--gold"
+          disabled={r.gold <= 0}
+          onClick={collect}
+        >
           {r.gold > 0 ? t('idle.collect') : t('idle.nothing')}
         </button>
         <button type="button" className="btn" onClick={() => setOpen(false)}>

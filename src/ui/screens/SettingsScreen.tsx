@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { LOCALES, useT } from '@/i18n';
 import { useGame } from '@/state/store';
+import { restartTutorial } from '@/game';
 import { platform, saves } from '@/state/services';
 import type { BattleSpeed } from '@/save';
 import './screens.css';
@@ -149,6 +150,17 @@ export default function SettingsScreen() {
         </div>
         <button type="button" className="btn" onClick={testNotify}>
           {t('settings.notifyTest')}
+        </button>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            useGame.getState().updateSave((s) => restartTutorial(s));
+            useGame.getState().showToast(t('tutorial.restarted'));
+            useGame.getState().go('camp');
+          }}
+        >
+          {t('tutorial.restart')}
         </button>
         <div className="row">
           <span>{t('settings.language')}</span>

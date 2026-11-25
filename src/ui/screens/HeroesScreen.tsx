@@ -248,6 +248,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
           {t('heroes.useTome', { n: 1 })}
         </button>
         <button
+          data-tut="hero-tomax"
           type="button"
           className="btn"
           disabled={hero.level >= cap || save.materials.xpTome <= 0}

@@ -210,6 +210,14 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
         ),
       };
     })(),
+    tutorial: (() => {
+      const tu = isObj(raw.tutorial) ? raw.tutorial : {};
+      return {
+        step: Math.floor(num(tu.step, 0, 0, 100)),
+        done: tu.done === true,
+        ...(tu.rewarded === true ? { rewarded: true } : {}),
+      };
+    })(),
     gearRng: Math.floor(num(raw.gearRng, base.gearRng, 0)) >>> 0,
     dungeons: Object.fromEntries(
       Object.entries(isObj(raw.dungeons) ? raw.dungeons : {})

@@ -282,3 +282,24 @@
   text-align: center;
   border: 2px solid var(--lead);
 }
+.nav__ic {
+  position: relative;
+  display: inline-grid;
+  line-height: 0;
+}
+.nav__dot {
+  position: absolute;
+  top: -3px;
+  right: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--red, #e0503a);
+  border: 2px solid var(--lead, #0a0710);
+  animation: dot-pop 0.3s ease-out;
+}
+@keyframes dot-pop {
+  from {
+    transform: scale(0);
+  }
+}

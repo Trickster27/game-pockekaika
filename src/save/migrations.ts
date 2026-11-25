@@ -77,6 +77,12 @@ export const MIGRATIONS: Record<number, Migration> = {
       ? s.items.map((i) => (i && typeof i === 'object' ? { ...(i as object), locked: false } : i))
       : [],
   }),
+  // v10: обучение. Тем, кто уже играл, оно не показывается.
+  10: (s) => {
+    const st = (s.stats ?? {}) as { battlesWon?: number; battlesLost?: number };
+    const played = (st.battlesWon ?? 0) + (st.battlesLost ?? 0) > 0;
+    return { ...s, version: 10, tutorial: { step: 0, done: played } };
+  },
 };
 
 export class SaveVersionError extends Error {}
