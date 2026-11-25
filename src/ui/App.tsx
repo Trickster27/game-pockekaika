@@ -5,6 +5,7 @@ import { TopBar } from './components/TopBar';
 import { BottomNav } from './components/BottomNav';
 import { IconCrystal } from './components/icons';
 import { IdleModal } from './components/IdleModal';
+import { ConflictModal } from './components/ConflictModal';
 import './screens/battle.css';
 import './screens/summon.css';
 import './app.css';
@@ -23,6 +24,9 @@ const DungeonsScreen = lazy(() => import('./screens/DungeonsScreen'));
 const TowerScreen = lazy(() => import('./screens/TowerScreen'));
 const ArenaScreen = lazy(() => import('./screens/ArenaScreen'));
 const QuestsScreen = lazy(() => import('./screens/QuestsScreen'));
+const AccountScreen = lazy(() => import('./screens/AccountScreen'));
+const FriendsScreen = lazy(() => import('./screens/FriendsScreen'));
+const ChatScreen = lazy(() => import('./screens/ChatScreen'));
 const PlaceholderScreen = lazy(() => import('./screens/PlaceholderScreen'));
 
 function Splash() {
@@ -64,6 +68,12 @@ function Screen() {
       return <ArenaScreen />;
     case 'quests':
       return <QuestsScreen />;
+    case 'account':
+      return <AccountScreen />;
+    case 'friends':
+      return <FriendsScreen />;
+    case 'chat':
+      return <ChatScreen />;
     case 'placeholder':
       return <PlaceholderScreen />;
   }
@@ -90,7 +100,7 @@ export function App() {
       </div>
     );
   }
-  const full = screen === 'battle';
+  const full = screen === 'battle' || screen === 'chat';
   return (
     <div className="app">
       {full ? <div /> : <TopBar />}
@@ -101,6 +111,7 @@ export function App() {
       </main>
       {full ? <div /> : <BottomNav />}
       {!full && <IdleModal />}
+      <ConflictModal />
       {toast && (
         <div className="toast" role="status">
           {toast}

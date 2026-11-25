@@ -107,4 +107,6 @@ export async function boot(): Promise<void> {
   manager.update((s) => trackQuest(s, 'login'));
   useGame.setState({ ready: true, save: manager.data, loadSource: source });
   checkIdle();
+  // Онлайн подключаем после загрузки сейва; без сети игра работает как раньше.
+  void import('./online').then((m) => m.initOnline()).catch((e) => console.warn('[online]', e));
 }

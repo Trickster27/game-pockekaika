@@ -17,6 +17,9 @@ export type ScreenId =
   | 'tower'
   | 'arena'
   | 'quests'
+  | 'account'
+  | 'friends'
+  | 'chat'
   | 'settings'
   | 'placeholder';
 
