@@ -33,6 +33,7 @@ type Sort = 'power' | 'level' | 'rarity';
 export default function HeroesScreen() {
   const t = useT();
   const save = useGame((s) => s.save)!;
+  const go = useGame((s) => s.go);
   const [faction, setFaction] = useState<Faction | 'all'>('all');
   const [element, setElement] = useState<Element | 'all'>('all');
   const [rarity, setRarity] = useState<Rarity | 'all'>('all');
@@ -72,7 +73,17 @@ export default function HeroesScreen() {
 
   return (
     <>
-      <h2 className="screen-title">{t('heroes.title')}</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <h2 className="screen-title">{t('heroes.title')}</h2>
+        <button
+          type="button"
+          className="btn btn--gold"
+          style={{ marginLeft: 'auto' }}
+          onClick={() => go('codex')}
+        >
+          📖 {t('codex.button')}
+        </button>
+      </div>
       <p className="screen-sub">{t('heroes.owned', { n: distinct, total: HEROES.length })}</p>
       <div className="filters">
         <div className="chips">

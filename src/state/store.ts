@@ -9,6 +9,7 @@ export type ScreenId =
   | 'campaign'
   | 'battle'
   | 'heroes'
+  | 'codex'
   | 'team'
   | 'summon'
   | 'bag'

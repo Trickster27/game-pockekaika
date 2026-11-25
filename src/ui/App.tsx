@@ -16,6 +16,7 @@ const SettingsScreen = lazy(() => import('./screens/SettingsScreen'));
 const BattleScreen = lazy(() => import('./screens/BattleScreen'));
 const CampaignScreen = lazy(() => import('./screens/CampaignScreen'));
 const HeroesScreen = lazy(() => import('./screens/HeroesScreen'));
+const CodexScreen = lazy(() => import('./screens/CodexScreen'));
 const TeamScreen = lazy(() => import('./screens/TeamScreen'));
 const SummonScreen = lazy(() => import('./screens/SummonScreen'));
 const ShopScreen = lazy(() => import('./screens/ShopScreen'));
@@ -52,6 +53,8 @@ function Screen() {
       return <CampaignScreen />;
     case 'heroes':
       return <HeroesScreen />;
+    case 'codex':
+      return <CodexScreen />;
     case 'team':
       return <TeamScreen />;
     case 'summon':
