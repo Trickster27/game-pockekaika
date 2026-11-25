@@ -9,7 +9,7 @@ import {
   type GearStat,
   type Slot,
 } from '@/content/gear';
-import { equip, heroItems, mainValue, setCounts } from '@/game';
+import { autoEquip, equip, heroItems, mainValue, setCounts } from '@/game';
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
@@ -37,7 +37,25 @@ export function HeroGear({ hero }: { hero: OwnedHero }) {
     : [];
   return (
     <section className="card">
-      <h3 style={{ fontSize: 16, marginBottom: 8 }}>{t('heroes.gear')}</h3>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <h3 style={{ fontSize: 16 }}>{t('heroes.gear')}</h3>
+        <button
+          type="button"
+          className="btn"
+          title={t('gear.autoHint')}
+          style={{ marginLeft: 'auto', minHeight: 34, fontSize: 12 }}
+          onClick={() => {
+            let n = 0;
+            updateSave((s) => {
+              n = autoEquip(s, hero.uid);
+            });
+            useGame.getState().showToast(n ? t('gear.autoDone', { n }) : t('gear.autoNone'));
+            platform().haptics.impact(n ? 'medium' : 'light');
+          }}
+        >
+          ✦ {t('gear.auto')}
+        </button>
+      </div>
       <div className="gear6">
         {SLOTS.map((slot) => {
           const it = bySlot.get(slot);

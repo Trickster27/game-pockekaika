@@ -3,7 +3,8 @@ import { CHAPTERS, enemyDef, type StageDef } from '@/content';
 import { chapterStars, currentStage, isStageUnlocked, stagePower, teamPower } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
-import { startCampaignStage } from '@/state/actions';
+import { canSweepStage, startCampaignStage, sweepCampaignStage } from '@/state/actions';
+import { SweepButtons } from '../components/SummaryModal';
 import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
 import { IconEnergy, IconGold, IconShard } from '../components/icons';
@@ -217,6 +218,9 @@ function StagePanel({ stage, teamPow }: { stage: StageDef; teamPow: number }) {
           {t('campaign.fight')} · <IconEnergy /> {stage.energy}
         </button>
       </div>
+      {canSweepStage(stage.id) && (
+        <SweepButtons hint={t('sweep.hint')} onSweep={(n) => sweepCampaignStage(stage.id, n)} />
+      )}
     </section>
   );
 }

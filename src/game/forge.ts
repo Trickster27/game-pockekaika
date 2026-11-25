@@ -14,7 +14,7 @@ export const CRAFT_COST: Record<Rarity, { gold: number; ore: number }> = {
 
 const SALVAGE_ORE: Record<Rarity, number> = { common: 4, rare: 10, epic: 24, legendary: 60 };
 
-export type ForgeError = 'noGold' | 'noOre' | 'full' | 'notFound';
+export type ForgeError = 'noGold' | 'noOre' | 'full' | 'notFound' | 'locked';
 
 /** Создать предмет выбранного слота, сета и редкости. Основная и доп. характеристики — случайные. */
 export function craftItem(save: SaveData, slot: Slot, set: SetId, rarity: Rarity): Item | ForgeError {
@@ -39,6 +39,7 @@ export function salvageValue(item: Item): number {
 export function salvageItem(save: SaveData, uid: string): number | ForgeError {
   const item = save.items.find((i) => i.uid === uid);
   if (!item) return 'notFound';
+  if (item.locked) return 'locked';
   const ore = salvageValue(item);
   save.items = save.items.filter((i) => i !== item);
   save.materials.ore += ore;

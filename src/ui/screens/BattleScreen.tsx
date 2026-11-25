@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Battle, chooseAction, type Action, type BattleResult, type BattleUnit } from '@/core/battle';
 import { db } from '@/content';
 import { formatNumber, useT } from '@/i18n';
-import { useGame, type RewardLine } from '@/state/store';
+import { useGame, type RepeatStop, type RewardLine } from '@/state/store';
+import { mergeRewardLines } from '@/state/rewards';
+import { INVENTORY_LIMIT } from '@/game';
 import { platform } from '@/state/services';
 import type { BattleView } from '@/render/pixi/battle/BattleView';
 import { unitArtUrl } from '@/assets/art';
@@ -48,6 +50,9 @@ export default function BattleScreen() {
   const battleKey = useGame((s) => s.battleKey);
   const go = useGame((s) => s.go);
   const settings = useGame((s) => s.save?.settings);
+  const updateSave = useGame((s) => s.updateSave);
+  const repeat = useGame((s) => s.repeat);
+  const setRepeat = useGame((s) => s.setRepeat);
   const host = useRef<HTMLDivElement>(null);
   const viewRef = useRef<BattleView | null>(null);
   const battleRef = useRef<Battle | null>(null);
@@ -197,7 +202,35 @@ export default function BattleScreen() {
         p.haptics.notify('success');
       } else p.haptics.notify('error');
       await view.wait(500);
-      if (alive) setResult({ r, lines });
+      if (!alive) return;
+      // Серия повторов: следующий бой запускается сам, пока не сработает условие остановки.
+      const rep = useGame.getState().repeat;
+      if (rep && !rep.stop) {
+        const next = {
+          ...rep,
+          done: rep.done + 1,
+          wins: rep.wins + (r.winner === 'ally' ? 1 : 0),
+          lines: [...rep.lines, lines],
+        };
+        const stop: RepeatStop | undefined =
+          r.winner !== 'ally'
+            ? 'defeat'
+            : rep.stopRequested
+              ? 'manual'
+              : next.done >= next.total
+                ? 'done'
+                : (useGame.getState().save?.items.length ?? 0) >= INVENTORY_LIMIT
+                  ? 'full'
+                  : undefined;
+        if (!stop) {
+          useGame.getState().setRepeat(next);
+          await view.wait(600);
+          if (!alive) return;
+          if (req.retry?.()) return;
+          useGame.getState().setRepeat({ ...next, stop: 'energy' });
+        } else useGame.getState().setRepeat({ ...next, stop });
+      }
+      setResult({ r, lines });
     })();
     return () => {
       alive = false;
@@ -222,6 +255,10 @@ export default function BattleScreen() {
     const v = !autoRef.current;
     autoRef.current = v;
     setAuto(v);
+    // Выбор запоминается для следующих боёв.
+    updateSave((s) => {
+      s.settings.autoBattle = v;
+    });
     const p = pendingRef.current;
     const b = battleRef.current;
     if (v && p && b) finishPending(chooseAction(b, p.unit));
@@ -278,7 +315,17 @@ export default function BattleScreen() {
         >
           {t('battle.auto')}
         </button>
-        <button className="chip" type="button" onClick={() => setSpeed((s) => (s >= 3 ? 1 : s + 1))}>
+        <button
+          className="chip"
+          type="button"
+          onClick={() => {
+            const v = (speed >= 3 ? 1 : speed + 1) as 1 | 2 | 3;
+            setSpeed(v);
+            updateSave((s) => {
+              s.settings.battleSpeed = v;
+            });
+          }}
+        >
           ×{speed}
         </button>
         <button
@@ -290,6 +337,19 @@ export default function BattleScreen() {
           {paused ? '▶' : 'II'}
         </button>
       </div>
+      {repeat && !repeat.stop && (
+        <div className="rep-bar">
+          <span>{t('repeat.progress', { n: repeat.done + 1, total: repeat.total })}</span>
+          <button
+            type="button"
+            className="chip"
+            disabled={repeat.stopRequested}
+            onClick={() => setRepeat({ ...repeat, stopRequested: true })}
+          >
+            {repeat.stopRequested ? t('repeat.stopping') : t('repeat.stopBtn')}
+          </button>
+        </div>
+      )}
       <div className="bs__order" aria-label="Очередь ходов">
         {order.map((u, i) => (
           <span
@@ -389,13 +449,15 @@ export default function BattleScreen() {
         <div className="overlay">
           <div className={`res${result.r.winner === 'ally' || req.mode === 'boss' ? '' : ' res--lose'}`}>
             <h2>
-              {req.resultTitle
-                ? req.resultTitle(result.r)
-                : result.r.winner === 'ally'
-                  ? t('battle.victory')
-                  : result.r.winner === 'draw'
-                    ? t('battle.draw')
-                    : t('battle.defeat')}
+              {repeat?.stop
+                ? t('repeat.title', { n: repeat.done })
+                : req.resultTitle
+                  ? req.resultTitle(result.r)
+                  : result.r.winner === 'ally'
+                    ? t('battle.victory')
+                    : result.r.winner === 'draw'
+                      ? t('battle.draw')
+                      : t('battle.defeat')}
             </h2>
             {req.mode === 'boss' ? null : result.r.winner === 'ally' ? (
               <div className="stars">
@@ -406,8 +468,13 @@ export default function BattleScreen() {
             ) : (
               <p>{t('battle.defeatHint')}</p>
             )}
+            {repeat?.stop && (
+              <p className="rep-note">
+                {t(`repeat.stop.${repeat.stop}`, { n: repeat.done, wins: repeat.wins })}
+              </p>
+            )}
             <div className="rw-list">
-              {result.lines.map((l) => (
+              {(repeat?.stop ? mergeRewardLines(repeat.lines) : result.lines).map((l) => (
                 <div className="rw-line" key={l.label}>
                   <RewardIcon icon={l.icon} />
                   <span>{l.label}</span>
@@ -422,9 +489,37 @@ export default function BattleScreen() {
                 </button>
               )}
               {req.retry && (
-                <button type="button" className="btn" onClick={() => req.retry?.()}>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    setRepeat(null);
+                    req.retry?.();
+                  }}
+                >
                   {t('battle.retry')}
                 </button>
+              )}
+              {req.repeatable && req.retry && result.r.winner === 'ally' && (
+                <div className="rep-pick">
+                  <span>{t('repeat.label')}</span>
+                  {[5, 10, 30].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      className="chip"
+                      onClick={() => {
+                        // Текущий бой уже засчитан: серия продолжает его.
+                        setRepeat({ total: n, done: 1, wins: 1, lines: [result.lines] });
+                        autoRef.current = true;
+                        setAuto(true);
+                        req.retry?.();
+                      }}
+                    >
+                      ×{n}
+                    </button>
+                  ))}
+                </div>
               )}
               <button type="button" className="btn" onClick={() => go(req.returnTo)}>
                 {t('battle.back')}

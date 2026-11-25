@@ -41,6 +41,8 @@ export interface BattleRequest {
   returnTo: ScreenId;
   /** Применить результат к сейву и вернуть строки наград для экрана итогов (может ждать сервер). */
   finish: (result: BattleResult) => RewardLine[] | Promise<RewardLine[]>;
+  /** Можно запускать серией повторов (кампания, подземелья). */
+  repeatable?: boolean;
   /** Бой с боссом на время: показывает ходы босса и урон, выход засчитывает урон. */
   mode?: 'boss';
   /** Свой заголовок итогов. */
@@ -68,6 +70,24 @@ interface GameState {
   startBattle: (req: BattleRequest) => void;
   updateSave: (mutator: (draft: SaveData) => void) => void;
   showToast: (text: string) => void;
+  /** Сводка (зачистка, серия повторов). */
+  summary: { title: string; note?: string; lines: RewardLine[] } | null;
+  showSummary: (s: { title: string; note?: string; lines: RewardLine[] } | null) => void;
+  /** Серия повторов боя. */
+  repeat: RepeatState | null;
+  setRepeat: (r: RepeatState | null) => void;
+}
+
+export type RepeatStop = 'done' | 'energy' | 'defeat' | 'full' | 'manual';
+export interface RepeatState {
+  /** Сколько боёв всего в серии и сколько уже закончено. */
+  total: number;
+  done: number;
+  wins: number;
+  lines: RewardLine[][];
+  /** Игрок нажал «Стоп»: серия закончится после текущего боя. */
+  stopRequested?: boolean;
+  stop?: RepeatStop;
 }
 
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
@@ -83,9 +103,13 @@ export const useGame = create<GameState>((set) => ({
   toast: null,
   idleOpen: false,
   setIdleOpen: (v) => set({ idleOpen: v }),
-  go: (screen) => set({ screen }),
+  go: (screen) => set({ screen, repeat: null }),
   openPlaceholder: (titleKey, stage) => set({ screen: 'placeholder', placeholder: { titleKey, stage } }),
   startBattle: (req) => set((s) => ({ battle: req, battleKey: s.battleKey + 1, screen: 'battle' })),
+  summary: null,
+  showSummary: (summary) => set({ summary }),
+  repeat: null,
+  setRepeat: (repeat) => set({ repeat }),
   updateSave: (mutator) => {
     const next = saves().update(mutator);
     set({ save: next });

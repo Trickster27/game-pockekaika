@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 8;
+export const SAVE_VERSION = 9;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -82,8 +82,11 @@ export interface Item {
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
   level: number;
   main: string;
-  subs: { stat: string; value: number; rolls: number }[];
+  /** Доп. характеристики; reforged — эту перековали (перековать можно одну на предмет). */
+  subs: { stat: string; value: number; rolls: number; reforged?: boolean }[];
   heroUid: string | null;
+  /** Под замком: нельзя продать или разобрать (в том числе массово). */
+  locked: boolean;
 }
 
 export interface ArenaState {

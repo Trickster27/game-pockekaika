@@ -1,5 +1,12 @@
+import { useState } from 'react';
 import { heroDef } from '@/content';
+import { STAT_NAME, formatStat, type GearStat } from '@/content/gear';
 import {
+  REFORGE_MIN_LEVEL,
+  canReforge,
+  reforgeCost,
+  reforgeSub,
+  toggleLock,
   salvageItem,
   salvageValue,
   trackQuest,
@@ -57,6 +64,21 @@ export function ItemSheet({ uid, onClose }: { uid: string; onClose: () => void }
         )}
         <button
           type="button"
+          className={`btn${item.locked ? ' is-on' : ''}`}
+          onClick={() => {
+            let v: boolean | null = null;
+            updateSave((s) => {
+              v = toggleLock(s, uid);
+            });
+            showToast(v ? t('gear.lockedOn') : t('gear.lockedOff'));
+            p.haptics.impact('light');
+          }}
+        >
+          {item.locked ? `🔓 ${t('gear.unlock')}` : `🔒 ${t('gear.lock')}`}
+        </button>
+        {canReforge(item) && <Reforge uid={uid} />}
+        <button
+          type="button"
           className="btn btn--gold"
           disabled={item.level >= MAX_ITEM_LEVEL}
           onClick={upgrade}
@@ -78,6 +100,7 @@ export function ItemSheet({ uid, onClose }: { uid: string; onClose: () => void }
           <button
             type="button"
             className="btn"
+            disabled={item.locked}
             onClick={() => {
               const ore = salvageValue(item);
               updateSave((s) => {
@@ -92,6 +115,7 @@ export function ItemSheet({ uid, onClose }: { uid: string; onClose: () => void }
           <button
             type="button"
             className="btn btn--danger"
+            disabled={item.locked}
             onClick={() => {
               const price = sellPrice(item);
               updateSave((s) => {
@@ -105,6 +129,61 @@ export function ItemSheet({ uid, onClose }: { uid: string; onClose: () => void }
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Перековка одной доп. характеристики (с +12, одна на предмет). */
+function Reforge({ uid }: { uid: string }) {
+  const t = useT();
+  const save = useGame((s) => s.save)!;
+  const updateSave = useGame((s) => s.updateSave);
+  const showToast = useGame((s) => s.showToast);
+  const [open, setOpen] = useState(false);
+  const item = save.items.find((i) => i.uid === uid)!;
+  const cost = reforgeCost(item);
+  const run = (idx: number) => {
+    let r: ReturnType<typeof reforgeSub> = 'notFound';
+    updateSave((s) => {
+      r = reforgeSub(s, uid, idx);
+    });
+    const res = r as ReturnType<typeof reforgeSub>;
+    if (typeof res === 'string') {
+      showToast(t(`gear.err.${res}`));
+      platform().haptics.notify('warning');
+      return;
+    }
+    setOpen(false);
+    const sub = res.subs[idx]!;
+    showToast(t('gear.reforged', { stat: STAT_NAME[sub.stat as GearStat] }));
+    platform().audio.play('reward');
+    platform().haptics.notify('success');
+  };
+  return (
+    <div className="reforge">
+      <button type="button" className="btn" onClick={() => setOpen((o) => !o)}>
+        ⚒ {t('gear.reforge')}
+      </button>
+      {open && (
+        <>
+          <small>{t('gear.reforgeHint', { n: REFORGE_MIN_LEVEL })}</small>
+          <small>{t('gear.reforgePick')}</small>
+          <div className="reforge__subs">
+            {item.subs.map((s, i) => (
+              <button
+                key={s.stat}
+                type="button"
+                className="chip"
+                disabled={save.currencies.gold < cost.gold || save.materials.ore < cost.ore}
+                onClick={() => run(i)}
+              >
+                {STAT_NAME[s.stat as GearStat]} {formatStat(s.stat as GearStat, s.value)}
+              </button>
+            ))}
+          </div>
+          <small>{t('gear.reforgeBtn', { gold: formatNumber(cost.gold), ore: cost.ore })}</small>
+        </>
+      )}
     </div>
   );
 }

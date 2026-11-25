@@ -46,6 +46,7 @@ export function generateItem(save: SaveData, rng: Rng, o: { slot?: Slot; set: Se
     main: rng.pick(SLOT_MAIN[slot]),
     subs: [],
     heroUid: null,
+    locked: false,
   };
   for (let i = 0; i < RARITY_INDEX[o.rarity]; i++) {
     const stat = pickNewSub(rng, item);
@@ -62,7 +63,7 @@ export function sellPrice(item: Item): number {
   return Math.round(80 * (1 + RARITY_INDEX[item.rarity]) * (1 + item.level * 0.3));
 }
 
-export type GearError = 'notFound' | 'maxLevel' | 'noGold' | 'full';
+export type GearError = 'notFound' | 'maxLevel' | 'noGold' | 'full' | 'locked';
 
 /** Улучшение +1. На +3/+6/+9/+12 добавляется новая доп. характеристика или растёт одна из имеющихся. */
 export function upgradeItem(save: SaveData, uid: string): Item | GearError {
@@ -91,6 +92,7 @@ export function upgradeItem(save: SaveData, uid: string): Item | GearError {
 export function sellItem(save: SaveData, uid: string): number | GearError {
   const item = save.items.find((i) => i.uid === uid);
   if (!item) return 'notFound';
+  if (item.locked) return 'locked';
   const price = sellPrice(item);
   save.items = save.items.filter((i) => i !== item);
   save.currencies.gold += price;

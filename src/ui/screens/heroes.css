@@ -701,3 +701,90 @@
   font-size: 12px;
   color: var(--muted);
 }
+.glist .lk {
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  font-size: 11px;
+  z-index: 1;
+}
+.glist .sc {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  padding: 0 4px;
+  border-radius: 6px;
+  background: rgba(10, 8, 16, 0.85);
+  font: 700 10px/15px var(--body);
+  color: var(--gold);
+}
+.idet__head {
+  position: relative;
+}
+.idet__score {
+  margin-left: auto;
+  display: grid;
+  justify-items: center;
+  line-height: 1;
+}
+.idet__score b {
+  font: 700 20px var(--display);
+  color: var(--gold);
+}
+.idet__score small {
+  font-size: 10px;
+  color: var(--muted);
+}
+.idet__sub {
+  display: grid !important;
+  grid-template-columns: 1fr 48px auto;
+  align-items: center;
+  gap: 8px;
+}
+.idet__pips {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.idet__pips em {
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: var(--gold);
+}
+.idet__q {
+  height: 5px;
+  border-radius: 3px;
+  background: #2a2236;
+  overflow: hidden;
+}
+.idet__q i {
+  display: block;
+  height: 100%;
+}
+.idet__ref {
+  margin-left: 6px;
+  font-size: 10px;
+  color: #c79cff;
+}
+.idet__sub.is-reforged b {
+  color: #c79cff;
+}
+.reforge {
+  display: grid;
+  gap: 6px;
+}
+.reforge small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.reforge__subs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.btn.is-on {
+  border-color: var(--gold);
+  color: var(--gold);
+}

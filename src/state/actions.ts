@@ -22,6 +22,10 @@ import {
   teamHeroes,
 } from '@/game';
 import { formatNumber, tr } from '@/i18n';
+import { simulate, type BattleResult } from '@/core/battle';
+import { db } from '@/content';
+import { INVENTORY_LIMIT } from '@/game';
+import { mergeRewardLines } from './rewards';
 import { useGame, type RewardLine } from './store';
 import {
   trackQuest,
@@ -69,29 +73,8 @@ export function startCampaignStage(stageId: string): boolean {
       newSeed(),
     ),
     returnTo: 'campaign',
-    finish: (result) => {
-      const lines: RewardLine[] = [];
-      useGame.getState().updateSave((s) => {
-        const r = applyStageResult(s, stageId, result);
-        if (result.winner === 'ally') trackQuest(s, 'campaign');
-        if (r.gold)
-          lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
-        if (r.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
-        lines.push({ icon: 'xp', label: tr('rewards.heroXp'), value: `+${formatNumber(r.heroXp)}` });
-        if (r.levelUps.length)
-          lines.push({ icon: 'level', label: tr('rewards.levelUp'), value: `${r.levelUps.length} гер.` });
-        if (r.playerLevelUps)
-          lines.push({ icon: 'star', label: tr('rewards.playerLevel'), value: `${s.player.level}` });
-        for (const it of r.items)
-          lines.push({
-            icon: 'item',
-            label: `${SLOT_NAME[it.slot as Slot]} · ${SETS.find((x) => x.id === it.set)?.name ?? ''}`,
-            value: tr(`labels.rarity.${it.rarity}`),
-          });
-        if (r.ore) lines.push({ icon: 'star', label: tr('labels.material.ore'), value: `+${r.ore}` });
-      });
-      return lines;
-    },
+    repeatable: true,
+    finish: (result) => campaignFinish(stageId, result),
     next: () => {
       const n = nextStage(stageId);
       return !!n && startCampaignStage(n.id);
@@ -132,30 +115,161 @@ export function startDungeon(id: DungeonId, level: number): boolean {
       newSeed(),
     ),
     returnTo: 'dungeons',
-    finish: (result) => {
-      const lines: RewardLine[] = [];
-      useGame.getState().updateSave((s) => {
-        const r = applyDungeonResult(s, id, level, result);
-        if (result.winner === 'ally') trackQuest(s, 'dungeon');
-        if (r.gold)
-          lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
-        for (const it of r.items)
-          lines.push({
-            icon: 'item',
-            label: `${SLOT_NAME[it.slot as Slot]} · ${SETS.find((x) => x.id === it.set)?.name ?? ''}`,
-            value: tr(`labels.rarity.${it.rarity}`),
-          });
-        for (const [m, n] of Object.entries(r.materials))
-          lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
-        if (r.firstClear) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: '+20' });
-      });
-      return lines;
-    },
+    repeatable: true,
+    finish: (result) => dungeonFinish(id, level, result),
     next: () => startDungeon(id, Math.min(DUNGEON_LEVELS, level + 1)),
     nextLabel: tr('battle.next'),
     retry: () => startDungeon(id, level),
   });
   return true;
+}
+
+function itemLine(it: { slot: string; set: string; rarity: string }): RewardLine {
+  return {
+    icon: 'item',
+    label: `${SLOT_NAME[it.slot as Slot]} · ${SETS.find((x) => x.id === it.set)?.name ?? ''}`,
+    value: tr(`labels.rarity.${it.rarity}`),
+  };
+}
+
+/** Итог этапа кампании: применяет результат к сейву и возвращает строки наград. */
+export function campaignFinish(stageId: string, result: BattleResult): RewardLine[] {
+  const lines: RewardLine[] = [];
+  useGame.getState().updateSave((s) => {
+    const r = applyStageResult(s, stageId, result);
+    if (result.winner === 'ally') trackQuest(s, 'campaign');
+    if (r.gold) lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
+    if (r.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
+    lines.push({ icon: 'xp', label: tr('rewards.heroXp'), value: `+${formatNumber(r.heroXp)}` });
+    if (r.levelUps.length)
+      lines.push({ icon: 'level', label: tr('rewards.levelUp'), value: `${r.levelUps.length} гер.` });
+    if (r.playerLevelUps)
+      lines.push({ icon: 'star', label: tr('rewards.playerLevel'), value: `${s.player.level}` });
+    for (const it of r.items) lines.push(itemLine(it));
+    if (r.ore) lines.push({ icon: 'star', label: tr('labels.material.ore'), value: `+${r.ore}` });
+  });
+  return lines;
+}
+
+/** Итог уровня подземелья. */
+export function dungeonFinish(id: DungeonId, level: number, result: BattleResult): RewardLine[] {
+  const lines: RewardLine[] = [];
+  useGame.getState().updateSave((s) => {
+    const r = applyDungeonResult(s, id, level, result);
+    if (result.winner === 'ally') trackQuest(s, 'dungeon');
+    if (r.gold) lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
+    for (const it of r.items) lines.push(itemLine(it));
+    for (const [m, n] of Object.entries(r.materials))
+      lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
+    if (r.firstClear) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: '+20' });
+  });
+  return lines;
+}
+
+export type SweepStop = 'done' | 'energy' | 'defeat' | 'full';
+
+/**
+ * Зачистка: бои считаются мгновенно, без анимации, по тем же правилам и наградам.
+ * Доступна для этапов на 3★ и пройденных уровней подземелий.
+ */
+function sweep(
+  times: number,
+  cost: number,
+  run: (seed: number) => { result: BattleResult; lines: RewardLine[] },
+  title: string,
+): { done: number; stop: SweepStop } {
+  const g = useGame.getState();
+  const all: RewardLine[][] = [];
+  let stop: SweepStop = 'done';
+  let done = 0;
+  for (let i = 0; i < times; i++) {
+    if (useGame.getState().save!.items.length >= INVENTORY_LIMIT) {
+      stop = 'full';
+      break;
+    }
+    let ok = false;
+    g.updateSave((s) => {
+      ok = spendEnergy(s.currencies, cost, Date.now());
+    });
+    if (!ok) {
+      stop = 'energy';
+      break;
+    }
+    const { result, lines } = run(newSeed());
+    all.push(lines);
+    done++;
+    if (result.winner !== 'ally') {
+      stop = 'defeat';
+      break;
+    }
+  }
+  g.showSummary({
+    title,
+    note: tr(`sweep.stop.${stop}`, { n: done }),
+    lines: mergeRewardLines(all),
+  });
+  return { done, stop };
+}
+
+export function canSweepStage(stageId: string): boolean {
+  return (useGame.getState().save?.campaign.stars[stageId] ?? 0) >= 3;
+}
+
+export function sweepCampaignStage(stageId: string, times: number) {
+  const stage = stageById(stageId)!;
+  const save = useGame.getState().save!;
+  const team = teamHeroes(save);
+  if (!team.length) {
+    useGame.getState().showToast(tr('campaign.noTeam'));
+    return null;
+  }
+  return sweep(
+    times,
+    stage.energy,
+    (seed) => {
+      const sv = useGame.getState().save!;
+      const { result } = simulate(
+        makeSetup(
+          teamHeroes(sv).map((h) => heroSpec(h, sv)),
+          stage.waves,
+          seed,
+        ),
+        db,
+      );
+      return { result, lines: campaignFinish(stageId, result) };
+    },
+    tr('sweep.title', { name: `${stage.id} · ${stage.name}` }),
+  );
+}
+
+export function canSweepDungeon(id: DungeonId, level: number): boolean {
+  return (useGame.getState().save?.dungeons[id] ?? 0) >= level;
+}
+
+export function sweepDungeon(id: DungeonId, level: number, times: number) {
+  const d = dungeonDef(id);
+  const save = useGame.getState().save!;
+  if (!teamHeroes(save).length) {
+    useGame.getState().showToast(tr('campaign.noTeam'));
+    return null;
+  }
+  return sweep(
+    times,
+    dungeonEnergy(level),
+    (seed) => {
+      const sv = useGame.getState().save!;
+      const { result } = simulate(
+        makeSetup(
+          teamHeroes(sv).map((h) => heroSpec(h, sv)),
+          dungeonWaves(d, level),
+          seed,
+        ),
+        db,
+      );
+      return { result, lines: dungeonFinish(id, level, result) };
+    },
+    tr('sweep.title', { name: `${d.name} · ${tr('dungeons.level', { n: level })}` }),
+  );
 }
 
 /** Этаж башни. Энергию не тратит. */

@@ -69,6 +69,14 @@ export const MIGRATIONS: Record<number, Migration> = {
   7: (s) => ({ ...s, version: 7, materials: { ...(s.materials as Record<string, number>), ore: 20 } }),
   // v8: клановые монеты и покупки в клановом магазине.
   8: (s) => ({ ...s, version: 8, clan: { coins: 0, bought: {} } }),
+  // v9: замок на предметах.
+  9: (s) => ({
+    ...s,
+    version: 9,
+    items: Array.isArray(s.items)
+      ? s.items.map((i) => (i && typeof i === 'object' ? { ...(i as object), locked: false } : i))
+      : [],
+  }),
 };
 
 export class SaveVersionError extends Error {}

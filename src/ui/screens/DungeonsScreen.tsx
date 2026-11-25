@@ -11,7 +11,8 @@ import {
 import { isDungeonLevelUnlocked, teamPower } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
-import { startDungeon } from '@/state/actions';
+import { canSweepDungeon, startDungeon, sweepDungeon } from '@/state/actions';
+import { SweepButtons } from '../components/SummaryModal';
 import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
 import { IconEnergy } from '../components/icons';
@@ -117,6 +118,9 @@ export default function DungeonsScreen() {
         >
           {t('dungeons.fight')} · <IconEnergy /> {dungeonEnergy(level)}
         </button>
+        {canSweepDungeon(id, level) && (
+          <SweepButtons hint={t('sweep.dhint')} onSweep={(n) => sweepDungeon(id, level, n)} />
+        )}
       </section>
     </>
   );

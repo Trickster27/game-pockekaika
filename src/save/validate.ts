@@ -55,9 +55,11 @@ function normalizeItems(v: unknown, heroUids: Set<string>): Item[] {
               stat: x.stat as string,
               value: num(x.value, 0, 0),
               rolls: Math.round(num(x.rolls, 1, 1, 6)),
+              ...(x.reforged === true ? { reforged: true } : {}),
             }))
         : [],
       heroUid,
+      locked: it.locked === true,
     });
   }
   return out;

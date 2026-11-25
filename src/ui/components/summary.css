@@ -1,0 +1,52 @@
+.sum-bg {
+  position: fixed;
+  z-index: 60;
+}
+.sum-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.sum-list {
+  display: grid;
+  gap: 6px;
+  max-height: 46vh;
+  overflow-y: auto;
+}
+.sum-line,
+.sheet2 .rw-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a1522;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.sum-line svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+.sum-line span {
+  flex: 1;
+  color: var(--muted);
+  font-size: 13px;
+}
+.sum-line b {
+  font-variant-numeric: tabular-nums;
+}
+.sweep {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.sweep span {
+  font-size: 13px;
+  color: var(--muted);
+  margin-right: auto;
+}
+.sweep .chip {
+  min-width: 46px;
+}
