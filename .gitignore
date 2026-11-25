@@ -1,0 +1,22 @@
+node_modules
+dist
+dist-ssr
+coverage
+*.local
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+# Capacitor: сгенерированные веб-ресурсы внутри нативных проектов
+android/app/src/main/assets/public
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/.gradle
+android/build
+android/app/build
+android/local.properties
+ios/App/App/public
+ios/App/App/capacitor.config.json
+ios/App/Pods
+ios/App/build
+ios/DerivedData

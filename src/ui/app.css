@@ -1,0 +1,256 @@
+/* Оболочка: телефонная колонка по центру. На ПК та же вёрстка, просто ограничена по ширине. */
+.app {
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #241a40 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.app__main {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px max(14px, var(--safe-l)) 20px max(14px, var(--safe-r));
+  -webkit-overflow-scrolling: touch;
+}
+.app__main--full {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Верхняя панель */
+.topbar {
+  padding: calc(var(--safe-t) + 10px) max(14px, var(--safe-r)) 10px max(14px, var(--safe-l));
+  display: grid;
+  gap: 10px;
+  background: linear-gradient(180deg, rgba(10, 8, 16, 0.95), rgba(10, 8, 16, 0.7));
+  border-bottom: 1px solid var(--line);
+}
+.topbar__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar__ava {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: radial-gradient(circle at 50% 40%, #3e5aa8, #1a1530);
+  overflow: hidden;
+  position: relative;
+  flex: none;
+}
+.topbar__ava img {
+  position: absolute;
+  width: 210%;
+  max-width: none;
+  left: -55%;
+  top: -15%;
+}
+.topbar__lvl {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gold);
+  color: #1a1206;
+  font: 700 10px var(--body);
+  border-radius: 8px;
+  padding: 0 5px;
+  border: 2px solid var(--lead);
+}
+.topbar__who {
+  flex: 1;
+  min-width: 0;
+}
+.topbar__who b {
+  font-family: var(--display);
+  font-size: 17px;
+  display: block;
+  line-height: 1.2;
+}
+.topbar__who span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.topbar__title {
+  flex: 1;
+  font-family: var(--display);
+  font-size: 20px;
+}
+.cur {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(20, 16, 28, 0.9);
+  border: 1px solid var(--line-2);
+  border-radius: 20px;
+  padding: 4px 10px 4px 5px;
+  min-width: 0;
+}
+.pill svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+.pill b {
+  font-weight: 600;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icon-btn {
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  flex: none;
+  padding: 0;
+  color: var(--fg);
+}
+.icon-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Нижняя навигация */
+.nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: rgba(10, 8, 16, 0.97);
+  border-top: 1px solid var(--line);
+  padding: 0 max(4px, var(--safe-r)) var(--safe-b) max(4px, var(--safe-l));
+}
+.nav button {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-height: 58px;
+  padding: 8px 0 6px;
+  font-size: 11px;
+  font-weight: 500;
+  position: relative;
+}
+.nav svg {
+  width: 24px;
+  height: 24px;
+}
+.nav .is-on {
+  color: var(--gold);
+}
+.nav .is-on::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+
+/* Общие элементы */
+.screen-title {
+  font-size: 24px;
+  margin: 4px 0 2px;
+}
+.screen-sub {
+  color: var(--muted);
+  margin: 0 0 14px;
+  font-size: 14px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.btn {
+  min-height: var(--tap);
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--panel-2);
+  color: var(--fg);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn--gold {
+  border-color: var(--lead);
+  background: linear-gradient(180deg, #f3cd6a, #c98f2a);
+  color: #1a1206;
+  box-shadow: 0 0 0 2px rgba(240, 200, 96, 0.22);
+}
+.btn--danger {
+  border-color: #6a2a2e;
+  color: #ff9a9a;
+}
+.btn--block {
+  width: 100%;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(76px + var(--safe-b));
+  transform: translateX(-50%);
+  background: rgba(28, 23, 37, 0.97);
+  border: 1px solid var(--gold);
+  color: var(--fg);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  max-width: calc(100% - 32px);
+  z-index: 50;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: toast-in 0.25s ease-out;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+.splash {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 16px;
+  color: var(--muted);
+}
+.splash svg {
+  width: 72px;
+  height: 72px;
+  animation: splash 1.6s ease-in-out infinite;
+}
+@keyframes splash {
+  50% {
+    transform: translateY(-6px);
+    filter: drop-shadow(0 0 14px rgba(240, 200, 96, 0.5));
+  }
+}

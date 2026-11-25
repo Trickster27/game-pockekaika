@@ -1,0 +1,22 @@
+/** Высота спрайта над точкой ног (в единицах viewBox) и масштаб в бою. Нужны для полосок HP и эффектов. */
+export const UNIT_ART_META: Record<string, { top: number; scale: number }> = {
+  knight: { top: 106, scale: 1.0 },
+  elf: { top: 100, scale: 1.0 },
+  necro: { top: 102, scale: 1.0 },
+  demon: { top: 100, scale: 1.0 },
+  dwarf: { top: 82, scale: 1.0 },
+  selesta: { top: 106, scale: 1.0 },
+  tirn: { top: 104, scale: 1.0 },
+  veila: { top: 96, scale: 1.0 },
+  azgar: { top: 88, scale: 1.0 },
+  grimsa: { top: 80, scale: 1.0 },
+  wraith: { top: 92, scale: 1.0 },
+  hound: { top: 62, scale: 1.0 },
+  mglaboss: { top: 124, scale: 1.08 },
+  drowned: { top: 102, scale: 1.0 },
+  eel: { top: 110, scale: 0.86 },
+  abbess: { top: 118, scale: 1.08 },
+  imp: { top: 66, scale: 1.0 },
+  golem: { top: 80, scale: 1.0 },
+  emberlord: { top: 122, scale: 1.08 },
+};

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -130 120 135" width="240" height="270">
+<g stroke="#0d0912" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+<path d="M-13 0 L-12 -13 L-3 -13 L-3 0 Z" fill="#3a2a1a"/>
+<path d="M13 0 L12 -13 L3 -13 L3 0 Z" fill="#2c2014"/>
+<path d="M28 -6 L28 -62" stroke="#0d0912" stroke-width="7"/>
+<path d="M28 -6 L28 -62" stroke="#7a5230" stroke-width="3.5"/>
+<path d="M14 -80 L42 -80 L44 -60 L12 -60 Z" fill="#7d8aa3"/>
+<path d="M14 -80 L28 -80 L28 -60 L12 -60 Z" fill="#a3afc4"/>
+<path d="M24 -74 L28 -66 L32 -74" fill="none" stroke="#7fe7ff" stroke-width="2"/>
+<path d="M-22 -16 L22 -16 L24 -5 L-24 -5 Z" fill="#7d8aa3"/>
+<path d="M-18 -11 h2 M-10 -11 h2 M-2 -11 h2 M6 -11 h2 M14 -11 h2" stroke="#4a5470" stroke-width="2"/>
+<path d="M-22 -14 Q-24 -44 0 -46 Q24 -44 22 -14 Z" fill="#a8692e"/>
+<path d="M-22 -14 Q-24 -44 0 -46 L0 -14 Z" fill="#c98a45"/>
+<rect x="-22" y="-20" width="44" height="6" fill="#4a3020"/>
+<rect x="-5" y="-22" width="10" height="10" fill="#e8c060"/>
+<circle cx="-22" cy="-40" r="8" fill="#c98a45"/>
+<circle cx="22" cy="-40" r="8" fill="#a8692e"/>
+<circle cx="0" cy="-55" r="11" fill="#e2b48a"/>
+<path d="M-12 -53 Q-16 -26 -4 -18 L0 -24 L4 -18 Q16 -26 12 -53 Q6 -48 0 -48 Q-6 -48 -12 -53 Z" fill="#d8762b"/>
+<path d="M-10 -50 Q-13 -30 -4 -21 L0 -26 L0 -47 Q-6 -47 -10 -50 Z" fill="#ee8c3a" stroke="none"/>
+<circle cx="-4" cy="-18" r="2.2" fill="#e8c060"/>
+<circle cx="4" cy="-18" r="2.2" fill="#e8c060"/>
+<path d="M-14 -59 Q-14 -76 0 -78 Q14 -76 14 -59 Z" fill="#b8793a"/>
+<path d="M-14 -59 Q-14 -76 0 -78 L0 -59 Z" fill="#d49450"/>
+<path d="M-2 -59 L2 -59 L1.5 -52 L-1.5 -52 Z" fill="#b8793a"/>
+<path d="M-6 -73 L-3 -66 M0 -76 L0 -66 M6 -73 L3 -66" stroke="#7fe7ff" stroke-width="1.6"/>
+<rect x="-7" y="-58" width="3.5" height="3" fill="#0d0912" stroke="none"/>
+<rect x="3.5" y="-58" width="3.5" height="3" fill="#0d0912" stroke="none"/>
+</g>
+</svg>

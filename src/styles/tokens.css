@@ -1,0 +1,35 @@
+/* Палитра «Тёмный витраж». Игра однотемная (тёмная) по задумке. */
+:root {
+  color-scheme: dark;
+  --bg: #110e16;
+  --bg-2: #15111d;
+  --panel: #1b1723;
+  --panel-2: #231d2d;
+  --line: #2f2839;
+  --line-2: #3a3147;
+  --lead: #0a0710;
+  --fg: #ece5d8;
+  --muted: #a59cb0;
+  --gold: #e0b052;
+  --gold-hi: #ffe7a0;
+  --red: #e2474f;
+  --green: #5fcf6f;
+  --blue: #6fb3ff;
+
+  --f-order: #d9a94a;
+  --f-grove: #5fb070;
+  --f-ash: #5fbfb2;
+  --f-abyss: #e0503a;
+  --f-forge: #c98a45;
+  --mgla: #a37cff;
+
+  --display: 'Philosopher', Georgia, serif;
+  --body: 'Golos Text', system-ui, sans-serif;
+
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --tap: 44px;
+  --radius: 12px;
+}
