@@ -11,6 +11,8 @@ const CampScreen = lazy(() => import('./screens/CampScreen'));
 const SettingsScreen = lazy(() => import('./screens/SettingsScreen'));
 const BattleScreen = lazy(() => import('./screens/BattleScreen'));
 const CampaignScreen = lazy(() => import('./screens/CampaignScreen'));
+const HeroesScreen = lazy(() => import('./screens/HeroesScreen'));
+const TeamScreen = lazy(() => import('./screens/TeamScreen'));
 const PlaceholderScreen = lazy(() => import('./screens/PlaceholderScreen'));
 
 function Splash() {
@@ -35,9 +37,9 @@ function Screen() {
     case 'campaign':
       return <CampaignScreen />;
     case 'heroes':
-      return <PlaceholderScreen titleKey="nav.heroes" stage={4} />;
+      return <HeroesScreen />;
     case 'team':
-      return <PlaceholderScreen titleKey="nav.team" stage={4} />;
+      return <TeamScreen />;
     case 'summon':
       return <PlaceholderScreen titleKey="nav.summon" stage={5} />;
     case 'bag':

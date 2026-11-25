@@ -25,7 +25,7 @@ describe('сейв v2', () => {
   it('миграция v1 → v2 выдаёт стартовых героев', () => {
     const v1 = { version: 1, player: { name: 'Старый' }, currencies: { gold: 50 } };
     const s = normalizeSave(migrate(v1), NOW);
-    expect(s.version).toBe(2);
+    expect(s.version).toBe(3);
     expect(s.player.name).toBe('Старый');
     expect(s.heroes.length).toBe(5);
     expect(s.team.length).toBe(5);
@@ -98,5 +98,82 @@ describe('кампания', () => {
     expect(r.gold).toBe(0);
     expect(r.heroXp).toBeGreaterThan(0);
     expect(isStageUnlocked(s, '1-2')).toBe(false);
+  });
+});
+
+import { addHero, spendXpTomes, starUp, starUpCost, awaken, setTeam, AWAKEN_COST } from '@/game';
+import { maxLevel } from '@/core';
+
+describe('прокачка героев', () => {
+  const fresh = () => {
+    const s = createNewSave(NOW);
+    s.currencies.gold = 10_000_000;
+    return s;
+  };
+
+  it('миграция до v3 добавляет материалы и составы', () => {
+    const s = normalizeSave(migrate({ version: 2, heroes: [], team: [] }), NOW);
+    expect(s.version).toBe(3);
+    expect(s.materials.xpTome).toBe(5);
+    expect(s.presets.length).toBe(3);
+  });
+
+  it('новый герой приходит со звёздами по редкости и встаёт в неполную команду', () => {
+    const s = fresh();
+    s.team = ['h1'];
+    const h = addHero(s, 'ardan', NOW);
+    expect(h.stars).toBe(4);
+    expect(s.team).toContain(h.uid);
+  });
+
+  it('тома опыта повышают уровень до потолка', () => {
+    const s = fresh();
+    s.materials.xpTome = 100;
+    const r = spendXpTomes(s, 'h1', 100);
+    expect(typeof r).toBe('object');
+    expect(s.heroes[0]!.level).toBe(maxLevel(1));
+    expect(s.materials.xpTome).toBeGreaterThan(0);
+    expect(spendXpTomes(s, 'h1', 1)).toBe('maxLevel');
+  });
+
+  it('звёзды: нужен максимальный уровень и цена', () => {
+    const s = fresh();
+    expect(starUp(s, 'h1')).toBe('notMaxLevel');
+    s.heroes[0]!.level = 10;
+    expect(starUp(s, 'h1')).toBe('noDust');
+    s.materials.starDust = starUpCost(1).dust;
+    expect(starUp(s, 'h1')).toEqual({ stars: 2 });
+    expect(s.materials.starDust).toBe(0);
+  });
+
+  it('звёзды за героев-копий: корм удаляется из коллекции и команды', () => {
+    const s = fresh();
+    const target = s.heroes[0]!;
+    target.level = 10;
+    const fodder = addHero(s, 'rikht', NOW);
+    setTeam(s, ['h1', fodder.uid]);
+    expect(starUp(s, target.uid, [fodder.uid])).toEqual({ stars: 2 });
+    expect(s.heroes.some((h) => h.uid === fodder.uid)).toBe(false);
+    expect(s.team).toEqual(['h1']);
+  });
+
+  it('нельзя скормить героя с меньшими звёздами', () => {
+    const s = fresh();
+    const t = addHero(s, 'ardan', NOW);
+    t.level = maxLevel(4);
+    const weak = ['h1', 'h2', 'h3', 'h4'];
+    expect(starUp(s, t.uid, weak)).toBe('badFodder');
+  });
+
+  it('пробуждение только на 6 звёздах и 60 уровне', () => {
+    const s = fresh();
+    const h = s.heroes[0]!;
+    expect(awaken(s, h.uid)).toBe('notSixStar');
+    h.stars = 6;
+    h.level = 60;
+    expect(awaken(s, h.uid)).toBe('noStones');
+    s.materials.awakenStone = AWAKEN_COST.stones;
+    expect(awaken(s, h.uid)).toBe(true);
+    expect(h.awakened).toBe(true);
   });
 });

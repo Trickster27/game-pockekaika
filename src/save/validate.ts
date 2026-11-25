@@ -1,4 +1,12 @@
-import { createNewSave, DEFAULT_SETTINGS, MAX_TEAM, type OwnedHero, type SaveData } from './schema';
+import {
+  createNewSave,
+  DEFAULT_SETTINGS,
+  MATERIAL_IDS,
+  MAX_TEAM,
+  type OwnedHero,
+  type SaveData,
+  type TeamPreset,
+} from './schema';
 import type { RawSave } from './migrations';
 
 const isObj = (v: unknown): v is Record<string, unknown> =>
@@ -54,6 +62,18 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
   for (const [k, v] of Object.entries(camp))
     if (typeof v === 'number' && v >= 1 && v <= 3) campStars[k] = Math.round(v);
   const st = isObj(raw.stats) ? raw.stats : {};
+  const matRaw = isObj(raw.materials) ? raw.materials : {};
+  const materials = { ...base.materials };
+  for (const id of MATERIAL_IDS) materials[id] = Math.floor(num(matRaw[id], base.materials[id], 0));
+  const presets: TeamPreset[] = Array.isArray(raw.presets)
+    ? raw.presets.slice(0, 5).map((p, i) => ({
+        name: str(isObj(p) ? p.name : undefined, `Состав ${i + 1}`).slice(0, 20),
+        uids:
+          isObj(p) && Array.isArray(p.uids)
+            ? p.uids.filter((u): u is string => typeof u === 'string' && heroUids.has(u)).slice(0, MAX_TEAM)
+            : [],
+      }))
+    : base.presets;
   const locale =
     s.locale === 'en' || s.locale === 'uk' || s.locale === 'ru' ? s.locale : DEFAULT_SETTINGS.locale;
   return {
@@ -76,6 +96,8 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
     heroes: heroes ?? base.heroes,
     team: team ?? base.team,
     campaign: { stars: campStars },
+    materials,
+    presets,
     seq: Math.max(Math.round(num(raw.seq, base.seq, 1)), (heroes?.length ?? 0) + 1),
     stats: {
       battlesWon: Math.floor(num(st.battlesWon, 0, 0)),

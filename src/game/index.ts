@@ -3,3 +3,4 @@ export * from './energy';
 export * from './battleSetup';
 export * from './campaign';
 export * from './power';
+export * from './heroes';

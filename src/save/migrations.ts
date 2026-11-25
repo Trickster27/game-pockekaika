@@ -1,4 +1,4 @@
-import { SAVE_VERSION, starterHeroes } from './schema';
+import { SAVE_VERSION, starterHeroes, defaultPresets } from './schema';
 
 /** Сырые данные сейва неизвестной версии. */
 export type RawSave = Record<string, unknown> & { version?: unknown };
@@ -28,6 +28,13 @@ export const MIGRATIONS: Record<number, Migration> = {
       stats: { battlesWon: 0, battlesLost: 0 },
     };
   },
+  // v3: материалы прокачки и сохранённые составы.
+  3: (s) => ({
+    ...s,
+    version: 3,
+    materials: { xpTome: 5, starDust: 0, awakenStone: 0 },
+    presets: defaultPresets(),
+  }),
 };
 
 export class SaveVersionError extends Error {}

@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -50,6 +50,15 @@ export interface CampaignProgress {
   stars: Record<string, number>;
 }
 
+/** Материалы прокачки. */
+export type MaterialId = 'xpTome' | 'starDust' | 'awakenStone';
+export const MATERIAL_IDS: readonly MaterialId[] = ['xpTome', 'starDust', 'awakenStone'];
+
+export interface TeamPreset {
+  name: string;
+  uids: string[];
+}
+
 export interface SaveData {
   version: number;
   /** Случайный id сейва: пригодится облачной синхронизации. */
@@ -67,6 +76,9 @@ export interface SaveData {
   campaign: CampaignProgress;
   /** Счётчик для uid новых героев и предметов. */
   seq: number;
+  materials: Record<MaterialId, number>;
+  /** Сохранённые составы команды. */
+  presets: TeamPreset[];
   stats: { battlesWon: number; battlesLost: number };
 }
 
@@ -119,6 +131,16 @@ export function createNewSave(now: number = Date.now()): SaveData {
     team: STARTER_HERO_IDS.map((_, i) => `h${i + 1}`),
     campaign: { stars: {} },
     seq: STARTER_HERO_IDS.length + 1,
+    materials: { xpTome: 5, starDust: 0, awakenStone: 0 },
+    presets: defaultPresets(),
     stats: { battlesWon: 0, battlesLost: 0 },
   };
+}
+
+export function defaultPresets(): TeamPreset[] {
+  return [
+    { name: 'Состав 1', uids: [] },
+    { name: 'Состав 2', uids: [] },
+    { name: 'Состав 3', uids: [] },
+  ];
 }
