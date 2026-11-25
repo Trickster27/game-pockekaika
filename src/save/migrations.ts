@@ -1,4 +1,4 @@
-import { SAVE_VERSION } from './schema';
+import { SAVE_VERSION, starterHeroes } from './schema';
 
 /** Сырые данные сейва неизвестной версии. */
 export type RawSave = Record<string, unknown> & { version?: unknown };
@@ -14,6 +14,20 @@ export type Migration = (save: RawSave) => RawSave;
 export const MIGRATIONS: Record<number, Migration> = {
   // Версия 0 — сейвы без поля version (прототипы). Приводим к схеме 1.
   1: (s) => ({ ...s, version: 1 }),
+  // v2: коллекция героев, команда и прогресс кампании. Старым сейвам выдаём стартовую команду.
+  2: (s) => {
+    const now = typeof s.updatedAt === 'number' ? s.updatedAt : Date.now();
+    const heroes = starterHeroes(now);
+    return {
+      ...s,
+      version: 2,
+      heroes,
+      team: heroes.map((h) => h.uid),
+      campaign: { stars: {} },
+      seq: heroes.length + 1,
+      stats: { battlesWon: 0, battlesLost: 0 },
+    };
+  },
 };
 
 export class SaveVersionError extends Error {}

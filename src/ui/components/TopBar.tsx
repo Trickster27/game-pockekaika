@@ -2,23 +2,30 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { unitArtUrl } from '@/assets/art';
 import { IconBack, IconEnergy, IconGear, IconGold, IconShard } from './icons';
+import { ENERGY_MAX, nextEnergyIn, regenEnergy } from '@/game';
+import { formatDuration, useNow } from '../hooks';
 
 export function TopBar() {
   const t = useT();
   const save = useGame((s) => s.save);
   const screen = useGame((s) => s.screen);
   const go = useGame((s) => s.go);
+  const now = useNow(1000);
   if (!save) return null;
-  const isSettings = screen === 'settings';
+  const energy = { ...save.currencies };
+  regenEnergy(energy, now);
+  const nextIn = nextEnergyIn(energy, now);
+  const titled: Record<string, string> = { settings: 'settings.title', campaign: 'nav.campaign' };
+  const titleKey = titled[screen];
   return (
     <header className="topbar">
       <div className="topbar__row">
-        {isSettings ? (
+        {titleKey ? (
           <>
             <button className="icon-btn" type="button" aria-label={t('nav.back')} onClick={() => go('camp')}>
               <IconBack />
             </button>
-            <h1 className="topbar__title">{t('settings.title')}</h1>
+            <h1 className="topbar__title">{t(titleKey)}</h1>
           </>
         ) : (
           <>
@@ -52,7 +59,14 @@ export function TopBar() {
         </div>
         <div className="pill" title={t('currency.energy')}>
           <IconEnergy />
-          <b>{save.currencies.energy}/120</b>
+          <b>
+            {energy.energy}/{ENERGY_MAX}
+            {nextIn > 0 && (
+              <small className="pill__sub">
+                {t('currency.energyNext', { time: formatDuration(nextIn) })}
+              </small>
+            )}
+          </b>
         </div>
       </div>
     </header>

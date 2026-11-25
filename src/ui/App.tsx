@@ -9,7 +9,8 @@ import './app.css';
 // Экраны грузятся лениво: первый экран (лагерь) приходит быстро, остальные — по требованию.
 const CampScreen = lazy(() => import('./screens/CampScreen'));
 const SettingsScreen = lazy(() => import('./screens/SettingsScreen'));
-const BattleTestScreen = lazy(() => import('./screens/BattleTestScreen'));
+const BattleScreen = lazy(() => import('./screens/BattleScreen'));
+const CampaignScreen = lazy(() => import('./screens/CampaignScreen'));
 const PlaceholderScreen = lazy(() => import('./screens/PlaceholderScreen'));
 
 function Splash() {
@@ -29,8 +30,10 @@ function Screen() {
       return <CampScreen />;
     case 'settings':
       return <SettingsScreen />;
-    case 'battleTest':
-      return <BattleTestScreen />;
+    case 'battle':
+      return <BattleScreen />;
+    case 'campaign':
+      return <CampaignScreen />;
     case 'heroes':
       return <PlaceholderScreen titleKey="nav.heroes" stage={4} />;
     case 'team':
@@ -65,7 +68,7 @@ export function App() {
       </div>
     );
   }
-  const full = screen === 'battleTest';
+  const full = screen === 'battle';
   return (
     <div className="app">
       {full ? <div /> : <TopBar />}

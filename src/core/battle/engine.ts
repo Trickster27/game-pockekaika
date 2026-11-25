@@ -209,6 +209,29 @@ export class Battle {
     return a.slot < b.slot;
   }
 
+  /** Прогноз очереди: кто будет ходить следующими (без изменения состояния). */
+  previewOrder(count: number): string[] {
+    const sim = this.units
+      .filter((u) => u.alive)
+      .map((u) => ({ u, tm: u.tm, spd: Math.max(1, effective(u).spd) }));
+    const out: string[] = [];
+    while (out.length < count && sim.length) {
+      let best = sim[0]!;
+      let bestT = Infinity;
+      for (const x of sim) {
+        const t = Math.max(0, (TM_FULL - x.tm) / x.spd);
+        if (t < bestT - 1e-9 || (Math.abs(t - bestT) <= 1e-9 && this.tieBreak(x.u, best.u))) {
+          bestT = t;
+          best = x;
+        }
+      }
+      for (const x of sim) x.tm += x.spd * bestT;
+      best.tm = 0;
+      out.push(best.u.uid);
+    }
+    return out;
+  }
+
   isReady(u: BattleUnit, skillIndex: number): boolean {
     return (u.cooldowns[skillIndex] ?? 1) <= 0;
   }

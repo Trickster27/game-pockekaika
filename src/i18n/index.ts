@@ -48,3 +48,8 @@ export function useT() {
 }
 
 export const formatNumber = (n: number) => Math.floor(n).toLocaleString('ru-RU').replace(/\s/g, '\u2009');
+
+/** Перевод вне React-компонентов (действия, сервисы). */
+export function tr(key: string, params?: Record<string, string | number>): string {
+  return translate(useI18n.getState().locale, key, params);
+}

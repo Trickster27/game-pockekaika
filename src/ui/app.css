@@ -51,7 +51,7 @@
   width: 210%;
   max-width: none;
   left: -55%;
-  top: -15%;
+  top: -60%;
 }
 .topbar__lvl {
   position: absolute;
@@ -110,6 +110,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.pill__sub {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.1;
 }
 
 .icon-btn {
@@ -195,6 +203,11 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+.btn svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
 }
 .btn--gold {
   border-color: var(--lead);

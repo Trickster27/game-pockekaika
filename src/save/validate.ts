@@ -1,4 +1,4 @@
-import { createNewSave, DEFAULT_SETTINGS, type SaveData } from './schema';
+import { createNewSave, DEFAULT_SETTINGS, MAX_TEAM, type OwnedHero, type SaveData } from './schema';
 import type { RawSave } from './migrations';
 
 const isObj = (v: unknown): v is Record<string, unknown> =>
@@ -9,6 +9,26 @@ const str = (v: unknown, d: string) => (typeof v === 'string' && v.length > 0 ? 
 const bool = (v: unknown, d: boolean) => (typeof v === 'boolean' ? v : d);
 
 export class SaveFormatError extends Error {}
+
+function normalizeHeroes(v: unknown, now: number): OwnedHero[] | null {
+  if (!Array.isArray(v)) return null;
+  const out: OwnedHero[] = [];
+  const seen = new Set<string>();
+  for (const h of v) {
+    if (!isObj(h) || typeof h.uid !== 'string' || typeof h.heroId !== 'string' || seen.has(h.uid)) continue;
+    seen.add(h.uid);
+    out.push({
+      uid: h.uid,
+      heroId: h.heroId,
+      level: Math.round(num(h.level, 1, 1, 60)),
+      xp: Math.floor(num(h.xp, 0, 0)),
+      stars: Math.round(num(h.stars, 1, 1, 6)),
+      awakened: bool(h.awakened, false),
+      obtainedAt: num(h.obtainedAt, now, 0),
+    });
+  }
+  return out;
+}
 
 /**
  * Превращает уже смигрированные сырые данные в SaveData.
@@ -21,6 +41,19 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
   const c = isObj(raw.currencies) ? raw.currencies : {};
   const s = isObj(raw.settings) ? raw.settings : {};
   const speed = num(s.battleSpeed, DEFAULT_SETTINGS.battleSpeed, 1, 3);
+  const heroes = normalizeHeroes(raw.heroes, now);
+  const heroUids = new Set((heroes ?? base.heroes).map((h) => h.uid));
+  const team = Array.isArray(raw.team)
+    ? [...new Set(raw.team.filter((u): u is string => typeof u === 'string' && heroUids.has(u)))].slice(
+        0,
+        MAX_TEAM,
+      )
+    : null;
+  const camp = isObj(raw.campaign) && isObj(raw.campaign.stars) ? raw.campaign.stars : {};
+  const campStars: Record<string, number> = {};
+  for (const [k, v] of Object.entries(camp))
+    if (typeof v === 'number' && v >= 1 && v <= 3) campStars[k] = Math.round(v);
+  const st = isObj(raw.stats) ? raw.stats : {};
   const locale =
     s.locale === 'en' || s.locale === 'uk' || s.locale === 'ru' ? s.locale : DEFAULT_SETTINGS.locale;
   return {
@@ -39,6 +72,14 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
       shards: Math.floor(num(c.shards, base.currencies.shards, 0)),
       energy: Math.floor(num(c.energy, base.currencies.energy, 0)),
       energyUpdatedAt: num(c.energyUpdatedAt, now, 0),
+    },
+    heroes: heroes ?? base.heroes,
+    team: team ?? base.team,
+    campaign: { stars: campStars },
+    seq: Math.max(Math.round(num(raw.seq, base.seq, 1)), (heroes?.length ?? 0) + 1),
+    stats: {
+      battlesWon: Math.floor(num(st.battlesWon, 0, 0)),
+      battlesLost: Math.floor(num(st.battlesLost, 0, 0)),
     },
     settings: {
       sound: bool(s.sound, DEFAULT_SETTINGS.sound),

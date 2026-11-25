@@ -2,6 +2,7 @@ import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
+import { currentStage } from '@/game';
 import './screens.css';
 
 /** Локации лагеря и этап плана, на котором каждая станет рабочей. */
@@ -19,6 +20,8 @@ export default function CampScreen() {
   const t = useT();
   const go = useGame((s) => s.go);
   const openPlaceholder = useGame((s) => s.openPlaceholder);
+  const save = useGame((s) => s.save)!;
+  const cur = currentStage(save);
   const tap = () => {
     platform().haptics.impact('light');
     platform().audio.play('tap');
@@ -37,13 +40,13 @@ export default function CampScreen() {
           style={{ ['--c' as string]: 'var(--gold)' }}
           onClick={() => {
             tap();
-            go('battleTest');
+            go('campaign');
           }}
         >
           <img src={unitArtUrl('mglaboss')} alt="" />
           <span>
-            <b style={{ display: 'block' }}>{t('camp.battleTest')}</b>
-            {t('camp.battleTestHint')}
+            <b style={{ display: 'block' }}>{t('camp.campaignGo')}</b>
+            {t('camp.campaignHint', { stage: cur.id, name: cur.name })}
           </span>
         </button>
         {LOCATIONS.map((l) => (
@@ -54,7 +57,8 @@ export default function CampScreen() {
             style={{ ['--c' as string]: l.color }}
             onClick={() => {
               tap();
-              openPlaceholder(`camp.locations.${l.id}.title`, l.stage);
+              if (l.id === 'campaign') go('campaign');
+              else openPlaceholder(`camp.locations.${l.id}.title`, l.stage);
             }}
           >
             <i />

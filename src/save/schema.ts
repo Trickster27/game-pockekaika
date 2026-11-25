@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -34,6 +34,22 @@ export interface PlayerProfile {
   xp: number;
 }
 
+/** Герой в коллекции игрока. */
+export interface OwnedHero {
+  uid: string;
+  heroId: string;
+  level: number;
+  xp: number;
+  stars: number;
+  awakened: boolean;
+  obtainedAt: number;
+}
+
+export interface CampaignProgress {
+  /** Лучшие звёзды по этапам: { '1-3': 2 }. */
+  stars: Record<string, number>;
+}
+
 export interface SaveData {
   version: number;
   /** Случайный id сейва: пригодится облачной синхронизации. */
@@ -45,6 +61,29 @@ export interface SaveData {
   player: PlayerProfile;
   currencies: Currencies;
   settings: Settings;
+  heroes: OwnedHero[];
+  /** uid героев в боевой команде (до 5). */
+  team: string[];
+  campaign: CampaignProgress;
+  /** Счётчик для uid новых героев и предметов. */
+  seq: number;
+  stats: { battlesWon: number; battlesLost: number };
+}
+
+export const MAX_TEAM = 5;
+
+export const STARTER_HERO_IDS = ['rikht', 'ivy', 'grav', 'chirk', 'dorn'] as const;
+
+export function starterHeroes(now: number): OwnedHero[] {
+  return STARTER_HERO_IDS.map((heroId, i) => ({
+    uid: `h${i + 1}`,
+    heroId,
+    level: 1,
+    xp: 0,
+    stars: 1,
+    awakened: false,
+    obtainedAt: now,
+  }));
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -76,5 +115,10 @@ export function createNewSave(now: number = Date.now()): SaveData {
     player: { name: 'Хранитель', level: 1, xp: 0 },
     currencies: { gold: 1000, shards: 300, energy: 60, energyUpdatedAt: now },
     settings: { ...DEFAULT_SETTINGS },
+    heroes: starterHeroes(now),
+    team: STARTER_HERO_IDS.map((_, i) => `h${i + 1}`),
+    campaign: { stars: {} },
+    seq: STARTER_HERO_IDS.length + 1,
+    stats: { battlesWon: 0, battlesLost: 0 },
   };
 }

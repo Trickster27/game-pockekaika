@@ -283,3 +283,36 @@ describe('контент', () => {
     }
   });
 });
+
+describe('прогноз очереди', () => {
+  it('совпадает с реальным порядком ходов', () => {
+    const b = new Battle(
+      {
+        allies: ['ardan', 'liel', 'mortis'].map((id) => ({
+          defId: id,
+          kind: 'hero' as const,
+          level: 20,
+          stars: 3,
+        })),
+        waves: [
+          [
+            { defId: 'wraith', kind: 'enemy', level: 1 },
+            { defId: 'hound', kind: 'enemy', level: 1 },
+          ],
+        ],
+        seed: 1,
+      },
+      gameDb,
+    );
+    const predicted = b.previewOrder(4);
+    const actual: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      const u = b.nextActor()!;
+      actual.push(u.uid);
+      // Ходим базовым навыком по самому живучему врагу, чтобы никто не умер и не было баффов скорости.
+      b.act(u.uid, 0, b.aliveOf(u.side === 'ally' ? 'enemy' : 'ally').sort((x, y) => y.hp - x.hp)[0]!.uid);
+      if (b.result) break;
+    }
+    expect(actual.slice(0, 2)).toEqual(predicted.slice(0, 2));
+  });
+});
