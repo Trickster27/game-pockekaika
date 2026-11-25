@@ -1,4 +1,5 @@
 import { baseStats, power, statsAt } from '@/core/stats';
+import { TIER_MULT } from '@/core/battle';
 import { enemyDef, heroDef } from '@/content';
 import type { StageDef } from '@/content/campaign';
 import type { OwnedHero, SaveData } from '@/save/schema';
@@ -27,7 +28,11 @@ export function stagePower(stage: StageDef): number {
     let sum = 0;
     for (const e of w) {
       const d = enemyDef(e.id);
-      sum += power(statsAt(baseStats(d.role, 'common', d.mod), e.level)) * (e.boss ? 2.2 : 1);
+      const t = TIER_MULT[e.tier ?? 'normal'];
+      sum +=
+        power(statsAt(baseStats(d.role, 'common', d.mod), e.level)) *
+        (e.boss ? 2.2 : 1) *
+        ((t.hp + t.atk + t.def) / 3);
     }
     best = Math.max(best, sum);
   }

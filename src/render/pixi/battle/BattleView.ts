@@ -4,6 +4,7 @@ import type { Element } from '@/core/types';
 import type { StatusId } from '@/core/content';
 import { DEBUFFS } from '@/core/content';
 import { unitArtMeta, unitArtUrl, UNIT_FRAME } from '@/assets/art';
+import type { IdleStyle } from '@/assets/art/meta';
 import { FIELD, sceneTexture, SCENE_TINT, type SceneKey } from './background';
 import { glowTexture, STATUS_LABEL, statusTexture } from './textures';
 
@@ -53,6 +54,10 @@ interface UnitView {
   uid: string;
   side: 'ally' | 'enemy';
   boss: boolean;
+  tier: 'normal' | 'elite' | 'champion';
+  idle: IdleStyle;
+  lean: number;
+  aura: Graphics;
   element: Element;
   x: number;
   y: number;
@@ -256,7 +261,7 @@ export class BattleView {
   private addView(u: BattleUnit, pos: Pos) {
     const tex = this.textures.get(u.art)!;
     const meta = unitArtMeta(u.art);
-    const scale = pos[2] * meta.scale;
+    const scale = pos[2] * meta.scale * (u.tier === 'champion' ? 1.1 : 1);
     const root = new Container();
     root.position.set(pos[0], pos[1]);
     const shadow = new Graphics()
@@ -274,7 +279,9 @@ export class BattleView {
     flashSprite.alpha = 0;
     const body = new Container();
     body.addChild(sprite, flashSprite);
-    root.addChild(shadow, ring, body);
+    const aura = new Graphics();
+    aura.blendMode = 'add';
+    root.addChild(shadow, aura, ring, body);
     sprite.eventMode = 'static';
     sprite.cursor = 'pointer';
     sprite.on('pointertap', () => this.opts.onUnitTap?.(u.uid));
@@ -284,14 +291,15 @@ export class BattleView {
     const icons = new Container();
     this.layerUi.addChild(bars, icons);
     let label: Text | undefined;
-    if (u.boss) {
+    const tierText = u.boss ? u.name : u.tier === 'champion' ? 'Чемпион' : u.tier === 'elite' ? 'Элита' : '';
+    if (tierText) {
       label = new Text({
-        text: u.name,
+        text: tierText,
         style: {
           fontFamily: FONT,
           fontWeight: '700',
-          fontSize: 11,
-          fill: '#e6d4ff',
+          fontSize: u.boss ? 11 : 10,
+          fill: u.boss ? '#e6d4ff' : u.tier === 'champion' ? '#ffd36b' : '#e6ecf5',
           stroke: { color: LEAD, width: 3, join: 'round' },
         },
       });
@@ -302,6 +310,10 @@ export class BattleView {
       uid: u.uid,
       side: u.side,
       boss: u.boss,
+      tier: u.tier ?? 'normal',
+      idle: meta.idle ?? 'bob',
+      lean: 0,
+      aura,
       element: u.element,
       x: pos[0],
       y: pos[1],
@@ -677,8 +689,10 @@ export class BattleView {
       dy = target.y - actor.y;
     const d = Math.hypot(dx, dy) || 1;
     const f = Math.max(0, (d - 52) / d);
-    await this.wait(120);
+    const dir = dx >= 0 ? 1 : -1;
+    await this.tween((x) => (actor.lean = x), 0, -0.18 * dir, 120, easeOut);
     for (let i = 0; i < 4; i++) setTimeoutGame(this, 30 * i, () => this.ghost(actor, color));
+    void this.tween((x) => (actor.lean = x), -0.18 * dir, 0.12 * dir, 170, easeIn);
     await Promise.all([
       this.tween((x) => (actor.ox = x), 0, dx * f, 170, easeIn),
       this.tween((x) => (actor.oy = x), 0, dy * f, 170, easeIn),
@@ -702,7 +716,13 @@ export class BattleView {
     kind: 'arrow' | 'orb',
   ) {
     void this.tween((x) => (actor.pulse = x), 1, 1.07, 200);
-    setTimeoutGame(this, 220, () => void this.tween((x) => (actor.pulse = x), 1.07, 1, 160));
+    setTimeoutGame(this, 220, () => {
+      void this.tween((x) => (actor.pulse = x), 1.07, 1, 160);
+      const back = actor.side === 'ally' ? 6 : -6;
+      void this.tween((x) => (actor.oy = x), 0, back, 80, easeOut).then(() =>
+        this.tween((x) => (actor.oy = x), back, 0, 220, easeOut),
+      );
+    });
     const sx = actor.x + (actor.side === 'ally' ? 0 : 0),
       sy = actor.y - actor.top * 0.6;
     await Promise.all(
@@ -721,6 +741,12 @@ export class BattleView {
 
   private async charge(actor: UnitView, colors: string[]) {
     void this.tween((x) => (actor.pulse = x), 1, 1.1, 330);
+    void this.tween((x) => (actor.oy = x), actor.oy, -10, 300, easeOut).then(() =>
+      this.tween((x) => (actor.oy = x), -10, 0, 260, easeInOut),
+    );
+    actor.flashSprite.tint = colors[0]!;
+    actor.flash = 0.7;
+    setTimeoutGame(this, 420, () => (actor.flashSprite.tint = 0xffffff));
     for (let i = 0; i < 10; i++) {
       setTimeoutGame(this, i * 30, () => {
         const a = Math.random() * Math.PI * 2;
@@ -1468,10 +1494,53 @@ export class BattleView {
   }
 
   private drawUnit(v: UnitView, dt: number) {
-    const body = v.root.children[2] as Container;
-    const bob = v.alive ? Math.sin(this.time / 420 + v.phase) * 0.022 : 0;
-    body.position.set(v.ox, v.oy);
-    body.scale.set(v.pulse, v.pulse * (1 + bob));
+    const body = v.root.children[3] as Container;
+    const t = this.time + v.phase * 400;
+    const bx = v.ox;
+    let by = v.oy,
+      sx = v.pulse,
+      sy = v.pulse,
+      rot = v.lean;
+    if (v.alive) {
+      switch (v.idle) {
+        case 'float':
+          by += Math.sin(t / 520) * 4 - 4;
+          rot += Math.sin(t / 900) * 0.03;
+          break;
+        case 'sway':
+          rot += Math.sin(t / 850) * 0.045;
+          sy *= 1 + Math.sin(t / 420) * 0.012;
+          break;
+        case 'heavy': {
+          const b = Math.sin(t / 700) * 0.03;
+          sy *= 1 + b;
+          sx *= 1 - b * 0.4;
+          break;
+        }
+        default:
+          sy *= 1 + Math.sin(t / 420) * 0.022;
+      }
+    }
+    body.position.set(bx, by);
+    body.scale.set(sx, sy);
+    body.rotation = rot;
+    // Аура ранга: элита — серебро, чемпион — золото с искрами.
+    v.aura.clear();
+    if (v.alive && v.tier !== 'normal') {
+      const gold = v.tier === 'champion';
+      const k = 0.55 + 0.25 * Math.sin(this.time / 300 + v.phase);
+      v.aura
+        .ellipse(v.ox, v.oy - 2, 32 * v.scale, 11 * v.scale)
+        .fill({ color: gold ? '#f0c860' : '#c7d0e0', alpha: 0.4 * k })
+        .stroke({ width: 2.5, color: gold ? '#ffd36b' : '#ffffff', alpha: 0.7 * k });
+      v.aura
+        .ellipse(v.ox, v.oy - v.top * 0.45, 28 * v.scale, v.top * 0.58)
+        .stroke({ width: 3, color: gold ? '#ffd36b' : '#dfe5ef', alpha: 0.35 * k });
+      if (gold && Math.random() < dt * 0.006)
+        this.glow(v.x + rand(-20, 20) * v.scale, v.y - rand(0, v.top), '#ffd36b', rand(3, 5), 700, 0, -30, {
+          alpha: 0.8,
+        });
+    }
     v.root.alpha = v.alpha;
     if (v.flash > 0) v.flash = Math.max(0, v.flash - dt / 280);
     v.flashSprite.alpha = v.flash;

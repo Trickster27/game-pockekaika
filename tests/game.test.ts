@@ -25,7 +25,7 @@ describe('сейв v2', () => {
   it('миграция v1 → v2 выдаёт стартовых героев', () => {
     const v1 = { version: 1, player: { name: 'Старый' }, currencies: { gold: 50 } };
     const s = normalizeSave(migrate(v1), NOW);
-    expect(s.version).toBe(6);
+    expect(s.version).toBe(7);
     expect(s.player.name).toBe('Старый');
     expect(s.heroes.length).toBe(5);
     expect(s.team.length).toBe(5);
@@ -113,7 +113,7 @@ describe('прокачка героев', () => {
 
   it('миграция до v3 добавляет материалы и составы', () => {
     const s = normalizeSave(migrate({ version: 2, heroes: [], team: [] }), NOW);
-    expect(s.version).toBe(6);
+    expect(s.version).toBe(7);
     expect(s.materials.xpTome).toBe(5);
     expect(s.presets.length).toBe(3);
   });

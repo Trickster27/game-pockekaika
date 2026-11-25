@@ -82,6 +82,13 @@ export function startCampaignStage(stageId: string): boolean {
           lines.push({ icon: 'level', label: tr('rewards.levelUp'), value: `${r.levelUps.length} гер.` });
         if (r.playerLevelUps)
           lines.push({ icon: 'star', label: tr('rewards.playerLevel'), value: `${s.player.level}` });
+        for (const it of r.items)
+          lines.push({
+            icon: 'item',
+            label: `${SLOT_NAME[it.slot as Slot]} · ${SETS.find((x) => x.id === it.set)?.name ?? ''}`,
+            value: tr(`labels.rarity.${it.rarity}`),
+          });
+        if (r.ore) lines.push({ icon: 'star', label: tr('labels.material.ore'), value: `+${r.ore}` });
       });
       return lines;
     },
@@ -181,6 +188,14 @@ export function startTower(floor: number): boolean {
         if (r?.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
         for (const [m, n] of Object.entries(r?.materials ?? {}))
           lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
+        if (r?.item) {
+          const it = r.item;
+          lines.push({
+            icon: 'item',
+            label: `${SLOT_NAME[it.slot as Slot]} · ${SETS.find((x) => x.id === it.set)?.name ?? ''}`,
+            value: tr(`labels.rarity.${it.rarity}`),
+          });
+        }
       });
       return lines;
     },

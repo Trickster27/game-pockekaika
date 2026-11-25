@@ -24,6 +24,7 @@ import { HeroTile, Stars } from '../components/HeroTile';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
 import { SkillIcon } from '../components/SkillIcon';
 import { HeroGear } from '../components/HeroGear';
+import { HeroCompare } from '../components/HeroCompare';
 import './screens.css';
 import './heroes.css';
 
@@ -152,6 +153,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
   const updateSave = useGame((s) => s.updateSave);
   const showToast = useGame((s) => s.showToast);
   const [starSheet, setStarSheet] = useState(false);
+  const [comparing, setComparing] = useState(false);
   const d = heroDef(hero.heroId);
   const stats = heroStats(hero, save);
   const cap = maxLevel(hero.stars);
@@ -176,9 +178,19 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
 
   return (
     <div className="hd">
-      <button type="button" className="btn" style={{ justifySelf: 'start' }} onClick={onBack}>
-        ← {t('heroes.back')}
-      </button>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button type="button" className="btn" style={{ justifySelf: 'start' }} onClick={onBack}>
+          ← {t('heroes.back')}
+        </button>
+        <button
+          type="button"
+          className="btn"
+          style={{ marginLeft: 'auto' }}
+          onClick={() => setComparing(true)}
+        >
+          ⇄ {t('compare.button')}
+        </button>
+      </div>
       <section
         className="hd__hero"
         style={{ ['--rc' as string]: RARITY_COLOR[d.rarity], ['--fc' as string]: FACTION_COLOR[d.faction] }}
@@ -307,6 +319,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
         </section>
       )}
 
+      {comparing && <HeroCompare base={hero} onClose={() => setComparing(false)} />}
       {starSheet && <StarSheet hero={hero} onClose={() => setStarSheet(false)} onRun={run} />}
     </div>
   );

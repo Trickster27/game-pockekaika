@@ -265,10 +265,10 @@ describe('контент', () => {
   it('без ошибок ссылок', () => {
     expect(validateContent()).toEqual([]);
   });
-  it('20 героев, все фракции по 4, есть все редкости и роли', () => {
-    expect(HEROES.length).toBe(20);
+  it('30 героев, все фракции по 6, есть все редкости и роли', () => {
+    expect(HEROES.length).toBe(30);
     for (const f of ['order', 'grove', 'ash', 'abyss', 'forge'])
-      expect(HEROES.filter((h) => h.faction === f).length).toBe(4);
+      expect(HEROES.filter((h) => h.faction === f).length).toBe(6);
     for (const r of ['common', 'rare', 'epic', 'legendary'])
       expect(HEROES.some((h) => h.rarity === r)).toBe(true);
     for (const r of ['attacker', 'defender', 'support', 'healer'])

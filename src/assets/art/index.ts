@@ -28,7 +28,7 @@ export function unitArtUrl(key: string): string | undefined {
 }
 
 export function unitArtMeta(key: string) {
-  return UNIT_ART_META[key] ?? { top: 100, scale: 1 };
+  return UNIT_ART_META[key] ?? { top: 100, scale: 1, idle: 'bob' as const };
 }
 
 export const UNIT_ART_KEYS = Object.keys(urls).sort();

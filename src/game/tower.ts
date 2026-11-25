@@ -3,8 +3,23 @@ import type { BattleResult } from '@/core/battle';
 import type { StageEnemy } from '@/content/campaign';
 import type { MaterialId, SaveData } from '@/save/schema';
 import { grantReward, type ShopReward } from './shop';
+import { rollGearDrop } from './forge';
+import type { Item } from '@/save/schema';
 
-const MINIONS = ['wraith', 'hound', 'drowned', 'eel', 'imp', 'golem'];
+const MINIONS = [
+  'wraith',
+  'hound',
+  'shade_archer',
+  'gloom_knight',
+  'drowned',
+  'eel',
+  'siren',
+  'crab',
+  'imp',
+  'golem',
+  'firedrake',
+  'cultist',
+];
 const BOSSES = ['colossus', 'abbess', 'emberlord'];
 const SCENES = ['mist', 'cathedral', 'forge'] as const;
 
@@ -31,7 +46,17 @@ export function towerWaves(floor: number): StageEnemy[][] {
         { id: rng.pick(BOSSES), level: lv + 2, boss: true },
         { id: rng.pick(MINIONS), level: lv },
       ]);
-    } else waves.push(Array.from({ length: size }, () => ({ id: rng.pick(MINIONS), level: lv })));
+    } else
+      waves.push(
+        Array.from({ length: size }, () => {
+          const r = rng.next();
+          const champ = floor >= 20 ? Math.min(0.25, 0.05 + (floor - 20) * 0.005) : 0;
+          const elite = Math.min(0.5, 0.08 + floor * 0.01);
+          const tier =
+            r < champ ? ('champion' as const) : r < champ + elite ? ('elite' as const) : ('normal' as const);
+          return { id: rng.pick(MINIONS), level: lv, tier };
+        }),
+      );
   }
   return waves;
 }
@@ -55,7 +80,7 @@ export function applyTowerResult(
   floor: number,
   result: BattleResult,
   now = Date.now(),
-): ShopReward | null {
+): (ShopReward & { item?: Item }) | null {
   if (result.winner !== 'ally') {
     save.stats.battlesLost += 1;
     return null;
@@ -63,7 +88,18 @@ export function applyTowerResult(
   save.stats.battlesWon += 1;
   if (floor !== save.tower.floor + 1) return null;
   save.tower.floor = floor;
-  const r = towerReward(floor);
+  const r: ShopReward & { item?: Item } = towerReward(floor);
   grantReward(save, r, now);
+  save.materials.ore += 3 + Math.floor(floor / 5);
+  // Каждый 5-й этаж — предмет снаряжения, тем лучше, чем выше этаж.
+  if (floor % 5 === 0) {
+    const t = Math.min(1, floor / 60);
+    const drop = rollGearDrop(
+      save,
+      { common: 40 * (1 - t), rare: 40, epic: 15 + 40 * t, legendary: 2 + 15 * t },
+      1,
+    );
+    if (drop) r.item = drop;
+  }
   return r;
 }

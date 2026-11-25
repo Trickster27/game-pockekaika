@@ -65,6 +65,8 @@ export const MIGRATIONS: Record<number, Migration> = {
     quests: { day: '', progress: {}, claimed: [], chests: [] },
     login: { lastClaimDay: '', claimed: 0 },
   }),
+  // v7: рунная руда для Кузни.
+  7: (s) => ({ ...s, version: 7, materials: { ...(s.materials as Record<string, number>), ore: 20 } }),
 };
 
 export class SaveVersionError extends Error {}

@@ -20,6 +20,12 @@ export const TM_FULL = 1000;
 const DEFAULT_MAX_TURNS = 300;
 /** Множители боссов поверх обычного роста. */
 const BOSS_MULT = { hp: 3.2, atk: 1.15, def: 1.2 };
+/** Ранги врагов: элита и чемпионы заметно крепче обычных. */
+export const TIER_MULT = {
+  normal: { hp: 1, atk: 1, def: 1, spd: 0, acc: 0 },
+  elite: { hp: 1.6, atk: 1.2, def: 1.15, spd: 4, acc: 10 },
+  champion: { hp: 2.4, atk: 1.35, def: 1.3, spd: 8, acc: 20 },
+} as const;
 
 function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid: string): BattleUnit {
   const def = spec.kind === 'hero' ? db.hero(spec.defId) : db.enemy(spec.defId);
@@ -38,6 +44,18 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
       hp: Math.round(stats.hp * BOSS_MULT.hp),
       atk: Math.round(stats.atk * BOSS_MULT.atk),
       def: Math.round(stats.def * BOSS_MULT.def),
+    };
+  }
+  const tier = spec.tier ?? 'normal';
+  if (tier !== 'normal') {
+    const m = TIER_MULT[tier];
+    stats = {
+      ...stats,
+      hp: Math.round(stats.hp * m.hp),
+      atk: Math.round(stats.atk * m.atk),
+      def: Math.round(stats.def * m.def),
+      spd: stats.spd + m.spd,
+      acc: stats.acc + m.acc,
     };
   }
   if (spec.bonusPct) {
@@ -67,6 +85,7 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     role: def.role,
     level: spec.level,
     boss,
+    tier,
     stats,
     hp: Math.max(1, Math.round(stats.hp * (spec.hpFrac ?? 1))),
     shield: 0,

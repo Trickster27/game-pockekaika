@@ -25,7 +25,7 @@ export function teamHeroes(save: SaveData): OwnedHero[] {
 }
 
 export function enemySpec(e: StageEnemy): UnitSpec {
-  return { defId: e.id, kind: 'enemy', level: e.level, boss: e.boss };
+  return { defId: e.id, kind: 'enemy', level: e.level, boss: e.boss, tier: e.tier };
 }
 
 export function makeSetup(allies: UnitSpec[], waves: StageEnemy[][], seed: number): BattleSetup {

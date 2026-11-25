@@ -65,15 +65,21 @@ export function dungeonEnergy(level: number): number {
 export function dungeonWaves(d: DungeonDef, level: number): StageEnemy[][] {
   const lv = dungeonEnemyLevel(level);
   const n = level < 4 ? 3 : 4;
+  // Во второй волне один элитный враг; с 5-го уровня элита стоит и рядом с боссом.
   const wave = (k: number): StageEnemy[] =>
-    Array.from({ length: n }, (_, i) => ({ id: d.minions[(i + k) % 2]!, level: lv }));
+    Array.from({ length: n }, (_, i) => ({
+      id: d.minions[(i + k) % 2]!,
+      level: lv,
+      tier: k === 1 && i === 0 ? ('elite' as const) : ('normal' as const),
+    }));
+  const guard = level >= 5 ? ('elite' as const) : ('normal' as const);
   return [
     wave(0),
     wave(1),
     [
-      { id: d.minions[0], level: lv },
+      { id: d.minions[0], level: lv, tier: guard },
       { id: d.boss, level: lv + 2, boss: true },
-      { id: d.minions[1], level: lv },
+      { id: d.minions[1], level: lv, tier: guard },
     ],
   ];
 }

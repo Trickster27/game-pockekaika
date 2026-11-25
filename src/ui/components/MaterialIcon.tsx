@@ -33,6 +33,14 @@ export function MaterialIcon({ id }: { id: MaterialId }) {
           <path d="M12 22 L19 10 L12 10 Z" fill="#3fbfd0" />
         </svg>
       );
+    case 'ore':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 16 L7 7 L14 4 L20 9 L19 18 L11 21 Z" fill="#5e5260" {...s} />
+          <path d="M7 7 L14 4 L12 12 Z" fill="#7a6e80" stroke="none" />
+          <path d="M9 13 L12 11 L14 15 M15 8 L17 12" fill="none" stroke="#7fe7ff" strokeWidth="1.8" />
+        </svg>
+      );
     case 'scroll':
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true">

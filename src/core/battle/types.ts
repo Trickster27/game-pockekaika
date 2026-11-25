@@ -3,6 +3,7 @@ import type { SkillDef, StatusId } from '../content';
 import type { Element, Faction, Role, Stats } from '../types';
 
 export type Side = 'ally' | 'enemy';
+export type EnemyTier = 'normal' | 'elite' | 'champion';
 
 /** Описание бойца для запуска боя. */
 export interface UnitSpec {
@@ -16,6 +17,8 @@ export interface UnitSpec {
   /** Процентные прибавки к hp/atk/def (0.1 = +10%). */
   bonusPct?: Partial<Pick<Stats, 'hp' | 'atk' | 'def' | 'spd'>>;
   boss?: boolean;
+  /** Ранг врага: обычный, элитный, чемпион. */
+  tier?: EnemyTier;
   /** Стартовое HP (доля), например для продолжения после волны. */
   hpFrac?: number;
 }
@@ -52,6 +55,7 @@ export interface BattleUnit {
   role: Role;
   level: number;
   boss: boolean;
+  tier: EnemyTier;
   stats: Stats;
   hp: number;
   shield: number;

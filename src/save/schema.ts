@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -51,8 +51,8 @@ export interface CampaignProgress {
 }
 
 /** Материалы прокачки. */
-export type MaterialId = 'xpTome' | 'starDust' | 'awakenStone' | 'scroll';
-export const MATERIAL_IDS: readonly MaterialId[] = ['xpTome', 'starDust', 'awakenStone', 'scroll'];
+export type MaterialId = 'xpTome' | 'starDust' | 'awakenStone' | 'scroll' | 'ore';
+export const MATERIAL_IDS: readonly MaterialId[] = ['xpTome', 'starDust', 'awakenStone', 'scroll', 'ore'];
 
 export interface TeamPreset {
   name: string;
@@ -197,7 +197,7 @@ export function createNewSave(now: number = Date.now()): SaveData {
     team: STARTER_HERO_IDS.map((_, i) => `h${i + 1}`),
     campaign: { stars: {} },
     seq: STARTER_HERO_IDS.length + 1,
-    materials: { xpTome: 5, starDust: 0, awakenStone: 0, scroll: 3 },
+    materials: { xpTome: 5, starDust: 0, awakenStone: 0, scroll: 3, ore: 20 },
     presets: defaultPresets(),
     idle: { lastClaimAt: now },
     summon: newSummonState(now),

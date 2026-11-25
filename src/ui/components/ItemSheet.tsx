@@ -1,5 +1,15 @@
 import { heroDef } from '@/content';
-import { trackQuest, MAX_ITEM_LEVEL, sellItem, sellPrice, unequip, upgradeCost, upgradeItem } from '@/game';
+import {
+  salvageItem,
+  salvageValue,
+  trackQuest,
+  MAX_ITEM_LEVEL,
+  sellItem,
+  sellPrice,
+  unequip,
+  upgradeCost,
+  upgradeItem,
+} from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
@@ -59,12 +69,26 @@ export function ItemSheet({ uid, onClose }: { uid: string; onClose: () => void }
             </>
           )}
         </button>
-        <div style={{ display: 'grid', gridTemplateColumns: owner ? '1fr 1fr' : '1fr', gap: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: owner ? '1fr 1fr 1fr' : '1fr 1fr', gap: 8 }}>
           {owner && (
             <button type="button" className="btn" onClick={() => updateSave((s) => unequip(s, uid))}>
               {t('gear.unequip')}
             </button>
           )}
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              const ore = salvageValue(item);
+              updateSave((s) => {
+                salvageItem(s, uid);
+              });
+              showToast(t('gear.salvaged', { n: ore }));
+              onClose();
+            }}
+          >
+            {t('gear.salvage', { n: salvageValue(item) })}
+          </button>
           <button
             type="button"
             className="btn btn--danger"

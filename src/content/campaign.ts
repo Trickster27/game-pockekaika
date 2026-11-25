@@ -4,6 +4,7 @@ export interface StageEnemy {
   id: string;
   level: number;
   boss?: boolean;
+  tier?: 'normal' | 'elite' | 'champion';
 }
 
 export interface StageDef {
@@ -31,7 +32,8 @@ interface ChapterSpec {
   name: string;
   desc: string;
   scene: ChapterDef['scene'];
-  minions: [string, string];
+  /** Прислужники главы: первые два — с первых этапов, остальные появляются дальше. */
+  minions: [string, string, ...string[]];
   boss: string;
   baseLevel: number;
   energy: number;
@@ -43,7 +45,7 @@ const SPECS: ChapterSpec[] = [
     name: 'Мглистые пустоши',
     desc: 'Пустоши у края Мглы. Здесь бродят призраки и гончие с кристаллами на спине.',
     scene: 'mist',
-    minions: ['wraith', 'hound'],
+    minions: ['wraith', 'hound', 'shade_archer', 'gloom_knight'],
     boss: 'colossus',
     baseLevel: 1,
     energy: 6,
@@ -64,7 +66,7 @@ const SPECS: ChapterSpec[] = [
     name: 'Затонувший собор',
     desc: 'Собор под водой. Свет падает из окна-розы, в нефах плавают угри.',
     scene: 'cathedral',
-    minions: ['drowned', 'eel'],
+    minions: ['drowned', 'eel', 'siren', 'crab'],
     boss: 'abbess',
     baseLevel: 15,
     energy: 8,
@@ -85,7 +87,7 @@ const SPECS: ChapterSpec[] = [
     name: 'Горнило Бездны',
     desc: 'Вулканическая кузня демонов. По земле текут лавовые реки.',
     scene: 'forge',
-    minions: ['imp', 'golem'],
+    minions: ['imp', 'golem', 'firedrake', 'cultist'],
     boss: 'emberlord',
     baseLevel: 31,
     energy: 10,
@@ -128,8 +130,15 @@ function buildStage(spec: ChapterSpec, chapter: number, index: number): StageDef
     const baseSize = chapter === 1 ? (index <= 2 ? 2 : index <= 5 ? 3 : 4) : index <= 3 ? 4 : 5;
     const size = Math.min(5, baseSize + (last && index >= 7 ? 1 : 0));
     const wave: StageEnemy[] = [];
-    for (let i = 0; i < size; i++)
-      wave.push({ id: rng.pick(spec.minions), level: Math.max(1, level - (w === 0 ? 1 : 0)) });
+    const pool = index <= 2 ? spec.minions.slice(0, 2) : index <= 5 ? spec.minions.slice(0, 3) : spec.minions;
+    // Элита и чемпионы появляются чаще ближе к концу главы и в поздних главах.
+    const eliteChance = chapter === 1 && index < 3 ? 0 : 0.06 + 0.025 * index + 0.05 * (chapter - 1);
+    const champChance = index >= 6 ? 0.03 + 0.02 * (chapter - 1) : 0;
+    for (let i = 0; i < size; i++) {
+      const r = rng.next();
+      const tier = r < champChance ? 'champion' : r < champChance + eliteChance ? 'elite' : 'normal';
+      wave.push({ id: rng.pick(pool), level: Math.max(1, level - (w === 0 ? 1 : 0)), tier });
+    }
     waves.push(wave);
   }
   return {

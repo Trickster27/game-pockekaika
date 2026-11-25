@@ -7,6 +7,7 @@ import { useGame } from '@/state/store';
 import { MaterialIcon } from '../components/MaterialIcon';
 import { GearIcon } from '../components/GearIcon';
 import { ItemSheet } from '../components/ItemSheet';
+import { ForgePanel } from '../components/ForgePanel';
 import './screens.css';
 import './summon.css';
 import './heroes.css';
@@ -16,7 +17,7 @@ const RANK = { legendary: 3, epic: 2, rare: 1, common: 0 } as const;
 export default function BagScreen() {
   const t = useT();
   const save = useGame((s) => s.save)!;
-  const [tab, setTab] = useState<'gear' | 'mats'>('gear');
+  const [tab, setTab] = useState<'gear' | 'mats' | 'forge'>('gear');
   const [slot, setSlot] = useState<Slot | 'all'>('all');
   const [open, setOpen] = useState<string | null>(null);
   const items = save.items
@@ -29,11 +30,16 @@ export default function BagScreen() {
         <button type="button" aria-pressed={tab === 'gear'} onClick={() => setTab('gear')}>
           {t('bag.gear')} ({t('bag.count', { n: save.items.length, max: INVENTORY_LIMIT })})
         </button>
+        <button type="button" aria-pressed={tab === 'forge'} onClick={() => setTab('forge')}>
+          {t('bag.forge')}
+        </button>
         <button type="button" aria-pressed={tab === 'mats'} onClick={() => setTab('mats')}>
           {t('bag.materials')}
         </button>
       </div>
-      {tab === 'mats' ? (
+      {tab === 'forge' ? (
+        <ForgePanel />
+      ) : tab === 'mats' ? (
         <div className="mats">
           {MATERIAL_IDS.map((id) => (
             <div className="mat" key={id}>

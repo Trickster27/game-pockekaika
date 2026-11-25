@@ -3,6 +3,8 @@ import { ALL_STAGES, stageById, type StageDef } from '@/content/campaign';
 import type { SaveData } from '@/save/schema';
 import { addHeroXp, addPlayerXp, type LevelUp } from './progression';
 import { teamHeroes } from './battleSetup';
+import { campaignDropWeights, rollGearDrop } from './forge';
+import type { Item } from '@/save/schema';
 
 /** Этап доступен, если пройден предыдущий (первый доступен всегда). */
 export function isStageUnlocked(save: SaveData, stageId: string): boolean {
@@ -37,6 +39,8 @@ export interface StageRewards {
   levelUps: LevelUp[];
   playerLevelUps: number;
   newStars: number;
+  items: Item[];
+  ore: number;
 }
 
 /** Записывает результат этапа в сейв и выдаёт награды. Поражение даёт треть опыта. */
@@ -64,7 +68,16 @@ export function applyStageResult(save: SaveData, stageId: string, result: Battle
     newStars = result.stars - prev;
     save.campaign.stars[stageId] = result.stars;
   }
+  // Трофеи: снаряжение (у босса — всегда) и рунная руда.
+  const items: Item[] = [];
+  let ore = 0;
+  if (win) {
+    const drop = rollGearDrop(save, campaignDropWeights(stage.chapter), stage.boss ? 1 : 0.35);
+    if (drop) items.push(drop);
+    ore = 2 + stage.chapter * 2 + (stage.boss ? 10 : 0);
+    save.materials.ore += ore;
+  }
   if (win) save.stats.battlesWon += 1;
   else save.stats.battlesLost += 1;
-  return { gold, shards, heroXp, playerXp, firstClear, levelUps, playerLevelUps, newStars };
+  return { gold, shards, heroXp, playerXp, firstClear, levelUps, playerLevelUps, newStars, items, ore };
 }
