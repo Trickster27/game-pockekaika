@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -51,12 +51,27 @@ export interface CampaignProgress {
 }
 
 /** Материалы прокачки. */
-export type MaterialId = 'xpTome' | 'starDust' | 'awakenStone';
-export const MATERIAL_IDS: readonly MaterialId[] = ['xpTome', 'starDust', 'awakenStone'];
+export type MaterialId = 'xpTome' | 'starDust' | 'awakenStone' | 'scroll';
+export const MATERIAL_IDS: readonly MaterialId[] = ['xpTome', 'starDust', 'awakenStone', 'scroll'];
 
 export interface TeamPreset {
   name: string;
   uids: string[];
+}
+
+export interface SummonState {
+  /** Состояние RNG призыва: перезагрузка не меняет результат следующего призыва. */
+  rng: number;
+  /** Призывов подряд без легендарного героя. */
+  sinceLegendary: number;
+  /** Призывов подряд без эпического или легендарного героя. */
+  sinceEpic: number;
+  total: number;
+}
+
+export interface ShopState {
+  /** Покупки: id предложения → { период, количество }. */
+  bought: Record<string, { period: string; count: number }>;
 }
 
 export interface SaveData {
@@ -79,6 +94,9 @@ export interface SaveData {
   materials: Record<MaterialId, number>;
   /** Сохранённые составы команды. */
   presets: TeamPreset[];
+  idle: { lastClaimAt: number };
+  summon: SummonState;
+  shop: ShopState;
   stats: { battlesWon: number; battlesLost: number };
 }
 
@@ -131,8 +149,11 @@ export function createNewSave(now: number = Date.now()): SaveData {
     team: STARTER_HERO_IDS.map((_, i) => `h${i + 1}`),
     campaign: { stars: {} },
     seq: STARTER_HERO_IDS.length + 1,
-    materials: { xpTome: 5, starDust: 0, awakenStone: 0 },
+    materials: { xpTome: 5, starDust: 0, awakenStone: 0, scroll: 3 },
     presets: defaultPresets(),
+    idle: { lastClaimAt: now },
+    summon: newSummonState(now),
+    shop: { bought: {} },
     stats: { battlesWon: 0, battlesLost: 0 },
   };
 }
@@ -143,4 +164,8 @@ export function defaultPresets(): TeamPreset[] {
     { name: 'Состав 2', uids: [] },
     { name: 'Состав 3', uids: [] },
   ];
+}
+
+export function newSummonState(seed: number): SummonState {
+  return { rng: (seed ^ 0x9e3779b9) >>> 0, sinceLegendary: 0, sinceEpic: 0, total: 0 };
 }

@@ -4,6 +4,9 @@ import { useGame } from '@/state/store';
 import { TopBar } from './components/TopBar';
 import { BottomNav } from './components/BottomNav';
 import { IconCrystal } from './components/icons';
+import { IdleModal } from './components/IdleModal';
+import './screens/battle.css';
+import './screens/summon.css';
 import './app.css';
 
 // Экраны грузятся лениво: первый экран (лагерь) приходит быстро, остальные — по требованию.
@@ -13,6 +16,9 @@ const BattleScreen = lazy(() => import('./screens/BattleScreen'));
 const CampaignScreen = lazy(() => import('./screens/CampaignScreen'));
 const HeroesScreen = lazy(() => import('./screens/HeroesScreen'));
 const TeamScreen = lazy(() => import('./screens/TeamScreen'));
+const SummonScreen = lazy(() => import('./screens/SummonScreen'));
+const ShopScreen = lazy(() => import('./screens/ShopScreen'));
+const BagScreen = lazy(() => import('./screens/BagScreen'));
 const PlaceholderScreen = lazy(() => import('./screens/PlaceholderScreen'));
 
 function Splash() {
@@ -41,9 +47,11 @@ function Screen() {
     case 'team':
       return <TeamScreen />;
     case 'summon':
-      return <PlaceholderScreen titleKey="nav.summon" stage={5} />;
+      return <SummonScreen />;
+    case 'shop':
+      return <ShopScreen />;
     case 'bag':
-      return <PlaceholderScreen titleKey="nav.bag" stage={6} />;
+      return <BagScreen />;
     case 'placeholder':
       return <PlaceholderScreen />;
   }
@@ -80,6 +88,7 @@ export function App() {
         </Suspense>
       </main>
       {full ? <div /> : <BottomNav />}
+      {!full && <IdleModal />}
       {toast && (
         <div className="toast" role="status">
           {toast}

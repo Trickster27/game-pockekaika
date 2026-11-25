@@ -1,0 +1,325 @@
+.altar {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid var(--line-2);
+  background:
+    radial-gradient(70% 60% at 50% 55%, rgba(163, 124, 255, 0.35), transparent 70%),
+    linear-gradient(180deg, #1a1530, #120e1c);
+  display: grid;
+  justify-items: center;
+  padding: 18px 14px 14px;
+  overflow: hidden;
+}
+.altar svg.crystal {
+  width: 150px;
+  height: 170px;
+  animation: crystal-bob 2.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 24px rgba(163, 124, 255, 0.6));
+}
+.altar.is-charging svg.crystal {
+  animation: crystal-charge 0.9s ease-in forwards;
+}
+@keyframes crystal-bob {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes crystal-charge {
+  60% {
+    transform: scale(1.2) rotate(8deg);
+    filter: drop-shadow(0 0 40px #fff) brightness(1.6);
+  }
+  100% {
+    transform: scale(0.2);
+    opacity: 0;
+    filter: drop-shadow(0 0 60px #fff) brightness(3);
+  }
+}
+.pity {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.pity .bar {
+  height: 8px;
+  border-radius: 4px;
+  background: #2a2236;
+  overflow: hidden;
+}
+.pity .bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #b07cff, #f0c860);
+}
+.sum-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+.sum-btns .btn {
+  min-height: 56px;
+  flex-direction: column;
+  gap: 2px;
+}
+.sum-btns small {
+  font-weight: 500;
+  font-size: 12px;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.rates {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  text-align: center;
+  font-size: 12px;
+}
+.rates div {
+  border-radius: 8px;
+  border: 1px solid var(--rc);
+  padding: 6px 2px;
+  color: var(--rc);
+}
+.rates b {
+  display: block;
+  color: var(--fg);
+  font-size: 14px;
+}
+.reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background: radial-gradient(circle at 50% 40%, #2a1f4d, #07050b 75%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  overflow-y: auto;
+  gap: 16px;
+  padding: 20px max(14px, var(--safe-r)) calc(var(--safe-b) + 20px) max(14px, var(--safe-l));
+  animation: fade-in 0.3s;
+}
+.reveal.is-leg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(240, 200, 96, 0.55), transparent 60%);
+  animation: leg-flash 1.2s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes leg-flash {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+.reveal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+}
+.reveal-grid.one {
+  grid-template-columns: minmax(0, 180px);
+  justify-content: center;
+}
+.rcard {
+  animation: card-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  position: relative;
+}
+.rcard .htile {
+  width: 100%;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--rc) 60%, transparent);
+}
+.rcard--legendary .htile {
+  box-shadow:
+    0 0 28px #f0c860,
+    0 0 60px rgba(240, 200, 96, 0.5);
+}
+.rcard .new {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--red);
+  color: #fff;
+  font: 700 10px var(--body);
+  border-radius: 8px;
+  padding: 1px 6px;
+  z-index: 2;
+}
+@keyframes card-in {
+  from {
+    transform: rotateY(90deg) scale(0.6);
+    opacity: 0;
+  }
+}
+.reveal .btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+}
+.offers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.offer {
+  border-radius: 14px;
+  border: 1px solid var(--line-2);
+  background: linear-gradient(180deg, #221b2e, #17121f);
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  text-align: center;
+}
+.offer--real {
+  border-color: var(--gold);
+  grid-column: 1 / -1;
+}
+.offer__ic {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #1a1522;
+  border: 1px solid var(--line-2);
+  display: grid;
+  place-items: center;
+}
+.offer__ic svg {
+  width: 34px;
+  height: 34px;
+}
+.offer b {
+  font-family: var(--display);
+  font-size: 15px;
+  line-height: 1.2;
+}
+.offer p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.offer small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.offer .btn {
+  width: 100%;
+  min-height: 40px;
+}
+.mats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.mat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+  padding: 10px;
+}
+.mat svg {
+  width: 32px;
+  height: 32px;
+  flex: none;
+}
+.mat b {
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  display: block;
+}
+.mat span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.idle-card .idle-chest {
+  width: 120px;
+  height: 100px;
+  margin: 0 auto;
+}
+.idle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 6px;
+}
+.idle-cell {
+  background: #1a1522;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  padding: 8px 2px;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+}
+.idle-cell svg {
+  width: 26px;
+  height: 26px;
+}
+.idle-cell b {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.idle-cell small {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+.idle-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  border: 1px solid #4a3d2a;
+  background: rgba(28, 23, 37, 0.94);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.idle-bar > svg {
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+.idle-bar div {
+  flex: 1;
+  min-width: 0;
+}
+.idle-bar b {
+  font-family: var(--display);
+  font-size: 16px;
+  display: block;
+}
+.idle-bar span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.idle-bar .pbar {
+  height: 6px;
+  border-radius: 3px;
+  background: #2a2236;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.idle-bar .pbar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #d9a94a, #ffe08a);
+}

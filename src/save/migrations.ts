@@ -1,4 +1,4 @@
-import { SAVE_VERSION, starterHeroes, defaultPresets } from './schema';
+import { SAVE_VERSION, starterHeroes, defaultPresets, newSummonState } from './schema';
 
 /** Сырые данные сейва неизвестной версии. */
 export type RawSave = Record<string, unknown> & { version?: unknown };
@@ -35,6 +35,19 @@ export const MIGRATIONS: Record<number, Migration> = {
     materials: { xpTome: 5, starDust: 0, awakenStone: 0 },
     presets: defaultPresets(),
   }),
+  // v4: idle-награды, призыв, магазин, свитки призыва.
+  4: (s) => {
+    const now = typeof s.updatedAt === 'number' ? s.updatedAt : Date.now();
+    const materials = { ...(s.materials as Record<string, number>), scroll: 3 };
+    return {
+      ...s,
+      version: 4,
+      materials,
+      idle: { lastClaimAt: now },
+      summon: newSummonState(now),
+      shop: { bought: {} },
+    };
+  },
 };
 
 export class SaveVersionError extends Error {}

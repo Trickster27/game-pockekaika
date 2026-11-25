@@ -76,6 +76,13 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
     : base.presets;
   const locale =
     s.locale === 'en' || s.locale === 'uk' || s.locale === 'ru' ? s.locale : DEFAULT_SETTINGS.locale;
+  const idleRaw = isObj(raw.idle) ? raw.idle : {};
+  const sm = isObj(raw.summon) ? raw.summon : {};
+  const shopRaw = isObj(raw.shop) && isObj(raw.shop.bought) ? raw.shop.bought : {};
+  const bought: SaveData['shop']['bought'] = {};
+  for (const [k, v] of Object.entries(shopRaw))
+    if (isObj(v) && typeof v.period === 'string')
+      bought[k] = { period: v.period, count: Math.floor(num(v.count, 0, 0)) };
   return {
     version: num(raw.version, base.version),
     saveId: str(raw.saveId, base.saveId),
@@ -98,6 +105,14 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
     campaign: { stars: campStars },
     materials,
     presets,
+    idle: { lastClaimAt: Math.min(now, num(idleRaw.lastClaimAt, now, 0)) },
+    summon: {
+      rng: Math.floor(num(sm.rng, base.summon.rng, 0)) >>> 0,
+      sinceLegendary: Math.floor(num(sm.sinceLegendary, 0, 0)),
+      sinceEpic: Math.floor(num(sm.sinceEpic, 0, 0)),
+      total: Math.floor(num(sm.total, 0, 0)),
+    },
+    shop: { bought },
     seq: Math.max(Math.round(num(raw.seq, base.seq, 1)), (heroes?.length ?? 0) + 1),
     stats: {
       battlesWon: Math.floor(num(st.battlesWon, 0, 0)),

@@ -5,7 +5,7 @@ import type { SceneKey } from '@/render/pixi/battle/background';
 import { saves } from './services';
 
 export type ScreenId =
-  'camp' | 'campaign' | 'battle' | 'heroes' | 'team' | 'summon' | 'bag' | 'settings' | 'placeholder';
+  'camp' | 'campaign' | 'battle' | 'heroes' | 'team' | 'summon' | 'bag' | 'shop' | 'settings' | 'placeholder';
 
 export interface RewardLine {
   icon: 'gold' | 'shards' | 'xp' | 'energy' | 'level' | 'star' | 'item';
@@ -39,6 +39,8 @@ interface GameState {
   /** Счётчик запусков боя: меняется при каждом новом бое, даже если экран тот же. */
   battleKey: number;
   toast: string | null;
+  idleOpen: boolean;
+  setIdleOpen: (v: boolean) => void;
   go: (screen: ScreenId) => void;
   openPlaceholder: (titleKey: string, stage: number) => void;
   startBattle: (req: BattleRequest) => void;
@@ -57,6 +59,8 @@ export const useGame = create<GameState>((set) => ({
   battle: null,
   battleKey: 0,
   toast: null,
+  idleOpen: false,
+  setIdleOpen: (v) => set({ idleOpen: v }),
   go: (screen) => set({ screen }),
   openPlaceholder: (titleKey, stage) => set({ screen: 'placeholder', placeholder: { titleKey, stage } }),
   startBattle: (req) => set((s) => ({ battle: req, battleKey: s.battleKey + 1, screen: 'battle' })),
