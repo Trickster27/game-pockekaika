@@ -801,3 +801,51 @@
   font: 700 10px/16px var(--body);
   white-space: nowrap;
 }
+.skins {
+  display: grid;
+  grid-template-columns: auto repeat(3, 1fr);
+  gap: 6px;
+  align-items: center;
+}
+.skins > small {
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #8f84a0;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.skin {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border-radius: 12px;
+  border: 1px solid #3e3350;
+  background: linear-gradient(180deg, #221c2c, #15111c);
+  color: inherit;
+}
+.skin img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+.skin span {
+  font-size: 11.5px;
+}
+.skin em {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  font-size: 11px;
+  background: rgba(10, 8, 16, 0.6);
+  border-radius: 12px;
+  color: #e0b052;
+}
+.skin.is-on {
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(240, 200, 96, 0.25);
+}

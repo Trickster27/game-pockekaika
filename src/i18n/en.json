@@ -1160,7 +1160,7 @@
     },
     "reset": "Reset talents",
     "resetYes": "Reset for {gold} gold",
-    "collection": "“{faction}” collection: {have}/{total} heroes — all its heroes get +{pct}% HP, attack and defense (3 heroes: +3%, 5: +6%, all 6: +10%).",
+    "collection": "“{faction}” collection: {have}/{total} heroes — all its heroes get +{pct}% HP, attack and defense (3 heroes: +3%, 5: +6%, all 7: +10%).",
     "err": {
       "notFound": "Not found",
       "max": "Skill is maxed",
@@ -1338,7 +1338,8 @@
     "enrage": "Enrage ×{n}",
     "cleanse": "Cleanse",
     "tmUp": "Turn meter +",
-    "tmDown": "Turn meter −"
+    "tmDown": "Turn meter −",
+    "thorns": "Thorns"
   },
   "time": {
     "dh": "{d}d {h}h",
@@ -1424,5 +1425,14 @@
       "locked": "Clear the previous level first",
       "closed": "This trial is closed today"
     }
+  },
+  "skin": {
+    "title": "Appearance",
+    "default": "Original",
+    "dusk": "Twilight",
+    "gilded": "Gilded",
+    "need": "{n}★+",
+    "set": "Appearance set",
+    "locked": "Requires {n}★"
   }
 }

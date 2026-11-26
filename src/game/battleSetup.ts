@@ -20,6 +20,7 @@ export function heroSpec(h: OwnedHero, save?: SaveData): UnitSpec {
     spec.bonusPct = b.pct;
   }
   if (h.skillLv?.some((x) => x > 1)) spec.skillLv = [...h.skillLv];
+  if (h.skin) spec.skin = h.skin;
   return spec;
 }
 

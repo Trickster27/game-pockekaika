@@ -27,5 +27,6 @@ export * from './expeditions';
 export * from './raid';
 export * from './mail';
 export * from './trial';
+export * from './skins';
 export * from './depth';
 export * from './liveops';

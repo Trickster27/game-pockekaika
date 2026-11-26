@@ -9,6 +9,7 @@ export * from './campaign';
 export * from './scrolls';
 export * from './clanBoss';
 export * from './story';
+export * from './skins';
 
 const heroMap = new Map(HEROES.map((h) => [h.id, h]));
 const enemyMap = new Map([...ENEMIES, ...CLAN_BOSSES].map((e) => [e.id, e]));

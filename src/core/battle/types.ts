@@ -28,6 +28,10 @@ export interface UnitSpec {
   element?: Element;
   /** Иммунитет к оглушению и сбиву шкалы хода. */
   ccImmune?: boolean;
+  /** Отражение урона (шипы): доля полученного урона, возвращаемая атакующему. */
+  thorns?: number;
+  /** Облик героя (перекраска модели). */
+  skin?: string;
   /** Ярость: прибавка к атаке за каждый свой ход (0.04 = +4%). */
   enrage?: number;
   /** Уровни навыков 1..4 (книги навыков): +10% силы за уровень, на 4-м перезарядка на 1 короче. */
@@ -80,6 +84,8 @@ export interface BattleUnit {
   statuses: StatusInst[];
   alive: boolean;
   ccImmune: boolean;
+  thorns: number;
+  skin?: string;
   /** Здоровье из общего пула (босс клана): яд ограничен атакой отравителя. */
   pooled: boolean;
   /** Прирост атаки за ход и сколько раз он уже сработал. */
@@ -101,6 +107,8 @@ export type BattleEvent =
       crit: boolean;
       affinity: Affinity;
       hp: number;
+      /** Урон от шипов цели. */
+      reflect?: boolean;
     }
   | { t: 'heal'; uid: string; amount: number; hp: number }
   | { t: 'shield'; uid: string; amount: number }

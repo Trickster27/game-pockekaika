@@ -78,6 +78,8 @@ export interface EnemyDef {
   skills: string[];
   mod?: Partial<Stats>;
   boss?: boolean;
+  /** Шипы: доля полученного от навыка урона, которая возвращается атакующему (0.2 = 20%). */
+  thorns?: number;
 }
 
 export interface ContentDb {

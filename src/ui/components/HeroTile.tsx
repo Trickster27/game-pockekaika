@@ -1,3 +1,4 @@
+import { skinCss } from '@/content/skins';
 import { busyKind } from '@/game';
 import type { HeroDef } from '@/core/content';
 import type { OwnedHero } from '@/save/schema';
@@ -40,7 +41,7 @@ export function HeroTile(props: {
       aria-label={def.name}
     >
       <span className="htile__art">
-        <img src={unitStillUrl(def.art)} alt="" loading="lazy" />
+        <img src={unitStillUrl(def.art)} alt="" loading="lazy" style={{ filter: skinCss(owned?.skin) }} />
       </span>
       <span
         className="htile__el"

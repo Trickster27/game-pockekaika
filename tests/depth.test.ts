@@ -91,9 +91,11 @@ describe('таланты и коллекция', () => {
     const before = heroPower(s.heroes[0]!, s);
     expect(collectionOf(s, 'order').pct).toBe(0);
     s.heroes.push(hero('mirna'));
-    expect(collectionOf(s, 'order')).toMatchObject({ have: 3, total: 6, pct: 0.03 });
+    expect(collectionOf(s, 'order')).toMatchObject({ have: 3, total: 7, pct: 0.03 });
     expect(heroPower(s.heroes[0]!, s)).toBeGreaterThan(before);
     for (const id of ['valeria', 'rikht', 'tobias']) s.heroes.push(hero(id));
+    expect(collectionOf(s, 'order').pct).toBe(0.06);
+    s.heroes.push(hero('marina'));
     expect(collectionOf(s, 'order').pct).toBe(0.1);
   });
 });

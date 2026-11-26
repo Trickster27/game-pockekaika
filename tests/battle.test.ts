@@ -265,13 +265,13 @@ describe('контент', () => {
   it('без ошибок ссылок', () => {
     expect(validateContent()).toEqual([]);
   });
-  it('40 героев: 30 обычного пула (по 6 на фракцию), 4 сумрачных, 4 мифических и 2 слиянием', () => {
-    expect(HEROES.length).toBe(40);
+  it('45 героев: 35 обычного пула (по 7 на фракцию), 4 сумрачных, 4 мифических и 2 слиянием', () => {
+    expect(HEROES.length).toBe(45);
     expect(HEROES.filter((h) => h.pool === 'fusion')).toHaveLength(2);
     const base = HEROES.filter((h) => !h.pool);
-    expect(base.length).toBe(30);
+    expect(base.length).toBe(35);
     for (const f of ['order', 'grove', 'ash', 'abyss', 'forge'])
-      expect(base.filter((h) => h.faction === f).length).toBe(6);
+      expect(base.filter((h) => h.faction === f).length).toBe(7);
     expect(
       HEROES.filter((h) => h.pool === 'void').every((h) => h.element === 'light' || h.element === 'dark'),
     ).toBe(true);
@@ -281,8 +281,8 @@ describe('контент', () => {
     for (const r of ['attacker', 'defender', 'support', 'healer'])
       expect(HEROES.some((h) => h.role === r)).toBe(true);
   });
-  it('5 глав по 10 этапов, босс в конце каждой', () => {
-    expect(CHAPTERS.length).toBe(5);
+  it('6 глав по 10 этапов, босс в конце каждой', () => {
+    expect(CHAPTERS.length).toBe(6);
     for (const c of CHAPTERS) {
       expect(c.stages.length).toBe(10);
       expect(c.stages[9]!.boss).toBe(true);

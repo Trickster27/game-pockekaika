@@ -1,4 +1,14 @@
-import { Application, Assets, Container, Graphics, Sprite, Text, type Texture } from 'pixi.js';
+import {
+  Application,
+  Assets,
+  ColorMatrixFilter,
+  Container,
+  Graphics,
+  Sprite,
+  Text,
+  type Texture,
+} from 'pixi.js';
+import { skinDef } from '@/content/skins';
 import type { Battle, BattleEvent, BattleUnit } from '@/core/battle';
 import type { Element } from '@/core/types';
 import type { StatusId } from '@/core/content';
@@ -322,6 +332,16 @@ export class BattleView {
       });
       body.addChild(sprite, rc, flashSprite);
     } else body.addChild(sprite, flashSprite);
+    // Облик: перекраска модели цветовой матрицей (те же параметры, что у CSS-фильтра в интерфейсе).
+    const skin = skinDef(u.skin);
+    if (skin) {
+      const f = new ColorMatrixFilter();
+      if (skin.sepia) f.sepia(true);
+      f.hue(skin.hue, true);
+      f.saturate(skin.saturate, true);
+      if (skin.brightness) f.brightness(skin.brightness, true);
+      body.filters = [f];
+    }
     const aura = new Graphics();
     aura.blendMode = 'add';
     root.addChild(shadow, aura, ring, body);
@@ -646,6 +666,12 @@ export class BattleView {
         if (foes.length) await this.fxProjectiles(actor, foes, color, byUid, 0, 'orb');
         await this.wait(350);
       }
+    }
+    // Шипы: урон, вернувшийся атакующему.
+    const back = (byUid.get(actor.uid) ?? []).filter((ev) => ev.t === 'damage' && ev.reflect);
+    if (back.length) {
+      this.label(actor, tr('fx.thorns'), '#c79cff');
+      await this.applyTo(actor, back, actor);
     }
     await this.wait(220);
   }

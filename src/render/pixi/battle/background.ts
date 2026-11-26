@@ -1,7 +1,7 @@
 import { Texture } from 'pixi.js';
 import { Rng } from '@/core/rng';
 
-export type SceneKey = 'mist' | 'cathedral' | 'forge' | 'dusk' | 'sky';
+export type SceneKey = 'mist' | 'cathedral' | 'forge' | 'dusk' | 'sky' | 'rift';
 export const FIELD = { width: 360, height: 520 } as const;
 const LEAD = '#0a0710';
 
@@ -43,6 +43,13 @@ const PALETTES: Record<
     near: ['#8aa4c8', '#9ab2d2', '#7e98bc', '#a6bcd8'],
     light: [90, 60, 220, '#fff4c8'],
     seed: 88,
+  },
+  rift: {
+    sky: ['#0a0618', '#120a2a', '#1a0e38', '#080414'],
+    mid: ['#1c1240', '#24164e', '#180e36'],
+    near: ['#1a1430', '#221a3c', '#141026', '#2a1f48'],
+    light: [180, 70, 240, '#c79cff'],
+    seed: 99,
   },
 };
 
@@ -216,6 +223,48 @@ export function sceneTexture(key: SceneKey, resolution = 2): Texture {
       x.fill();
     }
     x.globalCompositeOperation = 'source-over';
+  } else if (key === 'rift') {
+    // Трещина в небе, мёртвые звёзды и висящие осколки.
+    x.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 60; i++) {
+      const sx = (i * 97) % 360,
+        sy = (i * 53) % 170;
+      x.fillStyle = `rgba(230,220,255,${0.25 + ((i * 7) % 10) / 20})`;
+      x.fillRect(sx, sy, 1.6, 1.6);
+    }
+    const cg = x.createLinearGradient(170, 0, 200, 170);
+    cg.addColorStop(0, 'rgba(199,156,255,0)');
+    cg.addColorStop(0.5, 'rgba(199,156,255,.75)');
+    cg.addColorStop(1, 'rgba(255,240,255,.2)');
+    x.strokeStyle = cg;
+    x.lineWidth = 6;
+    x.beginPath();
+    x.moveTo(150, 0);
+    x.lineTo(176, 40);
+    x.lineTo(160, 70);
+    x.lineTo(196, 110);
+    x.lineTo(184, 150);
+    x.stroke();
+    x.lineWidth = 2;
+    x.strokeStyle = 'rgba(255,255,255,.8)';
+    x.stroke();
+    x.globalCompositeOperation = 'source-over';
+    x.lineWidth = 2;
+    for (const [cx, cy, s] of [
+      [60, 110, 1],
+      [300, 90, 0.8],
+      [250, 150, 0.6],
+    ] as const) {
+      x.fillStyle = '#3a2a6a';
+      x.beginPath();
+      x.moveTo(cx, cy - 14 * s);
+      x.lineTo(cx + 10 * s, cy);
+      x.lineTo(cx, cy + 18 * s);
+      x.lineTo(cx - 10 * s, cy);
+      x.closePath();
+      x.fill();
+      x.stroke();
+    }
   } else if (key === 'sky') {
     // Солнце, облака и парящие острова.
     x.globalCompositeOperation = 'lighter';
@@ -399,4 +448,5 @@ export const SCENE_TINT: Record<SceneKey, string> = {
   forge: '#ff7a2a',
   dusk: '#c79cff',
   sky: '#bfe0ff',
+  rift: '#c79cff',
 };

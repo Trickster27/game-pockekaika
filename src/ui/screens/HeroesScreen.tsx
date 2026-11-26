@@ -3,6 +3,7 @@ import { HEROES, heroDef } from '@/content';
 import { maxLevel, STAT_KEYS, HERO_RARITY_ORDER, ELEMENTS, FACTIONS, ROLES } from '@/core';
 import type { Element, Faction, HeroRarity, Role } from '@/core/types';
 import {
+  setHeroSkin,
   AWAKEN_COST,
   capOf,
   busyKind,
@@ -21,9 +22,10 @@ import {
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
-import { unitArtUrl } from '@/assets/art';
+import { unitArtUrl, unitStillUrl } from '@/assets/art';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { HeroTile, Stars } from '../components/HeroTile';
+import { SKINS, skinCss } from '@/content/skins';
 import { FilterBar, FilterGroup } from '../components/FilterBar';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
 import { HeroGear } from '../components/HeroGear';
@@ -229,7 +231,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
         className="hd__hero"
         style={{ ['--rc' as string]: RARITY_COLOR[d.rarity], ['--fc' as string]: FACTION_COLOR[d.faction] }}
       >
-        <img src={unitArtUrl(d.art)} alt={d.name} />
+        <img src={unitArtUrl(d.art)} alt={d.name} style={{ filter: skinCss(hero.skin) }} />
         <div>
           <h2>{d.name}</h2>
           <p className="hd__title">{d.title}</p>
@@ -260,6 +262,32 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
           </small>
         </div>
       </section>
+      <div className="skins">
+        <small>{t('skin.title')}</small>
+        {[undefined, ...SKINS].map((sk) => {
+          const locked = !!sk && hero.stars < sk.stars;
+          const on = (hero.skin ?? undefined) === sk?.id;
+          return (
+            <button
+              key={sk?.id ?? 'base'}
+              type="button"
+              className={`skin${on ? ' is-on' : ''}`}
+              disabled={locked}
+              title={locked ? t('skin.locked', { n: sk!.stars }) : undefined}
+              onClick={() => {
+                updateSave((s) => {
+                  setHeroSkin(s, hero.uid, sk?.id);
+                });
+                showToast(t('skin.set'));
+              }}
+            >
+              <img src={unitStillUrl(d.art)} alt="" style={{ filter: sk?.css }} />
+              <span>{sk ? t(`skin.${sk.id}`) : t('skin.default')}</span>
+              {locked && <em>🔒 {t('skin.need', { n: sk!.stars })}</em>}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="acts">
         <button

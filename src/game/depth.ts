@@ -107,7 +107,7 @@ export function resetTalents(save: SaveData, uid: string): true | 'notFound' | '
 export const COLLECTION_TIERS = [
   { need: 3, pct: 0.03 },
   { need: 5, pct: 0.06 },
-  { need: 6, pct: 0.1 },
+  { need: 7, pct: 0.1 },
 ] as const;
 
 export function collectionOf(save: SaveData, f: Faction): { have: number; total: number; pct: number } {

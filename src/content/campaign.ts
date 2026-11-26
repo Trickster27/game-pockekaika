@@ -24,7 +24,7 @@ export interface ChapterDef {
   name: string;
   desc: string;
   /** Ключ фона для рендера. */
-  scene: 'mist' | 'cathedral' | 'forge' | 'dusk' | 'sky';
+  scene: 'mist' | 'cathedral' | 'forge' | 'dusk' | 'sky' | 'rift';
   stages: StageDef[];
 }
 
@@ -144,6 +144,27 @@ const SPECS: ChapterSpec[] = [
       'Храм полудня',
       'Шпиль молний',
       'Трон Короля Бурь',
+    ],
+  },
+  {
+    name: 'Звёздный разлом',
+    desc: 'Трещина в небе за троном Короля Бурь. Пустота мёртвых звёзд, где каждая тварь возвращает удар.',
+    scene: 'rift',
+    minions: ['rift_spawn', 'void_mirror', 'star_wraith', 'null_priest', 'rift_spawn'],
+    boss: 'void_herald',
+    baseLevel: 76,
+    energy: 16,
+    stageNames: [
+      'Край трещины',
+      'Мост из мёртвых звёзд',
+      'Зеркальный зал',
+      'Рой Разлома',
+      'Безмолвный хор',
+      'Обломки неба',
+      'Тропа отражений',
+      'Чертог пустоты',
+      'Глаз бури',
+      'Престол Глашатая',
     ],
   },
 ];

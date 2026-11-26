@@ -102,6 +102,8 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     statuses: [],
     alive: true,
     ccImmune: spec.ccImmune ?? false,
+    thorns: Math.max(0, Math.min(0.8, spec.thorns ?? ('thorns' in def ? (def.thorns ?? 0) : 0))),
+    ...(spec.skin ? { skin: spec.skin } : {}),
     pooled: spec.hpMax != null,
     enrage: spec.enrage ?? 0,
     enrageStacks: 0,
@@ -512,7 +514,7 @@ export class Battle {
     this.emit({ t: 'status', uid: dst.uid, status: id, turns, landed: true });
   }
 
-  private dealDamage(src: BattleUnit, dst: BattleUnit, amount: number, crit: boolean) {
+  private dealDamage(src: BattleUnit, dst: BattleUnit, amount: number, crit: boolean, reflect = false) {
     let left = amount;
     let absorbed = 0;
     if (dst.shield > 0) {
@@ -535,8 +537,14 @@ export class Battle {
       crit,
       affinity: affinity(src.element, dst.element),
       hp: dst.hp,
+      ...(reflect ? { reflect: true } : {}),
     });
     if (dst.hp <= 0) this.kill(dst);
+    // Шипы: часть урона возвращается атакующему (не бесконечно — отражённый урон не отражается снова).
+    if (!reflect && dst.thorns > 0 && src.alive && src.side !== dst.side && lost + absorbed > 0) {
+      const back = Math.max(1, Math.round((lost + absorbed) * dst.thorns));
+      this.dealDamage(dst, src, back, false, true);
+    }
   }
 
   private track(u: BattleUnit) {

@@ -2,7 +2,7 @@
 import json, os, sys, importlib
 sys.path.insert(0, os.path.dirname(__file__))
 OUT = sys.argv[1]
-MODULES = ['featured', 'order', 'grove', 'ash', 'abyss', 'forge', 'mobs']
+MODULES = ['featured', 'order', 'grove', 'ash', 'abyss', 'forge', 'mobs', 'book1']
 only = sys.argv[2:]
 path = os.path.join(OUT, 'rigs.json')
 rigs = json.load(open(path)) if os.path.exists(path) else {}
