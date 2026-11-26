@@ -8,7 +8,15 @@ import {
   enemyDef,
   type DungeonId,
 } from '@/content';
-import { isDungeonLevelUnlocked, teamPower } from '@/game';
+import {
+  TRIAL_ATTEMPTS,
+  isDungeonLevelUnlocked,
+  teamPower,
+  trialAttemptsLeft,
+  trialReward,
+  trialToday,
+} from '@/game';
+import { RewardChips } from '../components/RewardChips';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { canSweepDungeon, startDungeon, sweepDungeon } from '@/state/actions';
@@ -18,9 +26,11 @@ import { unitStillUrl } from '@/assets/art';
 import { IconEnergy } from '../components/icons';
 import { MaterialIcon } from '../components/MaterialIcon';
 import type { MaterialId } from '@/save/schema';
+import { useNow } from '../hooks';
 import './screens.css';
 import './heroes.css';
 import './campaign.css';
+import './trial.css';
 
 const COLORS: Record<DungeonId, string> = {
   crypt: '#4fd6e0',
@@ -32,6 +42,8 @@ const COLORS: Record<DungeonId, string> = {
 export default function DungeonsScreen() {
   const t = useT();
   const save = useGame((s) => s.save)!;
+  const go = useGame((s) => s.go);
+  const now = useNow(30_000);
   const [id, setId] = useState<DungeonId>('crypt');
   const d = DUNGEONS.find((x) => x.id === id)!;
   const maxDone = save.dungeons[id] ?? 0;
@@ -45,6 +57,18 @@ export default function DungeonsScreen() {
     <>
       <h2 className="screen-title">{t('dungeons.title')}</h2>
       <p className="screen-sub">{t('dungeons.subtitle')}</p>
+      <button type="button" className="trial-entry" onClick={() => go('trial')}>
+        <RewardChips r={trialReward(trialToday(now)[0]!, 1)} />
+        <span>
+          <b>{t('trial.title')}</b>
+          <small>
+            {trialToday(now).length > 1 ? t('trial.allToday') : t(`trial.kind.${trialToday(now)[0]}`)} ·{' '}
+            {t('trial.attempts', { n: trialAttemptsLeft(save, now), max: TRIAL_ATTEMPTS })}
+          </small>
+        </span>
+        <span className="go-card__arrow">›</span>
+        {trialAttemptsLeft(save, now) > 0 && <i className="dot" />}
+      </button>
       <div className="dg-cards">
         {DUNGEONS.map((x) => (
           <button

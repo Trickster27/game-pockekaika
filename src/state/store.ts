@@ -24,6 +24,8 @@ export type ScreenId =
   | 'clan'
   | 'training'
   | 'expeditions'
+  | 'mail'
+  | 'trial'
   | 'raid'
   | 'leaders'
   | 'fusion'

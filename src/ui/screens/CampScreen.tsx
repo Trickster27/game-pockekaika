@@ -75,6 +75,7 @@ export default function CampScreen() {
     clan: !!b?.clan,
     arena: !!b?.arena,
     training: !!b?.training,
+    dungeon: !!b?.trial,
   };
 
   const open = (s: ScreenId) => {

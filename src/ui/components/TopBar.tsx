@@ -2,7 +2,15 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { unitStillUrl } from '@/assets/art';
 import { IconBack, IconEnergy, IconGear, IconGold, IconShard } from './icons';
-import { ENERGY_MAX, energyRegenMs, nextEnergyIn, playerXpToNext, regenEnergy, teamHeroes } from '@/game';
+import {
+  ENERGY_MAX,
+  energyRegenMs,
+  nextEnergyIn,
+  playerXpToNext,
+  regenEnergy,
+  teamHeroes,
+  unreadMail,
+} from '@/game';
 import { heroDef } from '@/content';
 import { formatDuration, useNow } from '../hooks';
 import { useOnline } from '@/state/online';
@@ -32,6 +40,8 @@ export function TopBar() {
     training: 'training.title',
     expeditions: 'exp.title',
     raid: 'raid.title',
+    mail: 'mail.title',
+    trial: 'trial.title',
     leaders: 'social.leaders',
     fusion: 'fusion.title',
     events: 'events.title',
@@ -71,6 +81,36 @@ export function TopBar() {
                 />
               </span>
             </div>
+            <button
+              className="icon-btn"
+              type="button"
+              aria-label={t('mail.title')}
+              onClick={() => go('mail')}
+              style={{ position: 'relative' }}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M3 7 L21 7 L21 18 L3 18 Z"
+                  fill="#efe6cf"
+                  stroke="#0a0710"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M3 7 L12 13.5 L21 7"
+                  fill="none"
+                  stroke="#0a0710"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+                <circle cx="12" cy="13.2" r="2.4" fill="#c8343c" stroke="#0a0710" strokeWidth="1" />
+              </svg>
+              {unreadMail(save) > 0 && (
+                <span className="unread" style={{ position: 'absolute', top: -4, right: -4 }}>
+                  {unreadMail(save)}
+                </span>
+              )}
+            </button>
             <button
               className="icon-btn"
               type="button"

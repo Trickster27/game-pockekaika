@@ -11,6 +11,7 @@ import {
   idleFullAt,
   pendingIdle,
   regenEnergy,
+  systemMail,
 } from '@/game';
 import { services } from './services';
 import { useGame } from './store';
@@ -124,6 +125,8 @@ export async function boot(): Promise<void> {
   window.addEventListener('pointerdown', unlock);
 
   manager.update((s) => trackQuest(s, 'login'));
+  // Письма: приветствие, подарок за возвращение (по времени прошлого визита).
+  manager.update((s) => systemMail(s, s.lastSeenAt, Date.now()));
   useGame.setState({ ready: true, save: manager.data, loadSource: source });
   checkIdle();
   // Онлайн подключаем после загрузки сейва; без сети игра работает как раньше.

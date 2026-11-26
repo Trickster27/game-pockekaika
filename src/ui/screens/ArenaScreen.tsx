@@ -11,13 +11,15 @@ import {
   leagueOf,
   leagueTier,
   refreshOpponents,
+  arenaSeason,
+  seasonEndsAt,
 } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { startArena } from '@/state/actions';
 import { platform } from '@/state/services';
 import { HeroTile } from '../components/HeroTile';
-import { useNow } from '../hooks';
+import { formatDuration, useNow } from '../hooks';
 import './screens.css';
 import './heroes.css';
 import './modes.css';
@@ -74,6 +76,12 @@ function ArenaAi() {
           </span>
           <span>{t('arena.record', { w: save.arena.wins, l: save.arena.losses })}</span>
           <span>{t('arena.tickets', { n: left, max: ARENA_DAILY_BATTLES })}</span>
+          <span className="arena-season">
+            {t('arena.season', {
+              n: arenaSeason(now) % 100,
+              time: formatDuration(seasonEndsAt(now) - now),
+            })}
+          </span>
         </div>
       </section>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, margin: '10px 0' }}>

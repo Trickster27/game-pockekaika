@@ -1,3 +1,5 @@
+import { sendMail } from './mail';
+import type { ShopReward } from './shop';
 import { Rng, hashSeed } from '@/core/rng';
 import type { UnitSpec, BattleResult } from '@/core/battle';
 import { HEROES } from '@/content/heroes';
@@ -75,6 +77,49 @@ function resetDay(save: SaveData, now: number) {
     save.arena.day = day;
     save.arena.battlesToday = 0;
   }
+  rollSeason(save, now);
+}
+
+// ———————————————————— сезоны ————————————————————
+
+/** Сезон арены — 14 дней. В конце: награда по лучшей лиге сезона (письмом) и мягкий сброс рейтинга. */
+export const SEASON_DAYS = 14;
+export function arenaSeason(now: number): number {
+  return Math.floor(Math.floor(now / 86_400_000) / SEASON_DAYS);
+}
+export function seasonEndsAt(now: number): number {
+  return (arenaSeason(now) + 1) * SEASON_DAYS * 86_400_000;
+}
+export const SEASON_REWARDS: Record<string, ShopReward> = {
+  bronze: { gold: 20_000, shards: 50 },
+  silver: { gold: 40_000, shards: 120, materials: { scroll: 1 } },
+  gold: { gold: 70_000, shards: 220, materials: { ancientScroll: 1 } },
+  platinum: { gold: 110_000, shards: 350, materials: { ancientScroll: 1, skillBook: 2 } },
+  legend: { gold: 160_000, shards: 500, materials: { voidScroll: 1, skillBook: 3 } },
+};
+
+export function rollSeason(save: SaveData, now: number) {
+  const cur = arenaSeason(now);
+  const a = save.arena;
+  if (a.season === cur) return;
+  if (a.season !== undefined && (a.wins + a.losses > 0 || (a.seasonBest ?? 0) > 1000)) {
+    const best = leagueOf(Math.max(a.seasonBest ?? a.rating, a.rating));
+    sendMail(
+      save,
+      {
+        key: `arena-season-${a.season}`,
+        title: 'mail.season.title',
+        body: 'mail.season.body',
+        params: { league: best.id },
+        reward: SEASON_REWARDS[best.id],
+      },
+      now,
+    );
+    // Мягкий сброс: половина пути к 1000.
+    a.rating = Math.round(1000 + (a.rating - 1000) / 2);
+  }
+  a.season = cur;
+  a.seasonBest = a.rating;
 }
 
 export function battlesLeft(save: SaveData, now: number): number {
@@ -161,6 +206,7 @@ export function applyArenaResult(
   const win = result.winner === 'ally';
   const delta = ratingDelta(save.arena.rating, opp.rating, win);
   save.arena.rating = Math.max(0, save.arena.rating + delta);
+  save.arena.seasonBest = Math.max(save.arena.seasonBest ?? 0, save.arena.rating);
   const gold = win ? 600 + Math.round(save.arena.rating / 4) : 150;
   save.currencies.gold += gold;
   if (win) {

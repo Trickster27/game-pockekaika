@@ -497,7 +497,8 @@
     "dailyReward": "Daily league reward",
     "claim": "Claim {n}",
     "claimed": "Claimed today",
-    "leagues": "Leagues"
+    "leagues": "Leagues",
+    "season": "Season {n} · ends in {time}"
   },
   "quests": {
     "title": "Quests",
@@ -1350,7 +1351,14 @@
     "heroesShort": "{n} heroes",
     "turnOrder": "Turn order",
     "resetFilters": "Reset filters",
-    "rarity": "Rarity"
+    "rarity": "Rarity",
+    "league": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum",
+      "legend": "Legend"
+    }
   },
   "story": {
     "skip": "Skip",
@@ -1362,6 +1370,59 @@
       "intro": "Prologue",
       "boss": "Before the boss",
       "outro": "Aftermath"
+    }
+  },
+  "mail": {
+    "title": "Mail",
+    "claim": "Claim",
+    "claimed": "Gift claimed",
+    "claimAll": "Claim all",
+    "claimedAll": "All gifts claimed",
+    "clean": "Delete read",
+    "empty": "No letters yet.",
+    "done": "Claimed",
+    "welcome": {
+      "title": "To the Warden — from the fire",
+      "body": "Warden! The first book of “Dawn Shards” has come to Kaelmor: the campaign story (reread it in the Chronicle), daily trials, mail and arena seasons.\n\nAccept a small gift from everyone who warms themselves by our fire."
+    },
+    "comeback": {
+      "title": "Welcome back, Warden!",
+      "body": "You were away for {n} days. The fire didn’t go out — we kept it for you. Take these supplies: the road awaits."
+    },
+    "season": {
+      "title": "Arena season results",
+      "body": "The arena season is over. Your best league: {league}. Here is your season reward. Rating partially reset — a new season begins!"
+    }
+  },
+  "trial": {
+    "title": "Daily Trial",
+    "hint": "Each day has its own trial and its own loot. No energy needed: {n} wins per day, a defeat doesn’t use an attempt. On Sunday every trial is open.",
+    "kind": {
+      "tomes": "Tome Archive",
+      "dust": "Starfall",
+      "ore": "Ore Vein",
+      "books": "Library of Mist",
+      "stones": "Sky Stones",
+      "gold": "Crucible Treasury"
+    },
+    "day": {
+      "tomes": "Mon",
+      "dust": "Tue",
+      "ore": "Wed",
+      "books": "Thu",
+      "stones": "Fri",
+      "gold": "Sat"
+    },
+    "open": "Open today",
+    "allToday": "All open today",
+    "attempts": "Wins left: {n}/{max}",
+    "reset": "resets in {time}",
+    "lucky": "Sometimes the loot is generous: +50%",
+    "noSpend": "Defeat — attempt not used",
+    "err": {
+      "noAttempts": "No attempts left today",
+      "locked": "Clear the previous level first",
+      "closed": "This trial is closed today"
     }
   }
 }

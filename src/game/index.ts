@@ -25,5 +25,7 @@ export * from './training';
 export * from './busy';
 export * from './expeditions';
 export * from './raid';
+export * from './mail';
+export * from './trial';
 export * from './depth';
 export * from './liveops';

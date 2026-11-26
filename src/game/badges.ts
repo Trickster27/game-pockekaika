@@ -13,6 +13,8 @@ import { canUpgradeCamp } from './camp';
 import { liveopsReady } from './liveops';
 import { activeParties, expeditionParties, expeditionsReady } from './expeditions';
 import { raidAttemptsLeft, raidClaimable } from './raid';
+import { trialAttemptsLeft } from './trial';
+import { unreadMail } from './mail';
 import { periodKey } from './shop';
 
 /**
@@ -40,6 +42,10 @@ export interface Badges {
   expeditions: boolean;
   /** Есть попытки рейда или награда недели. */
   raid: boolean;
+  /** Остались попытки испытания дня. */
+  trial: boolean;
+  /** Непрочитанные письма или подарки. */
+  mail: boolean;
 }
 
 export function computeBadges(save: SaveData, now: number): Badges {
@@ -71,5 +77,7 @@ export function computeBadges(save: SaveData, now: number): Badges {
         (save.expeditions.day !== periodKey('day', now) ||
           save.expeditions.board.some((m) => !m.party && !m.done))),
     raid: raidAttemptsLeft(save, now) > 0 || raidClaimable(save, now) > 0,
+    trial: trialAttemptsLeft(save, now) > 0,
+    mail: unreadMail(save) > 0,
   };
 }
