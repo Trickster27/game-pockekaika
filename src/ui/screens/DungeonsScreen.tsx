@@ -119,7 +119,11 @@ export default function DungeonsScreen() {
           {t('dungeons.fight')} · <IconEnergy /> {dungeonEnergy(level)}
         </button>
         {canSweepDungeon(id, level) && (
-          <SweepButtons hint={t('sweep.dhint')} onSweep={(n) => sweepDungeon(id, level, n)} />
+          <SweepButtons
+            hint={t('sweep.dhint')}
+            cost={dungeonEnergy(level)}
+            onSweep={(n) => sweepDungeon(id, level, n)}
+          />
         )}
       </section>
     </>

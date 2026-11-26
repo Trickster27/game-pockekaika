@@ -219,7 +219,11 @@ function StagePanel({ stage, teamPow }: { stage: StageDef; teamPow: number }) {
         </button>
       </div>
       {canSweepStage(stage.id) && (
-        <SweepButtons hint={t('sweep.hint')} onSweep={(n) => sweepCampaignStage(stage.id, n)} />
+        <SweepButtons
+          hint={t('sweep.hint')}
+          cost={stage.energy}
+          onSweep={(n) => sweepCampaignStage(stage.id, n)}
+        />
       )}
     </section>
   );

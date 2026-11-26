@@ -126,4 +126,30 @@ export interface BattleResult {
   bossTurns?: number;
   /** Игрок сам вышел из боя. */
   surrendered?: boolean;
+  /** Статистика по каждому бойцу (союзники и все враги всех волн). */
+  report?: UnitReport[];
+}
+
+/** Итоги бойца за бой. */
+export interface UnitReport {
+  uid: string;
+  name: string;
+  art: string;
+  side: Side;
+  element: Element;
+  /** Урон по противникам (по здоровью и щитам), включая яд. */
+  dealt: number;
+  /** Полученный урон. */
+  taken: number;
+  /** Сколько здоровья восстановил союзникам (без лечения сверх максимума). */
+  healed: number;
+  /** Сколько щитов повесил. */
+  shielded: number;
+  crits: number;
+  maxCrit: number;
+  kills: number;
+  /** Сколько ослаблений наложил на противников. */
+  debuffs: number;
+  /** Жив к концу боя. */
+  alive: boolean;
 }

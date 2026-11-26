@@ -37,16 +37,40 @@
   font-variant-numeric: tabular-nums;
 }
 .sweep {
-  display: flex;
-  align-items: center;
+  display: grid;
   gap: 6px;
-  flex-wrap: wrap;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px dashed color-mix(in srgb, var(--gold) 50%, transparent);
+  background: color-mix(in srgb, var(--gold) 7%, transparent);
 }
-.sweep span {
-  font-size: 13px;
+.sweep__head {
+  display: grid;
+}
+.sweep__head b {
+  font-size: 14px;
+}
+.sweep__head small {
+  font-size: 11px;
   color: var(--muted);
-  margin-right: auto;
 }
-.sweep .chip {
-  min-width: 46px;
+.sweep__btns {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+  gap: 6px;
+}
+.sweep__btns .btn {
+  min-height: 38px;
+  padding-inline: 4px;
+  font-size: 13px;
+}
+.sweep__btns svg {
+  width: 14px;
+  height: 14px;
+}
+.sweep .sweep__head small {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  color: var(--muted);
 }

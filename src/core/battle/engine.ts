@@ -13,7 +13,7 @@ import {
   type StatusId,
 } from '../content';
 import type { Stats } from '../types';
-import type { BattleEvent, BattleResult, BattleSetup, BattleUnit, Side, UnitSpec } from './types';
+import type { BattleEvent, BattleResult, BattleSetup, BattleUnit, Side, UnitReport, UnitSpec } from './types';
 import { chooseAction } from './ai';
 
 export const TM_FULL = 1000;
@@ -140,6 +140,8 @@ export class Battle {
   readonly damageBy: Record<string, number> = {};
   /** Ходы босса (для боя на время). */
   bossTurns = 0;
+  /** Статистика бойцов (переживает смену волн). */
+  private readonly stats = new Map<string, UnitReport>();
 
   constructor(
     readonly setup: BattleSetup,
@@ -160,6 +162,7 @@ export class Battle {
       }
     }
     this.units = allies;
+    for (const a of allies) this.track(a);
     this.spawnWave(0);
     this.emit({ t: 'start', wave: 1, waves: setup.waves.length });
   }
@@ -186,6 +189,7 @@ export class Battle {
     this.units = this.units.filter((u) => u.side === 'ally');
     const spawned = specs.map((s, i) => buildUnit(s, 'enemy', i, this.db, `e${index}_${i}_${this.uidSeq++}`));
     this.units.push(...spawned);
+    for (const u of spawned) this.track(u);
     this.wave = index;
     if (index > 0) this.emit({ t: 'wave', wave: index + 1, spawned: spawned.map((u) => u.uid) });
   }
@@ -219,9 +223,14 @@ export class Battle {
         if (!best.alive) break;
         const lost = Math.min(best.hp, p.value);
         best.hp = Math.max(0, best.hp - p.value);
-        this.tally(this.unit(p.source), best, lost);
+        const psrc = this.unit(p.source);
+        this.tally(psrc, best, lost);
+        this.note(psrc, best, lost, false);
         this.emit({ t: 'poison', uid: best.uid, amount: p.value, hp: best.hp });
-        if (best.hp <= 0) this.kill(best);
+        if (best.hp <= 0) {
+          if (psrc) this.stat(psrc).kills += 1;
+          this.kill(best);
+        }
       }
       if (!best.alive) {
         this.checkEnd();
@@ -375,11 +384,13 @@ export class Battle {
         const amount = Math.round(dst.stats.hp * eff.pct);
         const before = dst.hp;
         dst.hp = Math.min(dst.stats.hp, dst.hp + amount);
+        this.stat(src).healed += dst.hp - before;
         this.emit({ t: 'heal', uid: dst.uid, amount: dst.hp - before, hp: dst.hp });
         return;
       }
       case 'shield': {
         const amount = Math.round(src.stats.hp * eff.pct);
+        this.stat(src).shielded += Math.max(0, amount - dst.shield);
         dst.shield = Math.max(dst.shield, amount);
         dst.shieldTurns = Math.max(dst.shieldTurns, eff.turns);
         this.emit({ t: 'shield', uid: dst.uid, amount: dst.shield });
@@ -479,6 +490,7 @@ export class Battle {
         cur.fresh = cur.fresh || fresh;
       } else dst.statuses.push({ id, turns, value: 0, source: src.uid, fresh });
     }
+    if (isDebuff && dst.side !== src.side) this.stat(src).debuffs += 1;
     this.emit({ t: 'status', uid: dst.uid, status: id, turns, landed: true });
   }
 
@@ -494,6 +506,8 @@ export class Battle {
     const lost = Math.min(dst.hp, left);
     dst.hp = Math.max(0, dst.hp - left);
     this.tally(src, dst, lost);
+    this.note(src, dst, lost + absorbed, crit);
+    if (dst.hp <= 0 && dst.alive) this.stat(src).kills += 1;
     this.emit({
       t: 'damage',
       uid: dst.uid,
@@ -505,6 +519,45 @@ export class Battle {
       hp: dst.hp,
     });
     if (dst.hp <= 0) this.kill(dst);
+  }
+
+  private track(u: BattleUnit) {
+    this.stats.set(u.uid, {
+      uid: u.uid,
+      name: u.name,
+      art: u.art,
+      side: u.side,
+      element: u.element,
+      dealt: 0,
+      taken: 0,
+      healed: 0,
+      shielded: 0,
+      crits: 0,
+      maxCrit: 0,
+      kills: 0,
+      debuffs: 0,
+      alive: true,
+    });
+  }
+  private stat(u: BattleUnit): UnitReport {
+    if (!this.stats.has(u.uid)) this.track(u);
+    return this.stats.get(u.uid)!;
+  }
+  /** Статистика удара: урон источнику, полученный урон цели, криты. */
+  private note(src: BattleUnit | undefined, dst: BattleUnit, amount: number, crit: boolean) {
+    this.stat(dst).taken += amount;
+    if (!src || src.side === dst.side) return;
+    const s = this.stat(src);
+    s.dealt += amount;
+    if (crit) {
+      s.crits += 1;
+      s.maxCrit = Math.max(s.maxCrit, amount);
+    }
+  }
+
+  /** Отчёт по бойцам на текущий момент. */
+  report(): UnitReport[] {
+    return [...this.stats.values()].map((r) => ({ ...r, alive: this.unit(r.uid)?.alive ?? false }));
   }
 
   /** Учёт урона союзников по врагам. */
@@ -590,6 +643,7 @@ export class Battle {
       damage: this.damage,
       damageBy: { ...this.damageBy },
       bossTurns: this.bossTurns,
+      report: this.report(),
       ...(surrendered ? { surrendered } : {}),
     };
     this.emit({ t: 'end', winner, stars, turns: this.turn });

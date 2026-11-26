@@ -10,6 +10,7 @@ import type { BattleView } from '@/render/pixi/battle/BattleView';
 import { unitArtUrl } from '@/assets/art';
 import { SkillIcon } from '../components/SkillIcon';
 import { RewardIcon } from '../components/RewardIcon';
+import { BattleStats } from '../components/BattleStats';
 import './battle.css';
 
 const ELEMENT_COLOR: Record<string, string> = {
@@ -72,6 +73,7 @@ export default function BattleScreen() {
   const [result, setResult] = useState<{ r: BattleResult; lines: RewardLine[] } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [bossHud, setBossHud] = useState({ turn: 0, dmg: 0 });
+  const [resTab, setResTab] = useState<'rewards' | 'stats'>('rewards');
 
   const showTargets = useCallback((u: BattleUnit, idx: number) => {
     const b = battleRef.current;
@@ -110,6 +112,7 @@ export default function BattleScreen() {
     const el = host.current;
     setResult(null);
     setBossHud({ turn: 0, dmg: 0 });
+    setResTab('rewards');
     setAskExit(false);
     setPaused(false);
     const p = platform();
@@ -473,15 +476,33 @@ export default function BattleScreen() {
                 {t(`repeat.stop.${repeat.stop}`, { n: repeat.done, wins: repeat.wins })}
               </p>
             )}
-            <div className="rw-list">
-              {(repeat?.stop ? mergeRewardLines(repeat.lines) : result.lines).map((l) => (
-                <div className="rw-line" key={l.label}>
-                  <RewardIcon icon={l.icon} />
-                  <span>{l.label}</span>
-                  <b>{l.value}</b>
-                </div>
-              ))}
-            </div>
+            {result.r.report && result.r.report.length > 0 && (
+              <div className="res-tabs">
+                <button
+                  type="button"
+                  aria-pressed={resTab === 'rewards'}
+                  onClick={() => setResTab('rewards')}
+                >
+                  {t('stats.tabRewards')}
+                </button>
+                <button type="button" aria-pressed={resTab === 'stats'} onClick={() => setResTab('stats')}>
+                  {t('stats.tabStats')}
+                </button>
+              </div>
+            )}
+            {resTab === 'stats' && result.r.report ? (
+              <BattleStats report={result.r.report} />
+            ) : (
+              <div className="rw-list">
+                {(repeat?.stop ? mergeRewardLines(repeat.lines) : result.lines).map((l) => (
+                  <div className="rw-line" key={l.label}>
+                    <RewardIcon icon={l.icon} />
+                    <span>{l.label}</span>
+                    <b>{l.value}</b>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="btns">
               {result.r.winner === 'ally' && req.next && (
                 <button type="button" className="btn btn--gold" onClick={() => req.next?.()}>

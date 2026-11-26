@@ -178,6 +178,8 @@
   display: grid;
   gap: 12px;
   text-align: center;
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
   animation: pop 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3);
 }
 .res--lose {
@@ -283,4 +285,25 @@
   margin: 0 0 4px;
   color: var(--muted);
   font-size: 13px;
+}
+.res-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 10px;
+  background: rgba(10, 8, 16, 0.6);
+  border: 1px solid var(--line-2);
+}
+.res-tabs button {
+  padding: 6px 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: 700 13px var(--display);
+}
+.res-tabs button[aria-pressed='true'] {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 35%, #2a2030), #1d1626);
+  color: var(--gold);
 }

@@ -212,7 +212,7 @@ function sweep(
 }
 
 export function canSweepStage(stageId: string): boolean {
-  return (useGame.getState().save?.campaign.stars[stageId] ?? 0) >= 3;
+  return (useGame.getState().save?.campaign.stars[stageId] ?? 0) >= 1;
 }
 
 export function sweepCampaignStage(stageId: string, times: number) {
