@@ -179,6 +179,8 @@ export default function AccountScreen() {
                       })
                     : ''}
             </span>
+            {o.statsError && <p className="err">{t('online.statsErr', { err: o.statsError })}</p>}
+            {o.status === 'conflict' && <p className="err">{t('online.conflictPending')}</p>}
             <button
               type="button"
               className="btn btn--gold"

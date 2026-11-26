@@ -596,7 +596,9 @@
       "no_attacks": "No attacks left today",
       "self": "You can't attack yourself"
     },
-    "justNow": "just now"
+    "justNow": "just now",
+    "statsErr": "Leaderboards and arena: couldn't send your data ({err}). Other players can't see you yet.",
+    "conflictPending": "Your save is waiting for the “device or cloud” choice — open the choice window to resume syncing."
   },
   "forge": {
     "title": "Clan Forge",
@@ -1099,7 +1101,9 @@
       "all": "All",
       "friends": "Friends",
       "clan": "Clan"
-    }
+    },
+    "emptyAll": "No other players yet. A player shows up here after signing in on the latest version of the game with a team.",
+    "emptyFriends": "No friends in the table yet: a friend shows up after signing in on the latest version of the game."
   },
   "pvp": {
     "title": "Player Arena",

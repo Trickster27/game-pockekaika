@@ -81,6 +81,9 @@ export default function LeadersScreen() {
       {kind === 'boss' && <p className="screen-sub">{t('social.bossHint')}</p>}
       <div className="lb-list">
         {!data && <p className="screen-sub">{t('social.loading')}</p>}
+        {data && scope !== 'clan' && data.rows.filter((r) => r.profile.id !== userId).length === 0 && (
+          <p className="screen-sub">{t(scope === 'friends' ? 'social.emptyFriends' : 'social.emptyAll')}</p>
+        )}
         {data?.rows.map((r) => row(r))}
       </div>
       {data?.me && !data.rows.some((r) => r.profile.id === userId) && (

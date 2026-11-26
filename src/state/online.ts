@@ -35,6 +35,8 @@ interface OnlineState {
   status: SyncStatus;
   lastSync: number | null;
   error: string | null;
+  /** Ошибка отправки статистики для таблиц и арены (не мешает синхронизации сейва, но её видно). */
+  statsError: string | null;
   friends: Friend[];
   unread: Record<string, number>;
   chatWith: string | null;
@@ -50,6 +52,7 @@ export const useOnline = create<OnlineState>(() => ({
   status: 'off',
   lastSync: null,
   error: null,
+  statsError: null,
   friends: [],
   unread: {},
   chatWith: null,
@@ -137,6 +140,8 @@ async function afterLogin(uid: string) {
   });
   if (timer) clearInterval(timer);
   timer = setInterval(() => void syncNow(), 120_000);
+  // Сначала — появиться в таблицах и на арене, даже если синхронизация сейва потом упрётся в спор.
+  await publishStats();
   await syncNow();
   await refreshSocial();
 }
@@ -175,7 +180,10 @@ export async function signOut() {
 /** Синхронизация сейва с облаком и публикация профиля (уровень, сила, рейтинг арены). */
 export async function syncNow(): Promise<void> {
   const st = useOnline.getState();
-  if (!backend || !st.userId || syncing || st.conflict) return;
+  if (!backend || !st.userId || syncing) return;
+  // Пока игрок не решил спор «облако или устройство», сейв не трогаем,
+  // но в таблицах и на арене он всё равно должен быть виден.
+  if (st.conflict) return void (await publishStats());
   syncing = true;
   set({ status: 'syncing' });
   try {
@@ -224,8 +232,19 @@ async function publishProfile() {
   });
   await backend!.touch();
   set({ profile: await backend!.myProfile() });
-  // Статистика для таблиц лидеров и защитная команда для арены игроков.
-  await backend!.submitStats(statsOf(s)).catch(() => undefined);
+  await publishStats();
+}
+
+/** Статистика для таблиц лидеров и защитная команда для арены игроков. Ошибку запоминаем и показываем. */
+export async function publishStats(): Promise<void> {
+  if (!backend || !useOnline.getState().userId) return;
+  try {
+    await backend.submitStats(statsOf(saves().data));
+    if (useOnline.getState().statsError) set({ statsError: null });
+  } catch (e) {
+    console.warn('[online] submit_stats', e);
+    set({ statsError: errorText(e) });
+  }
 }
 
 /** Что отправляем серверу: сила команды, уровень, башня, коллекция и защита (текущая команда). */
@@ -255,6 +274,7 @@ export function statsOf(s: SaveData) {
 export async function submitDefenseNow() {
   if (!backend || !useOnline.getState().userId) return;
   await backend.submitStats(statsOf(saves().data));
+  if (useOnline.getState().statsError) set({ statsError: null });
 }
 
 /** Игрок выбирает, какую копию оставить. */
