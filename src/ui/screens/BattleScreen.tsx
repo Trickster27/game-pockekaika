@@ -338,9 +338,10 @@ export default function BattleScreen() {
             type="button"
             aria-pressed={ults}
             title={t('battle.manualUltsHint')}
+            aria-label={t('battle.manualUlts')}
             onClick={toggleUlts}
           >
-            ⚡{t('battle.manualUlts')}
+            ⚡
           </button>
         )}
         <button

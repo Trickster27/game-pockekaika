@@ -13,7 +13,106 @@
     <title>Каэлмор</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Заставка до запуска React: createRoot заменит её первым кадром игры. -->
+      <div class="boot">
+        <svg class="boot__gem" viewBox="0 0 120 180" aria-hidden="true">
+          <defs>
+            <linearGradient id="bg-gold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fff0b8" />
+              <stop offset=".55" stop-color="#f0c860" />
+              <stop offset="1" stop-color="#a86a1a" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M60 6 L10 80 L60 174 L110 80 Z"
+            fill="url(#bg-gold)"
+            stroke="#0a0710"
+            stroke-width="5"
+            stroke-linejoin="round"
+          />
+          <path d="M60 6 L10 80 L60 80 Z" fill="#fff4c8" opacity=".7" />
+        </svg>
+        <h1 class="boot__title">Каэлмор</h1>
+        <p class="boot__sub">Хроники Звёздного разлома</p>
+        <div class="boot__bar"><i></i></div>
+      </div>
+    </div>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #110e16;
+      }
+      .boot {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 10px;
+        background: radial-gradient(90% 60% at 50% 38%, #3a2266, #140c24 60%, #08060f);
+        color: #f4e8d0;
+        font-family: Georgia, 'Times New Roman', serif;
+        text-align: center;
+      }
+      .boot__gem {
+        width: 64px;
+        height: 96px;
+        filter: drop-shadow(0 0 22px #ffd36baa);
+        animation: boot-float 2.4s ease-in-out infinite;
+      }
+      .boot__title {
+        margin: 6px 0 0;
+        font-size: 38px;
+        letter-spacing: 3px;
+        color: #ffe2a0;
+        text-shadow:
+          0 2px 0 #3a1a08,
+          0 0 24px #ffb84a66;
+      }
+      .boot__sub {
+        margin: 0;
+        font-size: 14px;
+        color: #c8b8e8;
+        letter-spacing: 1px;
+      }
+      .boot__bar {
+        width: 160px;
+        height: 4px;
+        margin-top: 18px;
+        border-radius: 2px;
+        background: #ffffff1a;
+        overflow: hidden;
+      }
+      .boot__bar i {
+        display: block;
+        width: 40%;
+        height: 100%;
+        border-radius: 2px;
+        background: linear-gradient(90deg, transparent, #ffd36b, transparent);
+        animation: boot-bar 1.2s linear infinite;
+      }
+      @keyframes boot-float {
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      @keyframes boot-bar {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(250%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot__gem,
+        .boot__bar i {
+          animation: none;
+        }
+      }
+    </style>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

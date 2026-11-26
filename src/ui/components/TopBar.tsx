@@ -1,4 +1,4 @@
-import { formatNumber, useT } from '@/i18n';
+import { formatCompact, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { unitStillUrl } from '@/assets/art';
 import { IconBack, IconEnergy, IconGear, IconGold, IconShard } from './icons';
@@ -183,11 +183,11 @@ export function TopBar() {
       <div className="cur">
         <div className="pill" title={t('currency.gold')}>
           <IconGold />
-          <b>{formatNumber(save.currencies.gold)}</b>
+          <b>{formatCompact(save.currencies.gold)}</b>
         </div>
         <div className="pill" title={t('currency.shards')}>
           <IconShard />
-          <b>{formatNumber(save.currencies.shards)}</b>
+          <b>{formatCompact(save.currencies.shards)}</b>
           <button
             type="button"
             className="pill__plus"

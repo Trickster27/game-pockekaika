@@ -307,3 +307,25 @@
   background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 35%, #2a2030), #1d1626);
   color: var(--gold);
 }
+
+.bs {
+  /* Колонка не шире экрана: иначе длинный заголовок растягивает весь бой. */
+  grid-template-columns: minmax(0, 1fr);
+}
+.bs__top {
+  gap: 6px;
+}
+.bs__top > .chip {
+  flex-shrink: 0;
+  min-width: 40px;
+  padding: 0 10px;
+}
+.bs__title {
+  overflow: hidden;
+}
+.bs__title span {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

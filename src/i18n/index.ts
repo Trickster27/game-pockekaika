@@ -56,6 +56,18 @@ export const formatNumber = (n: number) =>
     .toLocaleString(useI18n.getState().locale === 'en' ? 'en-US' : 'ru-RU')
     .replace(/\s/g, '\u2009');
 
+/** Короткая запись для тесных мест (шапка): до 100 тыс. — полностью, дальше «128 тыс.», «1,28 млн». */
+export const formatCompact = (n: number) => {
+  if (Math.abs(n) < 100_000) return formatNumber(n);
+  const en = useI18n.getState().locale === 'en';
+  return new Intl.NumberFormat(en ? 'en-US' : 'ru-RU', {
+    notation: 'compact',
+    maximumFractionDigits: Math.abs(n) < 1_000_000 ? 0 : 2,
+  })
+    .format(Math.floor(n))
+    .replace(/\s/g, '\u2009');
+};
+
 /** Перевод вне React-компонентов (действия, сервисы). */
 export function tr(key: string, params?: Record<string, string | number>): string {
   return translate(useI18n.getState().locale, key, params);

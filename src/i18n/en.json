@@ -3,7 +3,8 @@
     "title": "Kaelmor",
     "loading": "Kindling the campfire…",
     "loadFromBackup": "Your main save was damaged; progress was restored from a backup.",
-    "comingIn": "Arrives in stage {stage}"
+    "comingIn": "Arrives in stage {stage}",
+    "tagline": "Chronicles of the Star Rift"
   },
   "nav": {
     "camp": "Camp",

@@ -56,6 +56,30 @@ function Splash() {
   );
 }
 
+/** Та же заставка, что в index.html (стили там же): без скачка между HTML и React. */
+function BootSplash() {
+  const t = useT();
+  return (
+    <div className="boot">
+      <svg className="boot__gem" viewBox="0 0 120 180" aria-hidden="true">
+        <path
+          d="M60 6 L10 80 L60 174 L110 80 Z"
+          fill="#f0c860"
+          stroke="#0a0710"
+          strokeWidth="5"
+          strokeLinejoin="round"
+        />
+        <path d="M60 6 L10 80 L60 80 Z" fill="#fff4c8" opacity=".7" />
+      </svg>
+      <h1 className="boot__title">{t('app.title')}</h1>
+      <p className="boot__sub">{t('app.tagline')}</p>
+      <div className="boot__bar">
+        <i />
+      </div>
+    </div>
+  );
+}
+
 function Screen() {
   const screen = useGame((s) => s.screen);
   switch (screen) {
@@ -155,15 +179,7 @@ export function App() {
     if (userId) void refreshClan();
   }, [userId]);
 
-  if (!ready) {
-    return (
-      <div className="app">
-        <div />
-        <Splash />
-        <div />
-      </div>
-    );
-  }
+  if (!ready) return <BootSplash />;
   const full = screen === 'battle' || screen === 'chat';
   return (
     <div className="app">
