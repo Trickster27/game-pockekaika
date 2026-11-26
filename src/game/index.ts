@@ -22,3 +22,4 @@ export * from './badges';
 export * from './tutorial';
 export * from './camp';
 export * from './training';
+export * from './depth';

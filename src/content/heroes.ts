@@ -493,6 +493,36 @@ export const HEROES: HeroDef[] = [
     pool: 'gold',
     lore: 'Корни Вердис проросли сквозь все миры. Каждый её лист — чья-то спасённая жизнь.',
   },
+
+  // ———— Только слиянием ————
+  {
+    id: 'ilia',
+    name: 'Илия',
+    title: 'Солнцеликая',
+    faction: 'order',
+    element: 'light',
+    rarity: 'legendary',
+    role: 'healer',
+    art: 'ilia',
+    skills: ['ilia_ray', 'ilia_dawn', 'ilia_rebirth'],
+    mod: { hp: 0.12, spd: 4 },
+    pool: 'fusion',
+    lore: 'Четыре клятвы Ордена слились в одну — так родилась та, что возвращает рассвет павшим.',
+  },
+  {
+    id: 'skarn',
+    name: 'Скарн',
+    title: 'Владыка Пепла',
+    faction: 'abyss',
+    element: 'fire',
+    rarity: 'legendary',
+    role: 'attacker',
+    art: 'skarn',
+    skills: ['skarn_cleave', 'skarn_inferno', 'skarn_doom'],
+    mod: { atk: 0.12, critDmg: 0.1 },
+    pool: 'fusion',
+    lore: 'Выкован в Горниле из четырёх демонов. Помнит голоса каждого — и все они хотят огня.',
+  },
 ];
 
 /** Стартовая команда нового игрока. */

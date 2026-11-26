@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 13;
+export const SAVE_VERSION = 14;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -43,6 +43,10 @@ export interface OwnedHero {
   stars: number;
   awakened: boolean;
   obtainedAt: number;
+  /** Уровни навыков 1..4 (по порядку навыков героя). */
+  skillLv?: number[];
+  /** Изученные таланты (id узлов). */
+  talents?: string[];
 }
 
 export interface CampaignProgress {
@@ -60,7 +64,8 @@ export type MaterialId =
   | 'ancientScroll'
   | 'factionScroll'
   | 'voidScroll'
-  | 'goldScroll';
+  | 'goldScroll'
+  | 'skillBook';
 export const MATERIAL_IDS: readonly MaterialId[] = [
   'xpTome',
   'starDust',
@@ -70,6 +75,7 @@ export const MATERIAL_IDS: readonly MaterialId[] = [
   'factionScroll',
   'voidScroll',
   'goldScroll',
+  'skillBook',
   'ore',
 ];
 
@@ -246,6 +252,7 @@ export function createNewSave(now: number = Date.now()): SaveData {
       factionScroll: 0,
       voidScroll: 0,
       goldScroll: 0,
+      skillBook: 2,
     },
     clan: { coins: 0, bought: {} },
     tutorial: { step: 0, done: false },

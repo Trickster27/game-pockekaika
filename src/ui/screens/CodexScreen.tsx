@@ -204,7 +204,9 @@ function Catalog({ onOpen }: { onOpen: (id: string) => void }) {
             <div key={d.id} className="cx-cell">
               <HeroTile def={d} owned={o.best} onClick={() => onOpen(d.id)} />
               {o.count > 1 && <span className="cx-copies">×{o.count}</span>}
-              <span className="cx-chance">{(summonChance(d) * 100).toFixed(2)}%</span>
+              <span className="cx-chance">
+                {d.pool === 'fusion' ? '⚗' : `${(summonChance(d) * 100).toFixed(2)}%`}
+              </span>
             </div>
           );
         })}
@@ -277,6 +279,7 @@ function CodexCard(props: {
       <section className="card">
         <h3 className="cx-h">{t('codex.sources')}</h3>
         {d.rarity === 'mythic' && <p className="cx-line cx-muted">{t('codex.mythicNote')}</p>}
+        {d.pool === 'fusion' && <p className="cx-line cx-muted">{t('codex.fusionOnly')}</p>}
         {heroSources(d).map((src) => {
           const sd = scrollDef(src.id);
           return (

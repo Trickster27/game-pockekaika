@@ -28,6 +28,8 @@ export const UNIT_ART_META: Record<string, { top: number; scale: number; idle?: 
   dusk_priest: { top: 90, scale: 1.0, idle: 'sway' },
   star_lancer: { top: 104, scale: 1.0 },
   eclipse_queen: { top: 124, scale: 1.08, idle: 'float' },
+  ilia: { top: 106, scale: 1.0, idle: 'float' },
+  skarn: { top: 112, scale: 1.04 },
   mglaboss: { top: 124, scale: 1.08, idle: 'heavy' },
   rift_fire: { top: 128, scale: 1.12, idle: 'heavy' },
   rift_thorn: { top: 128, scale: 1.12, idle: 'heavy' },

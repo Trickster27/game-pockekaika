@@ -30,6 +30,8 @@ export interface UnitSpec {
   ccImmune?: boolean;
   /** Ярость: прибавка к атаке за каждый свой ход (0.04 = +4%). */
   enrage?: number;
+  /** Уровни навыков 1..4 (книги навыков): +10% силы за уровень, на 4-м перезарядка на 1 короче. */
+  skillLv?: number[];
 }
 
 export interface BattleSetup {

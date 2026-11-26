@@ -5,12 +5,13 @@ import type { StageDef } from '@/content/campaign';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { teamHeroes } from './battleSetup';
 import { applyGear, gearBonus, heroItems } from './gear';
+import { depthBonus, mergeBonus } from './depth';
 
 /** Характеристики героя; если передан сейв — вместе со снаряжением. */
 export function heroStats(h: OwnedHero, save?: SaveData) {
   const d = heroDef(h.heroId);
   const s = statsAt(baseStats(d.role, d.rarity, d.mod), h.level, h.stars, h.awakened);
-  return save ? applyGear(s, gearBonus(heroItems(save, h.uid))) : s;
+  return save ? applyGear(s, mergeBonus(gearBonus(heroItems(save, h.uid)), depthBonus(save, h))) : s;
 }
 
 export function heroPower(h: OwnedHero, save?: SaveData): number {

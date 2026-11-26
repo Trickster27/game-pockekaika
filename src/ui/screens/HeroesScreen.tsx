@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { HEROES, heroDef, skillDef } from '@/content';
+import { HEROES, heroDef } from '@/content';
 import { maxLevel, STAT_KEYS, HERO_RARITY_ORDER, ELEMENTS, FACTIONS, ROLES } from '@/core';
 import type { Element, Faction, HeroRarity, Role } from '@/core/types';
 import {
@@ -25,8 +25,8 @@ import { unitArtUrl } from '@/assets/art';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { HeroTile, Stars } from '../components/HeroTile';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
-import { SkillIcon } from '../components/SkillIcon';
 import { HeroGear } from '../components/HeroGear';
+import { HeroSkills, HeroTalents } from '../components/HeroDepth';
 import { HeroCompare } from '../components/HeroCompare';
 import './screens.css';
 import './heroes.css';
@@ -85,6 +85,9 @@ export default function HeroesScreen() {
           onClick={() => go('codex')}
         >
           📖 {t('codex.button')}
+        </button>
+        <button type="button" className="btn" onClick={() => go('fusion')}>
+          ⚗ {t('fusion.button')}
         </button>
       </div>
       <p className="screen-sub">{t('heroes.owned', { n: distinct, total: HEROES.length })}</p>
@@ -307,24 +310,9 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
         </div>
       </section>
 
-      <section className="card">
-        <h3 style={{ fontSize: 16 }}>{t('heroes.skills')}</h3>
-        {d.skills.map((id) => {
-          const s = skillDef(id);
-          return (
-            <div className="skill" key={id}>
-              <span className="skill__ic">
-                <SkillIcon skill={s} color={ELEMENT_COLOR[d.element]} />
-              </span>
-              <div>
-                <b>{s.name}</b>
-                <small>{s.cooldown ? t('heroes.cooldown', { n: s.cooldown }) : t('heroes.noCooldown')}</small>
-                <p>{s.desc}</p>
-              </div>
-            </div>
-          );
-        })}
-      </section>
+      <HeroSkills hero={hero} />
+
+      <HeroTalents hero={hero} />
 
       <HeroGear hero={hero} />
 

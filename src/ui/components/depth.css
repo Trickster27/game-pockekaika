@@ -1,0 +1,151 @@
+.dp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.dp-books {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+}
+.dp-books svg {
+  width: 20px;
+  height: 20px;
+}
+.dp-lv {
+  font: 700 11px var(--body);
+  color: var(--gold);
+}
+.dp-up {
+  margin-top: 4px;
+  min-height: 30px;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+.dp-pts {
+  font: 700 12px var(--body);
+  color: var(--gold);
+}
+.dp-hint {
+  margin: 2px 0 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.dp-tree {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.dp-branch {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+.dp-branch > b {
+  text-align: center;
+  font: 700 12px var(--display);
+}
+.dp-branch.b-might > b {
+  color: #ff8a6a;
+}
+.dp-branch.b-guard > b {
+  color: #7fb8ff;
+}
+.dp-branch.b-grace > b {
+  color: #8fd18b;
+}
+.dp-node {
+  min-height: 40px;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: #120e18;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.2;
+}
+.dp-node.is-can {
+  border-color: var(--gold);
+  color: #e9dcc0;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--gold) 30%, transparent);
+}
+.dp-node.is-on {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 22%, #120e18);
+  color: var(--gold);
+  font-weight: 700;
+}
+.dp-reset {
+  margin-top: 8px;
+  width: 100%;
+  min-height: 32px;
+  font-size: 12px;
+}
+.dp-coll {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  border-left: 3px solid var(--fc);
+  padding-left: 8px;
+}
+.fu-card {
+  display: grid;
+  gap: 8px;
+}
+.fu-head {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.fu-head img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  background: #1a1530;
+  border: 2px solid var(--gold);
+}
+.fu-head div {
+  display: grid;
+}
+.fu-head small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.fu-parts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.fu-part {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  text-align: center;
+  font-size: 11px;
+}
+.fu-part img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  background: #1a1530;
+  border: 2px solid #5a2a2a;
+  filter: grayscale(0.7) brightness(0.7);
+}
+.fu-part.is-ok img {
+  border-color: #8fd18b;
+  filter: none;
+}
+.fu-part em {
+  font-style: normal;
+  color: #f08f86;
+}
+.fu-part.is-ok em {
+  color: #8fd18b;
+}

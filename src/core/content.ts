@@ -66,7 +66,7 @@ export interface HeroDef {
   mod?: Partial<Stats>;
   lore?: string;
   /** Особый пул призыва: такие герои выпадают только из своего свитка. */
-  pool?: 'void' | 'gold';
+  pool?: 'void' | 'gold' | 'fusion';
 }
 
 export interface EnemyDef {

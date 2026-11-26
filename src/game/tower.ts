@@ -64,10 +64,17 @@ export function towerWaves(floor: number): StageEnemy[][] {
 /** Награда за этаж; каждые 10 этажей — крупный сундук. */
 export function towerReward(floor: number): ShopReward {
   const r: ShopReward = { gold: 250 + 60 * floor };
+  // Каждые 5 этажей — книга навыков.
+  if (floor % 5 === 0) r.materials = { skillBook: 1 };
   if (floor % 10 === 0) {
     const tier = floor / 10;
     r.shards = 60 + 15 * tier;
-    const m: Partial<Record<MaterialId, number>> = { scroll: 1, ancientScroll: 1, starDust: 10 + 2 * tier };
+    const m: Partial<Record<MaterialId, number>> = {
+      scroll: 1,
+      ancientScroll: 1,
+      skillBook: 1,
+      starDust: 10 + 2 * tier,
+    };
     // Каждые 20 этажей — свиток Сумрака, каждые 50 — золотой.
     if (floor % 20 === 0) m.voidScroll = 1;
     if (floor % 50 === 0) m.goldScroll = 1;

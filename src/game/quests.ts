@@ -24,7 +24,7 @@ export const DAILY_QUESTS: QuestDef[] = [
 
 export const QUEST_CHESTS: { points: number; reward: ShopReward }[] = [
   { points: 30, reward: { gold: 5000, materials: { xpTome: 3 } } },
-  { points: 60, reward: { shards: 60, materials: { starDust: 10 } } },
+  { points: 60, reward: { shards: 60, materials: { starDust: 10, skillBook: 1 } } },
   { points: 100, reward: { shards: 100, materials: { scroll: 1, ancientScroll: 1 } } },
 ];
 

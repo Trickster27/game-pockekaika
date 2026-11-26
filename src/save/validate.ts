@@ -89,6 +89,12 @@ function normalizeHeroes(v: unknown, now: number): OwnedHero[] | null {
       stars: Math.round(num(h.stars, 1, 1, 6)),
       awakened: bool(h.awakened, false),
       obtainedAt: num(h.obtainedAt, now, 0),
+      ...(Array.isArray(h.skillLv)
+        ? { skillLv: h.skillLv.slice(0, 4).map((x) => Math.round(num(x, 1, 1, 4))) }
+        : {}),
+      ...(Array.isArray(h.talents)
+        ? { talents: h.talents.filter((x): x is string => typeof x === 'string').slice(0, 12) }
+        : {}),
     });
   }
   return out;

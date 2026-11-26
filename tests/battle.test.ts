@@ -265,8 +265,9 @@ describe('контент', () => {
   it('без ошибок ссылок', () => {
     expect(validateContent()).toEqual([]);
   });
-  it('38 героев: 30 обычного пула (по 6 на фракцию), 4 сумрачных и 4 мифических', () => {
-    expect(HEROES.length).toBe(38);
+  it('40 героев: 30 обычного пула (по 6 на фракцию), 4 сумрачных, 4 мифических и 2 слиянием', () => {
+    expect(HEROES.length).toBe(40);
+    expect(HEROES.filter((h) => h.pool === 'fusion')).toHaveLength(2);
     const base = HEROES.filter((h) => !h.pool);
     expect(base.length).toBe(30);
     for (const f of ['order', 'grove', 'ash', 'abyss', 'forge'])

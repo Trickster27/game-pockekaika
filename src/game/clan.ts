@@ -258,7 +258,8 @@ export interface ClanShopOffer {
     | 'ancientScroll'
     | 'factionScroll'
     | 'voidScroll'
-    | 'goldScroll';
+    | 'goldScroll'
+    | 'skillBook';
   price: number;
   limit: number;
   /** Нужный уровень клана. */

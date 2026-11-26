@@ -1680,4 +1680,76 @@ export const SKILLS: SkillDef[] = [
     fx: 'meteor',
     effects: [{ kind: 'damage', to: 'allEnemies', mult: 1.8 }],
   },
+
+  // ———— Герои слияния ————
+  {
+    id: 'ilia_ray',
+    name: 'Луч надежды',
+    desc: 'Бьёт врага и лечит самого раненого союзника.',
+    cooldown: 0,
+    target: 'enemy',
+    fx: 'ray',
+    effects: [
+      { kind: 'damage', mult: 1.1 },
+      { kind: 'heal', to: 'lowestAlly', pct: 0.12 },
+    ],
+  },
+  {
+    id: 'ilia_dawn',
+    name: 'Новый рассвет',
+    desc: 'Лечит всех союзников и даёт им щит.',
+    cooldown: 3,
+    target: 'none',
+    fx: 'heal',
+    effects: [
+      { kind: 'heal', to: 'allAllies', pct: 0.22 },
+      { kind: 'shield', to: 'allAllies', pct: 0.1, turns: 2 },
+    ],
+  },
+  {
+    id: 'ilia_rebirth',
+    name: 'Солнце не гаснет',
+    desc: 'Очищает, сильно лечит и усиливает атаку всех союзников.',
+    cooldown: 5,
+    target: 'none',
+    fx: 'buff',
+    effects: [
+      { kind: 'cleanse', to: 'allAllies' },
+      { kind: 'heal', to: 'allAllies', pct: 0.3 },
+      { kind: 'status', to: 'allAllies', status: 'atkUp', turns: 2 },
+    ],
+  },
+  {
+    id: 'skarn_cleave',
+    name: 'Пепельный разруб',
+    desc: 'Два удара; может отравить.',
+    cooldown: 0,
+    target: 'enemy',
+    fx: 'slash',
+    effects: [
+      { kind: 'damage', mult: 2.1, hits: 2 },
+      { kind: 'status', status: 'poison', turns: 2, chance: 0.3 },
+    ],
+  },
+  {
+    id: 'skarn_inferno',
+    name: 'Инферно',
+    desc: 'Огонь по всем врагам.',
+    cooldown: 3,
+    target: 'none',
+    fx: 'fire',
+    effects: [{ kind: 'damage', to: 'allEnemies', mult: 1.6 }],
+  },
+  {
+    id: 'skarn_doom',
+    name: 'Пепел к пеплу',
+    desc: 'Огромный урон, игнорирует 35% защиты, снижает защиту.',
+    cooldown: 4,
+    target: 'enemy',
+    fx: 'meteor',
+    effects: [
+      { kind: 'damage', mult: 3.6, defIgnore: 0.35 },
+      { kind: 'status', status: 'defDown', turns: 2, chance: 0.8 },
+    ],
+  },
 ];

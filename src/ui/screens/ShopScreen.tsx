@@ -26,6 +26,7 @@ function OfferIcon({ icon }: { icon: ShopOffer['icon'] }) {
     case 'factionScroll':
     case 'voidScroll':
     case 'goldScroll':
+    case 'skillBook':
       return <MaterialIcon id={icon} />;
     default:
       return <IconShard />;

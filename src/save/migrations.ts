@@ -100,6 +100,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   12: (s) => ({ ...s, version: 12, camp: { level: 1 } }),
   // v13: тренировочный зал.
   13: (s) => ({ ...s, version: 13, training: { slots: [] } }),
+  // v14: книги навыков (2 в подарок), уровни навыков и таланты героев.
+  14: (s) => ({ ...s, version: 14, materials: { ...(s.materials as Record<string, number>), skillBook: 2 } }),
 };
 
 export class SaveVersionError extends Error {}

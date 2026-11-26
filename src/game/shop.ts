@@ -35,7 +35,8 @@ export interface ShopOffer {
     | 'ancientScroll'
     | 'factionScroll'
     | 'voidScroll'
-    | 'goldScroll';
+    | 'goldScroll'
+    | 'skillBook';
   price: ShopPrice;
   reward: ShopReward;
   /** Лимит покупок за период. */
@@ -96,6 +97,24 @@ export const SHOP_OFFERS: ShopOffer[] = [
     price: { kind: 'shards', amount: 1800 },
     reward: { materials: { goldScroll: 1 } },
     limit: { per: 'week', count: 1 },
+  },
+  {
+    id: 'book1',
+    name: 'Книга навыков',
+    desc: 'Улучшает навык героя',
+    icon: 'skillBook',
+    price: { kind: 'shards', amount: 150 },
+    reward: { materials: { skillBook: 1 } },
+    limit: { per: 'day', count: 2 },
+  },
+  {
+    id: 'book2gold',
+    name: 'Книги навыков ×2',
+    desc: 'За золото, раз в день',
+    icon: 'skillBook',
+    price: { kind: 'gold', amount: 30000 },
+    reward: { materials: { skillBook: 2 } },
+    limit: { per: 'day', count: 1 },
   },
   {
     id: 'tome5',

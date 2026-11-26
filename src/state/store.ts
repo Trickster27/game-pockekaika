@@ -23,6 +23,7 @@ export type ScreenId =
   | 'clan'
   | 'training'
   | 'leaders'
+  | 'fusion'
   | 'chat'
   | 'settings'
   | 'placeholder';

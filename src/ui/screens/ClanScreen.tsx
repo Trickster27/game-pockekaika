@@ -1114,6 +1114,7 @@ const SHOP_MATERIAL: Record<string, MaterialId> = {
   factionScroll: 'factionScroll',
   voidScroll: 'voidScroll',
   goldScroll: 'goldScroll',
+  skillBook: 'skillBook',
 };
 
 function Shop({ st }: { st: ClanState }) {

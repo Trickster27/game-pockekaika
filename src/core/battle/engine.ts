@@ -69,10 +69,10 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     stats = { ...stats };
     for (const [k, v] of Object.entries(spec.bonus) as [keyof Stats, number][]) stats[k] += v;
   }
-  const skills = def.skills.map((id) => {
+  const skills = def.skills.map((id, i) => {
     const s = db.skill(id);
     if (!s) throw new Error(`Нет навыка ${id} у ${def.id}`);
-    return s;
+    return levelSkill(s, spec.skillLv?.[i] ?? 1);
   });
   if (spec.hpMax) stats = { ...stats, hp: Math.round(spec.hpMax) };
   return {
@@ -105,6 +105,24 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     pooled: spec.hpMax != null,
     enrage: spec.enrage ?? 0,
     enrageStacks: 0,
+  };
+}
+
+/** Навык с учётом уровня: урон, лечение и щиты +10% за уровень выше первого; на 4-м уровне перезарядка −1. */
+export function levelSkill(s: SkillDef, lv: number): SkillDef {
+  const l = Math.max(1, Math.min(4, Math.floor(lv)));
+  if (l === 1) return s;
+  const k = 1 + 0.1 * (l - 1);
+  return {
+    ...s,
+    cooldown: l >= 4 && s.cooldown > 1 ? s.cooldown - 1 : s.cooldown,
+    effects: s.effects.map((e) =>
+      e.kind === 'damage'
+        ? { ...e, mult: e.mult * k }
+        : e.kind === 'heal' || e.kind === 'shield'
+          ? { ...e, pct: e.pct * k }
+          : e,
+    ),
   };
 }
 

@@ -41,6 +41,18 @@ export function MaterialIcon({ id }: { id: MaterialId }) {
           <path d="M9 13 L12 11 L14 15 M15 8 L17 12" fill="none" stroke="#7fe7ff" strokeWidth="1.8" />
         </svg>
       );
+    case 'skillBook':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 5 L12 7 L20 5 L20 19 L12 21 L4 19 Z" fill="#7a2a4a" {...s} />
+          <path d="M12 7 L12 21" stroke="#0a0710" strokeWidth="1.4" />
+          <path
+            d="M7 10 L10 11 M14 11 L17 10 M7 14 L10 15 M14 15 L17 14"
+            stroke="#ffd0e6"
+            strokeWidth="1.2"
+          />
+        </svg>
+      );
     case 'ancientScroll':
     case 'factionScroll':
     case 'voidScroll':

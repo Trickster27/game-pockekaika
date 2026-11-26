@@ -6,6 +6,7 @@ export const LOGIN_CYCLE = 28;
 /** Награда за N-й день входа (1..28). 7, 14, 21 — особые, 28 — главная. */
 export function loginReward(day: number): ShopReward {
   if (day === 28) return { shards: 500, materials: { scroll: 5, awakenStone: 5, goldScroll: 1 } };
+  if (day === 10 || day === 24) return { materials: { skillBook: 2 }, gold: 8000 };
   if (day === 21) return { shards: 150, materials: { voidScroll: 1 } };
   if (day === 14) return { shards: 150, materials: { factionScroll: 1 } };
   if (day % 7 === 0) return { shards: 150, materials: { scroll: 2, ancientScroll: 1 } };

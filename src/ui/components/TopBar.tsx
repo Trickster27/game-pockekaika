@@ -30,6 +30,7 @@ export function TopBar() {
     clan: 'clan.title',
     training: 'training.title',
     leaders: 'social.leaders',
+    fusion: 'fusion.title',
   };
   const titleKey = titled[screen];
   return (
