@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { isOnline, MAX_MESSAGE } from '@/online';
-import { useT } from '@/i18n';
+import { useT, intlLocale } from '@/i18n';
 import { useGame } from '@/state/store';
 import { closeChat, errorText, sendChat, useOnline } from '@/state/online';
 import { IconBack } from '../components/icons';
 import './screens.css';
 import './online.css';
 
-const time = (at: number) => new Date(at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+const time = (at: number) =>
+  new Date(at).toLocaleTimeString(intlLocale(), { hour: '2-digit', minute: '2-digit' });
 
 export default function ChatScreen() {
   const t = useT();

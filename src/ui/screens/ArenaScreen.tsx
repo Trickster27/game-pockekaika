@@ -145,7 +145,7 @@ function ArenaAi() {
             key={l.id}
             style={{ margin: '4px 0 0', fontSize: 13, color: l.id === league.id ? l.color : 'var(--muted)' }}
           >
-            {l.name}: {l.min}+ · {l.dailyShards} ◆ / день
+            {l.name}: {l.min}+ · {l.dailyShards} ◆ {t('ui.perDay')}
           </p>
         ))}
       </section>

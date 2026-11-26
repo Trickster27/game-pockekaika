@@ -177,7 +177,7 @@ function StagePanel({ stage, teamPow }: { stage: StageDef; teamPow: number }) {
           return (
             <span className={`foe${f.boss ? ' foe--boss' : ''}`} key={f.id} title={d.name}>
               <img src={unitArtUrl(d.art)} alt={d.name} />
-              {f.level} ур.
+              {t('ui.lvl', { n: f.level })}
             </span>
           );
         })}

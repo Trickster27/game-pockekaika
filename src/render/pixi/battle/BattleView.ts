@@ -6,7 +6,8 @@ import { DEBUFFS } from '@/core/content';
 import { unitArtMeta, unitArtUrl, UNIT_FRAME } from '@/assets/art';
 import type { IdleStyle } from '@/assets/art/meta';
 import { FIELD, sceneTexture, SCENE_TINT, type SceneKey } from './background';
-import { glowTexture, STATUS_LABEL, statusTexture } from './textures';
+import { glowTexture, statusLabel, statusTexture } from './textures';
+import { tr } from '@/i18n';
 
 const LEAD = 0x0a0710;
 const FONT = 'Philosopher, Georgia, serif';
@@ -291,7 +292,13 @@ export class BattleView {
     const icons = new Container();
     this.layerUi.addChild(bars, icons);
     let label: Text | undefined;
-    const tierText = u.boss ? u.name : u.tier === 'champion' ? 'Чемпион' : u.tier === 'elite' ? 'Элита' : '';
+    const tierText = u.boss
+      ? u.name
+      : u.tier === 'champion'
+        ? tr('fx.champion')
+        : u.tier === 'elite'
+          ? tr('fx.elite')
+          : '';
     if (tierText) {
       label = new Text({
         text: tierText,
@@ -405,7 +412,7 @@ export class BattleView {
         }
         case 'stunned': {
           const v = this.views.get(e.uid);
-          if (v) this.label(v, 'Оглушён', '#ffd84a');
+          if (v) this.label(v, tr('fx.stunned'), '#ffd84a');
           await this.wait(420);
           i++;
           break;
@@ -441,7 +448,7 @@ export class BattleView {
               alpha: 0.6,
             });
           }
-          this.banner(`Волна ${e.wave}`, this.sceneTint());
+          this.banner(tr('fx.wave', { n: e.wave }), this.sceneTint());
           await this.wait(800);
           i++;
           break;
@@ -654,33 +661,28 @@ export class BattleView {
             if (!v.statuses.includes(e.status)) v.statuses.push(e.status);
             this.label(
               v,
-              STATUS_LABEL[e.status],
+              statusLabel(e.status),
               DEBUFFS.includes(e.status) ? '#ff9a8a' : '#ffe08a',
               labelN++,
             );
-          } else this.label(v, 'Сопротивление', '#b8b0c4', labelN++);
+          } else this.label(v, tr('fx.resist'), '#b8b0c4', labelN++);
           break;
         case 'immune':
-          this.label(
-            v,
-            e.what === 'stun' ? 'Иммунитет к оглушению' : 'Иммунитет к сбиву',
-            '#d8d0e6',
-            labelN++,
-          );
+          this.label(v, e.what === 'stun' ? tr('fx.immuneStun') : tr('fx.immuneTm'), '#d8d0e6', labelN++);
           break;
         case 'enrage':
-          this.label(v, `Ярость ×${e.stacks}`, '#ff6a4a', labelN++);
+          this.label(v, tr('fx.enrage', { n: e.stacks }), '#ff6a4a', labelN++);
           this.ring(v.x, v.y - v.top * 0.5, '#ff5a3a', 70 * v.scale, 4, 420);
           break;
         case 'cleanse':
           v.statuses = v.statuses.filter((s) => !e.removed.includes(s));
-          this.label(v, 'Очищение', '#bff7ff', labelN++);
+          this.label(v, tr('fx.cleanse'), '#bff7ff', labelN++);
           break;
         case 'tm':
           if (Math.abs(e.delta) >= 50)
             this.label(
               v,
-              e.delta > 0 ? 'Шкала хода +' : 'Шкала хода −',
+              e.delta > 0 ? tr('fx.tmUp') : tr('fx.tmDown'),
               e.delta > 0 ? '#9cc8ff' : '#c6a8ff',
               labelN++,
             );
@@ -1278,7 +1280,7 @@ export class BattleView {
     const c = new Container();
     if (crit) {
       const t = new Text({
-        text: 'КРИТ!',
+        text: tr('battle.crit'),
         style: {
           fontFamily: FONT,
           fontWeight: '700',

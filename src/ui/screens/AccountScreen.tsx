@@ -175,7 +175,7 @@ export default function AccountScreen() {
                         time:
                           now - o.lastSync < 60_000
                             ? t('online.justNow')
-                            : `${formatDuration(now - o.lastSync)} назад`,
+                            : t('time.ago', { time: formatDuration(now - o.lastSync) }),
                       })
                     : ''}
             </span>

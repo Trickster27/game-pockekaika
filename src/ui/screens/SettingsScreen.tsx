@@ -81,8 +81,8 @@ export default function SettingsScreen() {
     }
     await p.notifications.schedule({
       id: 999,
-      title: 'Каэлмор',
-      body: 'Добыча лагеря ждёт вас у костра!',
+      title: t('app.title'),
+      body: t('notify.testBody'),
       at: Date.now() + 10_000,
     });
     showToast(t('settings.notifyScheduled'));

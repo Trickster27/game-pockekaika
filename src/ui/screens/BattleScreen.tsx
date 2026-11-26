@@ -353,7 +353,7 @@ export default function BattleScreen() {
           </button>
         </div>
       )}
-      <div className="bs__order" aria-label="Очередь ходов">
+      <div className="bs__order" aria-label={t('ui.turnOrder')}>
         {order.map((u, i) => (
           <span
             key={`${u.uid}-${i}`}
@@ -372,7 +372,9 @@ export default function BattleScreen() {
       <div className="bs__bottom">
         <div className="bs__who">
           <b>{shown ? shown.name : '…'}</b>
-          <span>{shown ? (shown.side === 'enemy' ? t('battle.enemyTurn') : `${shown.level} ур.`) : ''}</span>
+          <span>
+            {shown ? (shown.side === 'enemy' ? t('battle.enemyTurn') : t('ui.lvl', { n: shown.level })) : ''}
+          </span>
         </div>
         <div className="sk-row">
           {shown && shown.side === 'ally'

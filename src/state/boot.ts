@@ -1,6 +1,7 @@
 import { createPlatform } from '@/platform';
 import { LocalSaveBackend, SaveManager, type SaveData } from '@/save';
 import { tr, useI18n } from '@/i18n';
+import { applyContentLocale } from '@/i18n/content';
 import {
   trackQuest,
   ENERGY_MAX,
@@ -23,6 +24,8 @@ export function applySettings(save: SaveData) {
   p.audio.setMusicEnabled(save.settings.music);
   p.audio.setMusicVolume(save.settings.musicVolume);
   p.haptics.setEnabled(save.settings.haptics);
+  // Сначала контент (имена, навыки), потом язык интерфейса — смена языка перерисует экраны.
+  applyContentLocale(save.settings.locale);
   useI18n.getState().setLocale(save.settings.locale);
 }
 

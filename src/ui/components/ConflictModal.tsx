@@ -1,4 +1,4 @@
-import { formatNumber, useT } from '@/i18n';
+import { formatNumber, useT, intlLocale } from '@/i18n';
 import { resolveConflict, useOnline, type SaveSummary } from '@/state/online';
 
 function Card({ title, s }: { title: string; s: SaveSummary }) {
@@ -8,7 +8,7 @@ function Card({ title, s }: { title: string; s: SaveSummary }) {
       <b>{title}</b>
       {t('online.summary', { level: s.level, stars: s.stars, heroes: s.heroes, gold: formatNumber(s.gold) })}
       <br />
-      {new Date(s.updatedAt).toLocaleString('ru-RU')}
+      {new Date(s.updatedAt).toLocaleString(intlLocale())}
     </div>
   );
 }

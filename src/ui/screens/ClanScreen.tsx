@@ -29,7 +29,7 @@ import {
 } from '@/game';
 import { CLAN_BOSS_SKILLS, heroDef } from '@/content';
 import { isOnline, type ClanInfo, type ClanMemberInfo, type ClanState } from '@/online';
-import { formatNumber, useT } from '@/i18n';
+import { formatNumber, useT, intlLocale } from '@/i18n';
 import { useGame } from '@/state/store';
 import { useOnline } from '@/state/online';
 import { platform } from '@/state/services';
@@ -572,7 +572,7 @@ function Overview({ st }: { st: ClanState }) {
               <li key={m.id}>
                 <span>{systemText(m)}</span>
                 <time>
-                  {new Date(m.at).toLocaleString('ru-RU', {
+                  {new Date(m.at).toLocaleString(intlLocale(), {
                     day: 'numeric',
                     month: 'short',
                     hour: '2-digit',
@@ -1074,7 +1074,7 @@ function Chat() {
               {m.from !== me && <b>{m.nickname ?? '?'}</b>}
               <span>{m.body}</span>
               <time>
-                {new Date(m.at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                {new Date(m.at).toLocaleTimeString(intlLocale(), { hour: '2-digit', minute: '2-digit' })}
               </time>
             </div>
           ),

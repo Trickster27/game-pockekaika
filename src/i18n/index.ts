@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import ru from './ru.json';
+import en from './en.json';
 
 /**
  * Простой i18n без внешних библиотек. Ключи — пути в JSON через точку: t('camp.level', { level: 3 }).
@@ -11,12 +12,12 @@ type Tree = { [k: string]: string | Tree };
 
 export const LOCALES = [
   { id: 'ru', label: 'Русский', ready: true },
-  { id: 'en', label: 'English', ready: false },
+  { id: 'en', label: 'English', ready: true },
   { id: 'uk', label: 'Українська', ready: false },
 ] as const;
 export type LocaleId = (typeof LOCALES)[number]['id'];
 
-const DICTS: Partial<Record<LocaleId, Tree>> = { ru: ru as Tree };
+const DICTS: Partial<Record<LocaleId, Tree>> = { ru: ru as Tree, en: en as Tree };
 
 function lookup(tree: Tree | undefined, key: string): string | undefined {
   let cur: string | Tree | undefined = tree;
@@ -47,7 +48,13 @@ export function useT() {
   return (key: string, params?: Record<string, string | number>) => translate(locale, key, params);
 }
 
-export const formatNumber = (n: number) => Math.floor(n).toLocaleString('ru-RU').replace(/\s/g, '\u2009');
+/** Локаль для дат и чисел (Intl). */
+export const intlLocale = () => (useI18n.getState().locale === 'en' ? 'en-GB' : 'ru-RU');
+
+export const formatNumber = (n: number) =>
+  Math.floor(n)
+    .toLocaleString(useI18n.getState().locale === 'en' ? 'en-US' : 'ru-RU')
+    .replace(/\s/g, '\u2009');
 
 /** Перевод вне React-компонентов (действия, сервисы). */
 export function tr(key: string, params?: Record<string, string | number>): string {

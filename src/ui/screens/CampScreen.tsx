@@ -196,6 +196,7 @@ export default function CampScreen() {
             key={b.id}
             type="button"
             className="campmap__b"
+            data-b={b.id}
             style={pct(b.box)}
             onClick={() => open(b.screen)}
             aria-label={t(`camp.locations.${b.id}.title`)}

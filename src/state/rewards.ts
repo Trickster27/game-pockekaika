@@ -1,14 +1,15 @@
+import { formatNumber } from '@/i18n';
 import type { RewardLine } from './store';
 
 /** Разбирает «+1 234», «×3», «+15» в число; иначе null. */
 function parse(v: string): { n: number; prefix: string } | null {
-  const m = /^([+×]?)\s*([\d\s\u00a0\u202f]+)$/.exec(v.trim());
+  const m = /^([+×]?)\s*([\d\s\u00a0\u202f\u2009,]+)$/.exec(v.trim());
   if (!m) return null;
-  const n = Number(m[2]!.replace(/[\s\u00a0\u202f]/g, ''));
+  const n = Number(m[2]!.replace(/[\s\u00a0\u202f\u2009,]/g, ''));
   return Number.isFinite(n) ? { n, prefix: m[1] ?? '' } : null;
 }
 
-const fmt = (n: number) => n.toLocaleString('ru-RU');
+const fmt = (n: number) => formatNumber(n);
 
 /**
  * Сводка наград за несколько боёв: числа по одной строке складываются,

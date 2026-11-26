@@ -32,7 +32,7 @@ const STEPS: Step[] = [
   {
     id: 'campaign',
     screens: ['camp'],
-    target: '.campmap [aria-label="Кампания"]',
+    target: '.campmap [data-b="campaign"]',
     skipIf: (s) => s.stats.battlesWon > 0,
   },
   {
@@ -84,7 +84,7 @@ const STEPS: Step[] = [
   },
   { id: 'idle', screens: ['camp'], target: '[data-tut="idle-open"]' },
   { id: 'idleClaim', screens: ['camp'], target: '[data-tut="idle-claim"]', place: 'above' },
-  { id: 'quests', screens: ['camp'], target: '.campmap [aria-label="Задания"]', place: 'above' },
+  { id: 'quests', screens: ['camp'], target: '.campmap [data-b="quests"]', place: 'above' },
   { id: 'done', screens: ['quests', 'camp'] },
 ];
 

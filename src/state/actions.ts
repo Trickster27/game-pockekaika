@@ -144,7 +144,11 @@ export function campaignFinish(stageId: string, result: BattleResult): RewardLin
     if (r.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
     lines.push({ icon: 'xp', label: tr('rewards.heroXp'), value: `+${formatNumber(r.heroXp)}` });
     if (r.levelUps.length)
-      lines.push({ icon: 'level', label: tr('rewards.levelUp'), value: `${r.levelUps.length} гер.` });
+      lines.push({
+        icon: 'level',
+        label: tr('rewards.levelUp'),
+        value: tr('ui.heroesShort', { n: r.levelUps.length }),
+      });
     if (r.playerLevelUps)
       lines.push({ icon: 'star', label: tr('rewards.playerLevel'), value: `${s.player.level}` });
     for (const it of r.items) lines.push(itemLine(it));

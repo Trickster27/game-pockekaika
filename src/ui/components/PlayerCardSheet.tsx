@@ -77,7 +77,7 @@ export function PlayerCardSheet({ userId, onClose }: { userId: string; onClose: 
                     <img src={unitArtUrl(d.art)} alt="" style={{ borderColor: RARITY_COLOR[d.rarity] }} />
                     <b>{d.name}</b>
                     <small>
-                      {u.level} ур. · {'★'.repeat(u.stars)}
+                      {t('ui.lvl', { n: u.level })} · {'★'.repeat(u.stars)}
                     </small>
                   </div>
                 );

@@ -72,7 +72,7 @@ export default function FriendsScreen() {
         {t('online.online')}
       </>
     ) : (
-      t('online.offline', { time: `${formatDuration(now - p.lastSeen)} назад` })
+      t('online.offline', { time: t('time.ago', { time: formatDuration(now - p.lastSeen) }) })
     );
 
   return (

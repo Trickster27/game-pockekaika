@@ -1,3 +1,4 @@
+import { tr } from '@/i18n';
 import { Texture } from 'pixi.js';
 import type { StatusId } from '@/core/content';
 
@@ -97,14 +98,5 @@ export function statusTexture(id: StatusId): Texture {
   return t;
 }
 
-export const STATUS_LABEL: Record<StatusId, string> = {
-  poison: 'Яд',
-  stun: 'Оглушение',
-  defDown: 'Защита −',
-  atkDown: 'Атака −',
-  slow: 'Замедление',
-  atkUp: 'Атака +',
-  defUp: 'Защита +',
-  haste: 'Ускорение',
-  taunt: 'Провокация',
-};
+/** Подпись статуса на поле боя (на текущем языке). */
+export const statusLabel = (id: StatusId): string => tr(`fx.status.${id}`);

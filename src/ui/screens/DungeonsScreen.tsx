@@ -83,7 +83,7 @@ export default function DungeonsScreen() {
           {[...d.minions, d.boss].map((e) => (
             <span key={e} className={`foe${e === d.boss ? ' foe--boss' : ''}`} title={enemyDef(e).name}>
               <img src={unitArtUrl(enemyDef(e).art)} alt="" />
-              {dungeonEnemyLevel(level)} ур.
+              {t('ui.lvl', { n: dungeonEnemyLevel(level) })}
             </span>
           ))}
         </div>
