@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -130 120 135" width="240" height="270"><defs><linearGradient id="nc-db" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#7fb8ff"/></linearGradient></defs><g stroke="#0d0912" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M-9 -72 Q-18 -76 -24 -86 Q-28 -92 -30 -96 L-26 -98 Q-22 -92 -18 -86 Q-14 -80 -7 -78 Z" fill="#4a3488"/>
-<path d="M-30 -96 Q-32 -102 -28 -103 Q-24 -102 -25 -97 Z" fill="#e9cfe0"/>
-<path d="M-28 -100 Q-46 -106 -50 -88 Q-44 -98 -30 -96 Z" fill="url(#nc-db)"/>
-<path d="M-27 -97 L-24 -92" stroke-width="3"/></g></svg>
+    <path d="M-30 -96 Q-32 -102 -28 -103 Q-24 -102 -25 -97 Z" fill="#e9cfe0"/>
+    <path d="M-28 -100 Q-46 -106 -50 -88 Q-44 -98 -30 -96 Z" fill="url(#nc-db)"/>
+    <path d="M-27 -97 L-24 -92" stroke-width="3"/></g></svg>

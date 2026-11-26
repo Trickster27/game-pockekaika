@@ -1,7 +1,7 @@
 import { busyKind } from '@/game';
 import type { HeroDef } from '@/core/content';
 import type { OwnedHero } from '@/save/schema';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
@@ -40,7 +40,7 @@ export function HeroTile(props: {
       aria-label={def.name}
     >
       <span className="htile__art">
-        <img src={unitArtUrl(def.art)} alt="" loading="lazy" />
+        <img src={unitStillUrl(def.art)} alt="" loading="lazy" />
       </span>
       <span
         className="htile__el"

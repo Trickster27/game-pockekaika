@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { errorText, rename, signIn, signOut, signUp, syncNow, useOnline } from '@/state/online';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { formatDuration, useNow } from '../hooks';
 import './screens.css';
 import './heroes.css';
@@ -106,7 +106,7 @@ export default function AccountScreen() {
           {o.profile && (
             <section className="card prof">
               <span className="ava">
-                <img src={unitArtUrl(o.profile.avatar)} alt="" />
+                <img src={unitStillUrl(o.profile.avatar)} alt="" />
               </span>
               <div>
                 <b>{o.profile.nickname}</b>

@@ -3,7 +3,15 @@ import type { Battle, BattleEvent, BattleUnit } from '@/core/battle';
 import type { Element } from '@/core/types';
 import type { StatusId } from '@/core/content';
 import { DEBUFFS } from '@/core/content';
-import { rigValue, unitArtMeta, unitArtUrl, unitRig, UNIT_FRAME, type RigPart } from '@/assets/art';
+import {
+  rigValue,
+  unitArtMeta,
+  unitArtUrl,
+  unitRig,
+  unitRigInfo,
+  UNIT_FRAME,
+  type RigPart,
+} from '@/assets/art';
 import type { IdleStyle } from '@/assets/art/meta';
 import { FIELD, sceneTexture, SCENE_TINT, type SceneKey } from './background';
 import { glowTexture, statusLabel, statusTexture } from './textures';
@@ -87,7 +95,14 @@ interface UnitView {
   sprite: Sprite;
   flashSprite: Sprite;
   /** Слои «живого» героя (если есть). */
-  rig?: { part: RigPart; holder: Container; sprite: Sprite }[];
+  rig?: { part: RigPart; holder: Container; sprite: Sprite; fall?: { vx: number; vy: number; vr: number } }[];
+  /** Точка руки/оружия в координатах кадра. */
+  hand?: [number, number];
+  /** Позы 0..1: каст (рука вверх), прицел (рука вперёд), попадание (отшатнуться), распад при смерти. */
+  cast: number;
+  aim: number;
+  hit: number;
+  dying: number;
   bars: Graphics;
   icons: Container;
   label?: Text;
@@ -376,6 +391,11 @@ export class BattleView {
       sprite,
       flashSprite,
       rig,
+      hand: unitRigInfo(u.art)?.hand,
+      cast: 0,
+      aim: 0,
+      hit: 0,
+      dying: 0,
       bars,
       icons,
       label,
@@ -607,6 +627,7 @@ export class BattleView {
       default: {
         // buff и всё остальное
         const list = friends.length ? friends : [actor];
+        this.castPose(actor, color, 300);
         this.ring(actor.x, actor.y, color, 60, 6, 500);
         for (const [n, f] of list.entries()) {
           await this.wait(n ? 70 : 0);
@@ -638,6 +659,8 @@ export class BattleView {
           v.flash = 1;
           const dir = v.side === 'enemy' ? -1 : 1;
           v.oy += dir * 7;
+          v.hit = e.crit ? 1.4 : 1;
+          void this.tween((x) => (v.hit = x), v.hit, 0, e.crit ? 420 : 300, easeOut);
           void this.tween((x) => (v.oy = x), v.oy, 0, 240);
           v.hp = e.hp;
           v.shield = Math.max(0, v.shield - e.absorbed);
@@ -735,6 +758,7 @@ export class BattleView {
     await this.tween((x) => (actor.lean = x), 0, -0.18 * dir, 120, easeOut);
     for (let i = 0; i < 4; i++) setTimeoutGame(this, 30 * i, () => this.ghost(actor, color));
     void this.tween((x) => (actor.lean = x), -0.18 * dir, 0.12 * dir, 170, easeIn);
+    setTimeoutGame(this, 120, () => this.swoosh(actor, color));
     await Promise.all([
       this.tween((x) => (actor.ox = x), 0, dx * f, 170, easeIn),
       this.tween((x) => (actor.oy = x), 0, dy * f, 170, easeIn),
@@ -758,19 +782,26 @@ export class BattleView {
     kind: 'arrow' | 'orb',
   ) {
     void this.tween((x) => (actor.pulse = x), 1, 1.07, 200);
+    // Прицелиться: рука с луком/посохом вытягивается вперёд, после выстрела — отдача.
+    void this.tween((x) => (actor.aim = x), 0, 1, 200, easeOut);
     setTimeoutGame(this, 220, () => {
+      void this.tween((x) => (actor.aim = x), 1, 0.5, 90, easeOut).then(() =>
+        setTimeoutGame(this, 200, () => void this.tween((x) => (actor.aim = x), 0.5, 0, 260, easeInOut)),
+      );
+      const h = this.handPos(actor);
+      this.glow(h.x, h.y, color, 22, 260, 0, 0, { grow: 30 });
       void this.tween((x) => (actor.pulse = x), 1.07, 1, 160);
       const back = actor.side === 'ally' ? 6 : -6;
       void this.tween((x) => (actor.oy = x), 0, back, 80, easeOut).then(() =>
         this.tween((x) => (actor.oy = x), back, 0, 220, easeOut),
       );
     });
-    const sx = actor.x + (actor.side === 'ally' ? 0 : 0),
-      sy = actor.y - actor.top * 0.6;
+    const from = actor.hand ? null : { x: actor.x, y: actor.y - actor.top * 0.6 };
     await Promise.all(
       foes.map(async (f, n) => {
         await this.wait(200 + n * 100);
-        await this.projectile(sx, sy, f.x, f.y - f.top * 0.5, 330, arc, kind, color);
+        const s = from ?? this.handPos(actor);
+        await this.projectile(s.x, s.y, f.x, f.y - f.top * 0.5, 330, arc, kind, color);
         this.burst(f.x, f.y - f.top * 0.5, 14, [color, '#ffffff'], {
           sp: [80, 220],
           life: [200, 400],
@@ -781,7 +812,72 @@ export class BattleView {
     );
   }
 
+  /** Где сейчас рука/оружие персонажа на экране (с учётом позы). Без рига — над центром. */
+  private handPos(v: UnitView): { x: number; y: number } {
+    if (!v.hand) return { x: v.x + v.ox, y: v.y + v.oy - v.top * 0.6 };
+    let [hx, hy] = v.hand;
+    const w = v.rig?.find((r) => r.part.role === 'weapon');
+    if (w) {
+      const a = -v.lean * 2.4 - v.cast * 1.05 - v.aim * 0.55;
+      const [px, py] = w.part.pivot;
+      const dx = hx - px,
+        dy = hy - py;
+      hx = px + dx * Math.cos(a) - dy * Math.sin(a);
+      hy = py + dx * Math.sin(a) + dy * Math.cos(a);
+    }
+    return { x: v.x + v.ox + hx * v.scale, y: v.y + v.oy + hy * v.scale };
+  }
+
+  /** Поза заклинания: рука с оружием/посохом поднимается, у руки вспыхивает свет, под ногами — круг. */
+  private castPose(actor: UnitView, color: string, hold = 340) {
+    void this.tween((x) => (actor.cast = x), actor.cast, 1, 220, easeOut).then(() =>
+      setTimeoutGame(this, hold, () => void this.tween((x) => (actor.cast = x), 1, 0, 260, easeInOut)),
+    );
+    setTimeoutGame(this, 160, () => {
+      const h = this.handPos(actor);
+      this.glow(h.x, h.y, color, 26, 420, 0, 0, { grow: 40 });
+      this.glow(h.x, h.y, '#ffffff', 10, 300, 0, 0);
+    });
+    this.fx(
+      hold + 420,
+      (g, k) => {
+        const a = Math.sin(k * Math.PI);
+        const rx = 30 * actor.scale * (0.8 + 0.4 * k),
+          ry = 9 * actor.scale * (0.8 + 0.4 * k);
+        g.ellipse(actor.x, actor.y, rx, ry).stroke({ width: 2.5, color, alpha: 0.8 * a });
+        g.ellipse(actor.x, actor.y, rx * 0.7, ry * 0.7).stroke({
+          width: 1.5,
+          color: '#ffffff',
+          alpha: 0.5 * a,
+        });
+        for (let i = 0; i < 6; i++) {
+          const t = k * 2 + (i * Math.PI) / 3;
+          g.circle(actor.x + Math.cos(t) * rx, actor.y + Math.sin(t) * ry, 2).fill({ color, alpha: a });
+        }
+      },
+      true,
+    );
+  }
+
+  /** След от взмаха оружием перед бойцом. */
+  private swoosh(actor: UnitView, color: string) {
+    const cx = actor.x + actor.ox,
+      cy = actor.y + actor.oy - actor.top * 0.55;
+    const R = 46 * actor.scale;
+    const dir = actor.side === 'ally' ? -1 : 1;
+    this.fx(260, (g, k) => {
+      const a0 = -2.2 + k * 1.6,
+        a1 = a0 + 1.6;
+      const al = 1 - k;
+      for (let j = 0; j < 4; j++)
+        g.moveTo(cx + Math.cos(a0) * (R - j * 4), cy + dir * Math.sin(a0) * (R - j * 4) * 0.8)
+          .arc(cx, cy, R - j * 4, a0, a1)
+          .stroke({ width: 5 - j, color: j ? color : '#ffffff', alpha: al * (0.9 - j * 0.18) });
+    });
+  }
+
   private async charge(actor: UnitView, colors: string[]) {
+    this.castPose(actor, colors[0]!);
     void this.tween((x) => (actor.pulse = x), 1, 1.1, 330);
     void this.tween((x) => (actor.oy = x), actor.oy, -10, 300, easeOut).then(() =>
       this.tween((x) => (actor.oy = x), -10, 0, 260, easeInOut),
@@ -792,8 +888,9 @@ export class BattleView {
     for (let i = 0; i < 10; i++) {
       setTimeoutGame(this, i * 30, () => {
         const a = Math.random() * Math.PI * 2;
-        const cx = actor.x,
-          cy = actor.y - actor.top * 0.55;
+        const h = this.handPos(actor);
+        const cx = h.x,
+          cy = h.y;
         this.glow(
           cx + Math.cos(a) * 48,
           cy + Math.sin(a) * 48,
@@ -938,8 +1035,9 @@ export class BattleView {
   }
 
   private async fxHeal(actor: UnitView, targets: UnitView[], byUid: Map<string, BattleEvent[]>) {
-    const ox = actor.x - 20 * actor.scale,
-      oy = actor.y - actor.top * 0.85;
+    this.castPose(actor, '#8bff9a', 420);
+    await this.wait(160);
+    const { x: ox, y: oy } = this.handPos(actor);
     this.fx(500, (g, k) => {
       g.circle(ox, oy, 10 + 26 * Math.sin(k * Math.PI)).fill({ color: '#5fe0cf', alpha: 0.25 });
     });
@@ -958,6 +1056,7 @@ export class BattleView {
   }
 
   private async fxShield(actor: UnitView, targets: UnitView[], byUid: Map<string, BattleEvent[]>) {
+    this.castPose(actor, '#7fe7ff', 260);
     void this.tween((x) => (actor.oy = x), 0, -14, 180);
     await this.wait(180);
     await this.tween((x) => (actor.oy = x), -14, 0, 110, easeIn);
@@ -1270,9 +1369,13 @@ export class BattleView {
     v.statuses = [];
     v.shield = 0;
     v.flash = 1;
-    setTimeoutGame(this, 60, () => void this.tween((x) => (v.alpha = x), 1, 0, 90, easeIn));
+    if (v.rig) {
+      // «Живой» персонаж распадается на части: каждая отлетает по-своему и гаснет.
+      for (const r of v.rig) r.fall = { vx: rand(-40, 40), vy: rand(-50, -10), vr: rand(-1.6, 1.6) };
+      void this.tween((x) => (v.dying = x), 0, 1, 850, easeOut).then(() => (v.alpha = 0));
+    } else setTimeoutGame(this, 60, () => void this.tween((x) => (v.alpha = x), 1, 0, 90, easeIn));
     const colors = [ELEMENT_COLOR[v.element], '#3b2d55', '#cfc8e2', '#2c2440', '#ffffff'];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < (v.rig ? 14 : 30); i++) {
       const r = rand(4, 10);
       const g = new Graphics()
         .poly([rand(-r, r), rand(-r, r), rand(-r, r), rand(-r, r), rand(-r, r), rand(-r, r)])
@@ -1541,35 +1644,63 @@ export class BattleView {
     const torso = v.rig!.find((r) => r.part.motion?.kind === 'breathe');
     const breath = torso && alive ? rigValue(torso.part.motion!, t) : 0;
     const tpy = torso?.part.pivot[1] ?? 0;
+    // Отшатнуться от удара: торс сжимается, голова откидывается, всё чуть уходит назад.
+    const recoil = v.hit;
     for (const r of v.rig!) {
       const m = r.part.motion;
+      const role = r.part.role;
+      const px = r.part.pivot[0];
       const py = r.part.pivot[1];
       let y = py * v.scale;
       if (r.part.follow) y += breath * (tpy - py) * v.scale;
+      if (r.part.follow) y += recoil * 0.06 * (tpy - py) * v.scale;
+      r.holder.x = px * v.scale;
       r.holder.y = y;
-      if (!m) continue;
-      const val = alive ? rigValue(m, t) : 0;
-      switch (m.kind) {
-        case 'sway':
-          r.holder.rotation = (val * Math.PI) / 180;
-          break;
-        case 'swing':
-          // Замах: в бою оружие «догоняет» наклон тела и уходит дальше него.
-          r.holder.rotation = (val * Math.PI) / 180 - v.lean * 2.4;
-          break;
-        case 'breathe':
-          r.holder.scale.y = 1 + val;
-          break;
-        case 'bob':
-          r.holder.y += val * v.scale;
-          break;
-        case 'pulse':
-          r.holder.alpha = alive ? val : 0;
-          break;
-        case 'blink':
-          r.holder.alpha = val;
-          break;
+      let rotation = 0;
+      let alpha = 1;
+      const val = m && alive ? rigValue(m, t) : 0;
+      if (m)
+        switch (m.kind) {
+          case 'sway':
+            rotation = (val * Math.PI) / 180;
+            break;
+          case 'swing':
+            rotation = (val * Math.PI) / 180;
+            break;
+          case 'breathe':
+            r.holder.scale.y = 1 + val - recoil * 0.07;
+            r.holder.scale.x = 1 + recoil * 0.04;
+            break;
+          case 'bob':
+            r.holder.y += val * v.scale;
+            break;
+          case 'pulse':
+            alpha = alive ? val : 0;
+            break;
+          case 'blink':
+            alpha = recoil > 0.3 ? 1 : val; // от удара — зажмуриться
+            break;
+        }
+      if (role === 'weapon') {
+        // Замах следует за наклоном тела и уходит дальше; каст поднимает руку, прицел — вытягивает вперёд.
+        rotation += -v.lean * 2.4 - v.cast * 1.05 - v.aim * 0.55 + recoil * 0.25;
+      } else if (role === 'head') {
+        rotation += -v.cast * 0.12 - recoil * 0.22;
+      } else if (role === 'fx' && v.cast > 0) {
+        alpha = Math.min(1, alpha + v.cast);
+        r.holder.scale.set(1 + v.cast * 0.35);
+      } else if (m?.kind === 'sway') {
+        rotation += recoil * 0.12; // плащи и волосы взлетают от удара
       }
+      if (v.dying > 0 && r.fall) {
+        const k = v.dying;
+        r.holder.x += r.fall.vx * k * v.scale;
+        r.holder.y += (r.fall.vy * k + 70 * k * k) * v.scale;
+        rotation += r.fall.vr * k;
+        alpha *= 1 - k * k;
+      }
+      r.holder.rotation = rotation;
+      r.holder.alpha = alpha;
     }
   }
 

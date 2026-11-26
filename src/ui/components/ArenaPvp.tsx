@@ -7,7 +7,7 @@ import { errorText, onlineBackend, submitDefenseNow, useOnline } from '@/state/o
 import { useGame } from '@/state/store';
 import { startPvp } from '@/state/actions';
 import { platform } from '@/state/services';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { RARITY_COLOR } from '../colors';
 import { PlayerCardSheet } from './PlayerCardSheet';
 import './social.css';
@@ -121,7 +121,7 @@ export function ArenaPvp() {
               return (
                 <img
                   key={i}
-                  src={unitArtUrl(d.art)}
+                  src={unitStillUrl(d.art)}
                   alt={d.name}
                   title={`${d.name} · ${u.level}`}
                   style={{ borderColor: RARITY_COLOR[d.rarity] }}

@@ -6,7 +6,7 @@ import type { PlayerCard } from '@/online';
 import { formatNumber, useT } from '@/i18n';
 import { errorText, onlineBackend, useOnline } from '@/state/online';
 import { useGame } from '@/state/store';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { RARITY_COLOR } from '../colors';
 import './social.css';
 
@@ -34,7 +34,7 @@ export function PlayerCardSheet({ userId, onClose }: { userId: string; onClose: 
         ) : (
           <>
             <div className="pc-head">
-              <img src={unitArtUrl(card.profile.avatar)} alt="" />
+              <img src={unitStillUrl(card.profile.avatar)} alt="" />
               <div>
                 <b>
                   {card.profile.nickname}
@@ -74,7 +74,7 @@ export function PlayerCardSheet({ userId, onClose }: { userId: string; onClose: 
                 const d = heroDef(u.defId);
                 return (
                   <div key={i} className="pc-hero">
-                    <img src={unitArtUrl(d.art)} alt="" style={{ borderColor: RARITY_COLOR[d.rarity] }} />
+                    <img src={unitStillUrl(d.art)} alt="" style={{ borderColor: RARITY_COLOR[d.rarity] }} />
                     <b>{d.name}</b>
                     <small>
                       {t('ui.lvl', { n: u.level })} · {'★'.repeat(u.stars)}

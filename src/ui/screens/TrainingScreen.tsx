@@ -23,7 +23,7 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
 import type { OwnedHero } from '@/save/schema';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { HeroTile } from '../components/HeroTile';
 import { IconGold, IconShard } from '../components/icons';
 import { RARITY_COLOR } from '../colors';
@@ -122,7 +122,7 @@ function ActiveSlot(props: {
       className={`tr-slot${done ? ' is-done' : ''}`}
       style={{ ['--rc' as string]: RARITY_COLOR[d.rarity] }}
     >
-      <img src={unitArtUrl(d.art)} alt="" />
+      <img src={unitStillUrl(d.art)} alt="" />
       <div className="tr-main">
         <b>{d.name}</b>
         <small>
@@ -253,7 +253,7 @@ function Plan(props: {
   return (
     <div className="tr-plan">
       <div className="tr-plan__head">
-        <img src={unitArtUrl(d.art)} alt="" style={{ borderColor: RARITY_COLOR[d.rarity] }} />
+        <img src={unitStillUrl(d.art)} alt="" style={{ borderColor: RARITY_COLOR[d.rarity] }} />
         <div>
           <b>{d.name}</b>
           <small>{t('training.rate', { n: formatNumber(rate.total) })}</small>

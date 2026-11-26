@@ -1,3 +1,3 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -130 120 135" width="240" height="270"><defs><radialGradient id="if-fb"><stop offset="0" stop-color="#fff4c8"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient></defs><g stroke="#0d0912" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="29" cy="-116" r="15" fill="url(#if-fb)" stroke="none" opacity=".9"/>
-<path d="M29 -128 Q38 -118 34 -110 Q30 -104 24 -108 Q19 -114 24 -120 Q24 -114 28 -114 Q26 -122 29 -128 Z" fill="#ffb02a"/>
-<path d="M29 -120 Q33 -114 30 -110 Q26 -110 27 -114 Z" fill="#fff4c8" stroke-width="1.2"/></g></svg>
+    <path d="M29 -128 Q38 -118 34 -110 Q30 -104 24 -108 Q19 -114 24 -120 Q24 -114 28 -114 Q26 -122 29 -128 Z" fill="#ffb02a"/>
+    <path d="M29 -120 Q33 -114 30 -110 Q26 -110 27 -114 Z" fill="#fff4c8" stroke-width="1.2"/></g></svg>

@@ -1,6 +1,6 @@
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { IconBack, IconEnergy, IconGear, IconGold, IconShard } from './icons';
 import { ENERGY_MAX, energyRegenMs, nextEnergyIn, regenEnergy } from '@/game';
 import { formatDuration, useNow } from '../hooks';
@@ -54,7 +54,7 @@ export function TopBar() {
               aria-label={t('online.account')}
               onClick={() => go('account')}
             >
-              <img src={unitArtUrl('knight')} alt="" />
+              <img src={unitStillUrl('knight')} alt="" />
               <span className="topbar__lvl">{save.player.level}</span>
             </button>
             <div className="topbar__who">

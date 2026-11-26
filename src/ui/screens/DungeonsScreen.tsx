@@ -14,7 +14,7 @@ import { useGame } from '@/state/store';
 import { canSweepDungeon, startDungeon, sweepDungeon } from '@/state/actions';
 import { SweepButtons } from '../components/SummaryModal';
 import { platform } from '@/state/services';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { IconEnergy } from '../components/icons';
 import { MaterialIcon } from '../components/MaterialIcon';
 import type { MaterialId } from '@/save/schema';
@@ -82,7 +82,7 @@ export default function DungeonsScreen() {
         <div className="foes">
           {[...d.minions, d.boss].map((e) => (
             <span key={e} className={`foe${e === d.boss ? ' foe--boss' : ''}`} title={enemyDef(e).name}>
-              <img src={unitArtUrl(enemyDef(e).art)} alt="" />
+              <img src={unitStillUrl(enemyDef(e).art)} alt="" />
               {t('ui.lvl', { n: dungeonEnemyLevel(level) })}
             </span>
           ))}

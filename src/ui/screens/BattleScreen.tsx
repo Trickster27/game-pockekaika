@@ -7,7 +7,7 @@ import { mergeRewardLines } from '@/state/rewards';
 import { INVENTORY_LIMIT } from '@/game';
 import { platform } from '@/state/services';
 import type { BattleView } from '@/render/pixi/battle/BattleView';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { SkillIcon } from '../components/SkillIcon';
 import { RewardIcon } from '../components/RewardIcon';
 import { BattleStats } from '../components/BattleStats';
@@ -364,7 +364,7 @@ export default function BattleScreen() {
             }}
             title={u.name}
           >
-            <img src={unitArtUrl(u.art)} alt="" />
+            <img src={unitStillUrl(u.art)} alt="" />
           </span>
         ))}
       </div>

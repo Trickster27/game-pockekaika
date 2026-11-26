@@ -58,7 +58,7 @@ import {
   updateClanAction,
   useClan,
 } from '@/state/clan';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { ClanEmblem } from '../components/ClanEmblem';
 import { RewardIcon } from '../components/RewardIcon';
 import { MaterialIcon } from '../components/MaterialIcon';
@@ -647,7 +647,7 @@ function Boss({ st }: { st: ClanState }) {
     <>
       <section className="card clan-boss" style={{ ['--ec' as string]: ec }}>
         <div className="clan-boss__art">
-          <img src={unitArtUrl(`rift_${element}`)} alt={t('clan.bossName')} />
+          <img src={unitStillUrl(`rift_${element}`)} alt={t('clan.bossName')} />
         </div>
         <div className="clan-boss__info">
           <h3>{t('clan.bossTitle', { n: st.boss.level })}</h3>
@@ -698,7 +698,7 @@ function Boss({ st }: { st: ClanState }) {
           </span>
           <div className="clan-team__row">
             {team.map((h) => (
-              <img key={h.uid} src={unitArtUrl(heroDef(h.heroId).art)} alt={heroDef(h.heroId).name} />
+              <img key={h.uid} src={unitStillUrl(heroDef(h.heroId).art)} alt={heroDef(h.heroId).name} />
             ))}
             <button type="button" className="btn" onClick={() => go('team')}>
               {t('clan.changeTeam')}
@@ -721,7 +721,7 @@ function Boss({ st }: { st: ClanState }) {
             const d = heroDef(p.heroId);
             return (
               <div key={p.uid} className="clan-pick-hero">
-                <img src={unitArtUrl(d.art)} alt="" style={{ borderColor: ELEMENT_COLOR[d.element] }} />
+                <img src={unitStillUrl(d.art)} alt="" style={{ borderColor: ELEMENT_COLOR[d.element] }} />
                 <b>{d.name}</b>
                 <small>
                   {p.reasons
@@ -804,7 +804,7 @@ function Boss({ st }: { st: ClanState }) {
           <ol className="clan-rank">
             {ranking.map((m) => (
               <li key={m.profile.id}>
-                <img src={unitArtUrl(m.profile.avatar)} alt="" />
+                <img src={unitStillUrl(m.profile.avatar)} alt="" />
                 <span>{m.profile.nickname}</span>
                 <span className="clan-keydots sm">
                   {Array.from({ length: CLAN.keysPerDay }, (_, i) => (
@@ -841,7 +841,7 @@ function Members({ st }: { st: ClanState }) {
           ) : (
             st.requests.map((r) => (
               <div key={r.profile.id} className="clan-member">
-                <img src={unitArtUrl(r.profile.avatar)} alt="" />
+                <img src={unitStillUrl(r.profile.avatar)} alt="" />
                 <div>
                   <b>{r.profile.nickname}</b>
                   <small>
@@ -885,7 +885,7 @@ function Members({ st }: { st: ClanState }) {
           return (
             <div key={m.profile.id} className="clan-member">
               <span className="clan-ava">
-                <img src={unitArtUrl(m.profile.avatar)} alt="" />
+                <img src={unitStillUrl(m.profile.avatar)} alt="" />
                 {on && <i title={t('clan.online')} />}
               </span>
               <div>

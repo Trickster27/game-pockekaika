@@ -11,7 +11,7 @@ import {
   requestFriend,
   useOnline,
 } from '@/state/online';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { formatDuration, useNow } from '../hooks';
 import './screens.css';
 import './heroes.css';
@@ -20,7 +20,7 @@ import './online.css';
 function Ava({ p, unread }: { p: Profile; unread?: number }) {
   return (
     <span className={`ava${isOnline(p) ? ' on' : ''}`}>
-      <img src={unitArtUrl(p.avatar)} alt="" />
+      <img src={unitStillUrl(p.avatar)} alt="" />
       {unread ? <span className="unread ub">{unread}</span> : null}
     </span>
   );

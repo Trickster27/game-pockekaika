@@ -3,7 +3,7 @@ import { FUSIONS, fuse, fusionPick } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { IconGold } from '../components/icons';
 import '../components/depth.css';
 import './screens.css';
@@ -25,7 +25,7 @@ export default function FusionScreen() {
         return (
           <section key={r.result} className="card fu-card">
             <div className="fu-head">
-              <img src={unitArtUrl(d.art)} alt="" />
+              <img src={unitStillUrl(d.art)} alt="" />
               <div>
                 <b>
                   {d.name} · {d.title}
@@ -41,7 +41,7 @@ export default function FusionScreen() {
                 const pd = heroDef(p.heroId);
                 return (
                   <div key={p.heroId} className={`fu-part${picks[i] ? ' is-ok' : ''}`}>
-                    <img src={unitArtUrl(pd.art)} alt="" />
+                    <img src={unitStillUrl(pd.art)} alt="" />
                     <span>{pd.name}</span>
                     <em>{t('fusion.need', { n: p.stars })}</em>
                   </div>

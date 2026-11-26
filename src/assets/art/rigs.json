@@ -72,7 +72,8 @@
      "period": 3.2,
      "phase": 0.3
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "plume",
@@ -86,7 +87,8 @@
      "period": 2.1,
      "phase": 1.0
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "sword",
@@ -100,7 +102,8 @@
      "period": 3.2,
      "phase": 0.9
     },
-    "follow": true
+    "follow": true,
+    "role": "weapon"
    },
    {
     "id": "shard",
@@ -115,7 +118,12 @@
     },
     "follow": true
    }
-  ]
+  ],
+  "hand": [
+   47,
+   -118
+  ],
+  "top": 118
  },
  "ifrita": {
   "parts": [
@@ -131,7 +139,8 @@
      "period": 1.7,
      "phase": 0.5
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "legs",
@@ -178,7 +187,8 @@
      "period": 3,
      "phase": 0.4
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "eyes",
@@ -190,7 +200,8 @@
      "kind": "blink",
      "period": 4.2
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "hairFront",
@@ -204,7 +215,8 @@
      "period": 1.7,
      "phase": 1.1
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "armFront",
@@ -218,7 +230,8 @@
      "period": 3,
      "phase": 1.5
     },
-    "follow": true
+    "follow": true,
+    "role": "weapon"
    },
    {
     "id": "fire",
@@ -233,7 +246,12 @@
     },
     "follow": true
    }
-  ]
+  ],
+  "hand": [
+   29,
+   -116
+  ],
+  "top": 120
  },
  "grom": {
   "parts": [
@@ -282,7 +300,8 @@
      "period": 3.6,
      "phase": 0.8
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "eyes",
@@ -294,7 +313,8 @@
      "kind": "blink",
      "period": 5.3
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "topknot",
@@ -322,9 +342,16 @@
      "period": 3.6,
      "phase": 0.2
     },
-    "follow": true
+    "follow": true,
+    "role": "weapon"
    }
-  ]
+  ],
+  "hand": [
+   36,
+   -126
+  ],
+  "top": 122,
+  "idle": "heavy"
  },
  "nocta": {
   "parts": [
@@ -401,7 +428,8 @@
      "period": 2.6,
      "phase": 0.6
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "eyes",
@@ -413,7 +441,8 @@
      "kind": "blink",
      "period": 3.7
     },
-    "follow": true
+    "follow": true,
+    "role": "head"
    },
    {
     "id": "armFront",
@@ -427,7 +456,8 @@
      "period": 2.6,
      "phase": 1.3
     },
-    "follow": true
+    "follow": true,
+    "role": "weapon"
    },
    {
     "id": "glow",
@@ -442,6 +472,8231 @@
     },
     "follow": true
    }
-  ]
+  ],
+  "hand": [
+   52,
+   -58
+  ],
+  "top": 110,
+  "idle": "sway"
+ },
+ "selesta": {
+  "parts": [
+   {
+    "id": "halo",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.4,
+     "period": 2.6,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 2.04,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.04,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "staffGlow",
+    "pivot": [
+     30.9,
+     -119.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.8,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   31,
+   -118.0
+  ],
+  "top": 104
+ },
+ "mirna": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -71.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.5,
+     "period": 2.8,
+     "phase": 0.6
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.68,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.8,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.8,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.68,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.8,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "tip",
+    "pivot": [
+     55,
+     -114.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 1.5,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   56,
+   -114.0
+  ],
+  "top": 104
+ },
+ "rikht": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -13,
+     -60.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -36.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -32.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -68.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -78.3
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -87.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.56,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     13,
+     -60.9
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   42,
+   -80.8
+  ],
+  "top": 94
+ },
+ "valeria": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -71.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 0.6
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.92,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.92,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     12,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "hammerGlow",
+    "pivot": [
+     37,
+     -104.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 2.0,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   37,
+   -104.0
+  ],
+  "top": 104
+ },
+ "tobias": {
+  "parts": [
+   {
+    "id": "quiver",
+    "pivot": [
+     -10,
+     -69.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -66.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.0,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -39.2
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -35.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.0,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -75.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.0,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -85.3
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -95.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.7999999999999998,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -95.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.0,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -66.6
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.0,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   56,
+   -63.8
+  ],
+  "top": 102
+ },
+ "aurel": {
+  "parts": [
+   {
+    "id": "sunring",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 6,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 2.16,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -97.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.16,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -97.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "lamp",
+    "pivot": [
+     30,
+     -57.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   30,
+   -57.0
+  ],
+  "top": 104
+ },
+ "solarion": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -75.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.0,
+     "phase": 0.6
+    },
+    "follow": true
+   },
+   {
+    "id": "sun",
+    "pivot": [
+     0,
+     -98.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 8,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -92.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 2.04,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -16,
+     -72.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -42.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -38.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -81.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -92.2
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -103.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.04,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -103.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     16,
+     -72.3
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "blade",
+    "pivot": [
+     49,
+     -115.1
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.55,
+     "period": 1.2,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   49,
+   -115.1
+  ],
+  "top": 114
+ },
+ "ilia": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -71.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.4,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "halo",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.35,
+     "period": 2.2,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 5,
+     "period": 1.7999999999999998,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.0,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.0,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.0,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3.0,
+     "period": 1.7999999999999998,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.0,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.0,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   28,
+   -79.0
+  ],
+  "top": 104
+ },
+ "elf": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -71.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.6,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.68,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.8,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.8,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.68,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.8,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.8,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "arrowGlow",
+    "pivot": [
+     53,
+     -64.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 1.4,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   53,
+   -64.0
+  ],
+  "top": 104
+ },
+ "saira": {
+  "parts": [
+   {
+    "id": "ribbons",
+    "pivot": [
+     0,
+     -71.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 1.8,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 1.56,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3.5999999999999996,
+     "period": 1.56,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "wind",
+    "pivot": [
+     0,
+     -52.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 1.6,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "fx"
+   },
+   {
+    "id": "palm",
+    "pivot": [
+     -26,
+     -79.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.5,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -26,
+   -81.0
+  ],
+  "top": 104
+ },
+ "tirn": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -21,
+     -75.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 4.0,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -44.8
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -40.8
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.022,
+     "period": 4.0,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -85.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 4.0,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -109.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 4.0,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     21,
+     -75.5
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 4.0,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   30,
+   -54.2
+  ],
+  "top": 118,
+  "idle": "heavy"
+ },
+ "ivy": {
+  "parts": [
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -76.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 1.7999999999999998,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -10,
+     -59.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.0,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -35.2
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -31.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.0,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -67.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.0,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -76.6
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -86.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.7999999999999998,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -86.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.0,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     10,
+     -59.5
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.0,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "drop",
+    "pivot": [
+     0,
+     -55.8
+    ],
+    "motion": {
+     "kind": "bob",
+     "amp": 1.5,
+     "period": 2.2,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   0,
+   -57.8
+  ],
+  "top": 92
+ },
+ "olkha": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -22,
+     -72.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -43.2
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -39.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.025,
+     "period": 3.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -82.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -105.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     22,
+     -72.7
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "aura",
+    "pivot": [
+     0,
+     -67.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 3,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   40,
+   -83.0
+  ],
+  "top": 114,
+  "idle": "heavy"
+ },
+ "fyu": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -44.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 10,
+     "period": 0.5,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -53.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 0.96,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -7,
+     -42.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 1.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -24.8
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -20.8
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 1.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -47.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 1.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -53.9
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -60.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 0.96,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -60.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     7,
+     -42.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 1.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "light",
+    "pivot": [
+     0,
+     -53.9
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 1.2,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   17,
+   -50.0
+  ],
+  "top": 70,
+  "idle": "float"
+ },
+ "iren": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -71.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.7999999999999998,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.0,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.0,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.0,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.7999999999999998,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.0,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.0,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "star",
+    "pivot": [
+     54,
+     -66.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.3,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   54,
+   -66.0
+  ],
+  "top": 104
+ },
+ "verdis": {
+  "parts": [
+   {
+    "id": "roots",
+    "pivot": [
+     0,
+     0
+    ],
+    "follow": true
+   },
+   {
+    "id": "aura",
+    "pivot": [
+     0,
+     -68.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 3.2,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -95.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.16,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -75.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -44.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -40.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -84.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -95.7
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -107.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.7999999999999998,
+     "period": 2.16,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -107.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     12,
+     -75.1
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "orb",
+    "pivot": [
+     34,
+     -132.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.8,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   34,
+   -132.2
+  ],
+  "top": 120
+ },
+ "veila": {
+  "parts": [
+   {
+    "id": "veil",
+    "pivot": [
+     0,
+     -90.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 5,
+     "period": 2.4,
+     "phase": 0.3
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -90.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 5,
+     "period": 1.92,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -70.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -41.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -37.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -79.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -101.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3.0,
+     "period": 1.92,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -101.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -70.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "tears",
+    "pivot": [
+     0,
+     -90.5
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -28,
+   -72.5
+  ],
+  "top": 108,
+  "idle": "float"
+ },
+ "necro": {
+  "parts": [
+   {
+    "id": "souls",
+    "pivot": [
+     0,
+     -63.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 10,
+     "period": 4,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -69.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.8
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.8
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -78.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -99.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -69.4
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "blade",
+    "pivot": [
+     4,
+     -127.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.7,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -6,
+   -127.0
+  ],
+  "top": 106
+ },
+ "karr": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -68.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 2.2,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -65.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -38.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -34.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -73.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -93.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -65.2
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "swarm",
+    "pivot": [
+     0,
+     -59.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 14,
+     "period": 1.4,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   40,
+   -83.5
+  ],
+  "top": 100
+ },
+ "grav": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -15,
+     -66.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -39.2
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -35.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -75.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -95.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     15,
+     -66.6
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -86
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 2,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   18,
+   -55.0
+  ],
+  "top": 102,
+  "idle": "heavy"
+ },
+ "ragna": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -73.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.6,
+     "period": 3.2,
+     "phase": 0.6
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -90.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 2.04,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -70.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -41.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -37.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -79.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -101.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.04,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -101.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     12,
+     -70.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "rune",
+    "pivot": [
+     31,
+     -114.1
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.8,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   31,
+   -114.1
+  ],
+  "top": 108
+ },
+ "whisper": {
+  "parts": [
+   {
+    "id": "smoke",
+    "pivot": [
+     0,
+     0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 2.4,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -13,
+     -66.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -39.2
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -35.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -75.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -95.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     13,
+     -66.6
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   38,
+   -41.0
+  ],
+  "top": 102
+ },
+ "morok": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -73.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.6,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -70.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -41.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -37.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -79.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -101.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -70.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "mist",
+    "pivot": [
+     -30,
+     -83.8
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -30,
+   -83.8
+  ],
+  "top": 108,
+  "idle": "sway"
+ },
+ "thalassa": {
+  "parts": [
+   {
+    "id": "vortex",
+    "pivot": [
+     0,
+     -57.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 3,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -95.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 5,
+     "period": 2.04,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -75.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -44.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -40.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -84.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -95.7
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -107.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3.0,
+     "period": 2.04,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -107.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     12,
+     -75.1
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "palm",
+    "pivot": [
+     -26,
+     -78.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.4,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -26,
+   -80.2
+  ],
+  "top": 122,
+  "idle": "float"
+ },
+ "demon": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -78.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 2.0,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -95.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.68,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -20,
+     -74.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.8,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -44.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -40.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -84.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.8,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -107.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.68,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -107.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.8,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     20,
+     -74.1
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.8,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "fire",
+    "pivot": [
+     36,
+     -94.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.45,
+     "period": 0.9,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   36,
+   -94.2
+  ],
+  "top": 118
+ },
+ "sirra": {
+  "parts": [
+   {
+    "id": "tail",
+    "pivot": [
+     -4,
+     -40.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 1.8,
+     "phase": 0.4
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -88.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.56,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -69.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.8
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.8
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -78.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -88.7
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -100.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.56,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -100.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -69.4
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "lash",
+    "pivot": [
+     48,
+     -137.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 0.8,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   52,
+   -139.2
+  ],
+  "top": 106
+ },
+ "azgar": {
+  "parts": [
+   {
+    "id": "familiar",
+    "pivot": [
+     -30,
+     -89.0
+    ],
+    "motion": {
+     "kind": "bob",
+     "amp": 3,
+     "period": 2.4,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -97.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "book",
+    "pivot": [
+     20,
+     -68.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 1.5,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -30,
+   -89.0
+  ],
+  "top": 104
+ },
+ "chirk": {
+  "parts": [
+   {
+    "id": "tail",
+    "pivot": [
+     -3,
+     -26.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 12,
+     "period": 1.2,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -9,
+     -44.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 1.8,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -26.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -22.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 1.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -50.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 1.8,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -57.4
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -64.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.8,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     9,
+     -44.9
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 1.8,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "spark",
+    "pivot": [
+     34,
+     -80.3
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 0.7,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   36,
+   -80.3
+  ],
+  "top": 74,
+  "idle": "bob"
+ },
+ "skarn": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -79.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.6
+    },
+    "follow": true
+   },
+   {
+    "id": "embers",
+    "pivot": [
+     0,
+     -69.4
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.4,
+     "period": 0.8,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -21,
+     -75.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -44.8
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -40.8
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -85.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -109.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     21,
+     -75.5
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "edge",
+    "pivot": [
+     44,
+     -118.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.55,
+     "period": 1.1,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   46,
+   -118.2
+  ],
+  "top": 124,
+  "idle": "heavy"
+ },
+ "torvald": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -18,
+     -56.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -33.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -29.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -64.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -73.1
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -81.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     18,
+     -56.6
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "rune",
+    "pivot": [
+     37,
+     -89.7
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.55,
+     "period": 1.8,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   37,
+   -89.7
+  ],
+  "top": 88,
+  "idle": "heavy"
+ },
+ "grimsa": {
+  "parts": [
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -69.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.92,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -15,
+     -53.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -32.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -28.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -61.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -69.6
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -78.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.92,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -78.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     15,
+     -53.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "muzzle",
+    "pivot": [
+     46,
+     -58.6
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 1.1,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   46,
+   -58.6
+  ],
+  "top": 84,
+  "idle": "heavy"
+ },
+ "dwarf": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -19,
+     -55.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -32.8
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -28.8
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -62.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -71.3
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -80.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     19,
+     -55.2
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "rune",
+    "pivot": [
+     22,
+     -46.6
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 2.4,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   22,
+   -50.6
+  ],
+  "top": 86,
+  "idle": "heavy"
+ },
+ "dorn": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -17,
+     -52.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -31.2
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -27.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -59.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -67.9
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -76.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     17,
+     -52.4
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "foam",
+    "pivot": [
+     -26,
+     -66.4
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 2,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -26,
+   -64.4
+  ],
+  "top": 82,
+  "idle": "heavy"
+ },
+ "sigrun": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -75.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3.5,
+     "period": 2.6,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -92.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 1.7999999999999998,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -72.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.0,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -42.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -38.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.0,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -81.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.0,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -92.2
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -103.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.7999999999999998,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -103.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.0,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     12,
+     -72.3
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.0,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "heal",
+    "pivot": [
+     -26,
+     -75.7
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -26,
+   -75.7
+  ],
+  "top": 110
+ },
+ "vint": {
+  "parts": [
+   {
+    "id": "pack",
+    "pivot": [
+     -16,
+     -56.8
+    ],
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -16,
+     -53.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -32.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -28.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -61.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -69.6
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -78.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     16,
+     -53.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "steam",
+    "pivot": [
+     -22,
+     -80.8
+    ],
+    "motion": {
+     "kind": "bob",
+     "amp": 2,
+     "period": 1.4,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -26,
+   -57.6
+  ],
+  "top": 84,
+  "idle": "heavy"
+ },
+ "gorran": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -24,
+     -78.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 4.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -46.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -42.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 4.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -88.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 4.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -113.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 4.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     24,
+     -78.4
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 4.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "core",
+    "pivot": [
+     0,
+     -71.9
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.55,
+     "period": 2.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   38,
+   -54.3
+  ],
+  "top": 124,
+  "idle": "heavy"
+ },
+ "wraith": {
+  "parts": [
+   {
+    "id": "tail",
+    "pivot": [
+     0,
+     -30
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2,
+     "phase": 0
+    }
+   },
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -40
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.03,
+     "period": 2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -16,
+     -66
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 2,
+     "phase": 1
+    },
+    "follow": true
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     16,
+     -66
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 6,
+     "period": 2,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "glow",
+    "pivot": [
+     0,
+     -76
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   36,
+   -42
+  ],
+  "top": 100,
+  "idle": "float"
+ },
+ "hound": {
+  "parts": [
+   {
+    "id": "tail",
+    "pivot": [
+     -24.0,
+     -30.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 10,
+     "period": 1.4,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "legsBack",
+    "pivot": [
+     0,
+     -26.0
+    ]
+   },
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.03,
+     "period": 1.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "legsFront",
+    "pivot": [
+     0,
+     -26.0
+    ]
+   },
+   {
+    "id": "head",
+    "pivot": [
+     24.0,
+     -38.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 1.6,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   }
+  ],
+  "hand": [
+   48.0,
+   -40.0
+  ],
+  "top": 64,
+  "idle": "bob"
+ },
+ "eclipse_wolf": {
+  "parts": [
+   {
+    "id": "tail",
+    "pivot": [
+     -26.4,
+     -33.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 10,
+     "period": 1.4,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "legsBack",
+    "pivot": [
+     0,
+     -28.6
+    ]
+   },
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.03,
+     "period": 1.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "legsFront",
+    "pivot": [
+     0,
+     -28.6
+    ]
+   },
+   {
+    "id": "head",
+    "pivot": [
+     26.4,
+     -41.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 1.6,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   }
+  ],
+  "hand": [
+   52.8,
+   -44.0
+  ],
+  "top": 72,
+  "idle": "bob"
+ },
+ "mglaboss": {
+  "parts": [
+   {
+    "id": "mist",
+    "pivot": [
+     0,
+     -20
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 2.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -47.2
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -30,
+     -79.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2,
+     "period": 3.6,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -47.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -90.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     30,
+     -79.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.6,
+     "phase": 0.6
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   46,
+   -41.4
+  ],
+  "top": 130,
+  "idle": "heavy"
+ },
+ "shade_archer": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -69.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.4,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -66.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -39.2
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -35.2
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -75.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -95.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -66.6
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   52,
+   -64.8
+  ],
+  "top": 102
+ },
+ "gloom_knight": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -73.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -19,
+     -69.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -41.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -37.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -79.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -101.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     19,
+     -69.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   42,
+   -104.1
+  ],
+  "top": 108,
+  "idle": "heavy"
+ },
+ "drowned": {
+  "parts": [
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -83.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 2.04,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -65.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -38.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -34.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -73.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -93.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.04,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -65.2
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   44,
+   -109.9
+  ],
+  "top": 100
+ },
+ "eel": {
+  "parts": [
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -20
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.04,
+     "period": 1.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     20,
+     -60
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 5,
+     "period": 1.4,
+     "phase": 0.6
+    },
+    "follow": true,
+    "role": "head"
+   }
+  ],
+  "hand": [
+   40,
+   -62
+  ],
+  "top": 96,
+  "idle": "sway"
+ },
+ "abbess": {
+  "parts": [
+   {
+    "id": "halo",
+    "pivot": [
+     0,
+     -95.7
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.4,
+     "period": 2.4,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -75.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -44.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -40.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -84.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -107.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     12,
+     -75.1
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "lamp",
+    "pivot": [
+     28,
+     -62.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   28,
+   -62.2
+  ],
+  "top": 124,
+  "idle": "float"
+ },
+ "siren": {
+  "parts": [
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 1.68,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.8,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.8,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3.5999999999999996,
+     "period": 1.68,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -98.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.8,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.8,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "song",
+    "pivot": [
+     0,
+     -87.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 2,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   24,
+   -79.0
+  ],
+  "top": 104,
+  "idle": "sway"
+ },
+ "crab": {
+  "parts": [
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -14
+    ]
+   },
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -18
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.03,
+     "period": 2.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -44
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 5,
+     "period": 1.8,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "clawBack",
+    "pivot": [
+     -26,
+     -30
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 2.4,
+     "phase": 1
+    },
+    "follow": true
+   },
+   {
+    "id": "clawFront",
+    "pivot": [
+     26,
+     -30
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 4,
+     "period": 2.4,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   50,
+   -60
+  ],
+  "top": 64,
+  "idle": "heavy"
+ },
+ "imp": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -45.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 14,
+     "period": 0.5,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "tail",
+    "pivot": [
+     -3,
+     -25.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 12,
+     "period": 1.2,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -9,
+     -43.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 1.6,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -25.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -21.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 1.6,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -49.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 1.6,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -62.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 1.6,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     9,
+     -43.4
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 1.6,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "spark",
+    "pivot": [
+     30,
+     -73.3
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 0.7,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   32,
+   -73.3
+  ],
+  "top": 72,
+  "idle": "bob"
+ },
+ "golem": {
+  "parts": [
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -24
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -26,
+     -56
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2,
+     "period": 3,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -24
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.025,
+     "period": 3,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -66
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     26,
+     -56
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   36,
+   -16
+  ],
+  "top": 84,
+  "idle": "heavy"
+ },
+ "emberlord": {
+  "parts": [
+   {
+    "id": "chains",
+    "pivot": [
+     0,
+     -82.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 2.6,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -22,
+     -78.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -46.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -42.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -88.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -113.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     22,
+     -78.4
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "heat",
+    "pivot": [
+     0,
+     -71.9
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.5,
+     "period": 1.4,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   36,
+   -101.9
+  ],
+  "top": 128,
+  "idle": "heavy"
+ },
+ "firedrake": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -46
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 12,
+     "period": 0.7,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "tail",
+    "pivot": [
+     -12,
+     -26
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 10,
+     "period": 1.2,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -10
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.04,
+     "period": 1.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     6,
+     -50
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 1.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "flame",
+    "pivot": [
+     32,
+     -56
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 0.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   38,
+   -56
+  ],
+  "top": 80,
+  "idle": "float"
+ },
+ "cultist": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -97.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "orb",
+    "pivot": [
+     29,
+     -120.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.2,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   },
+   {
+    "id": "rite",
+    "pivot": [
+     -26,
+     -72.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.5,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   29,
+   -120.0
+  ],
+  "top": 104
+ },
+ "dusk_wisp": {
+  "parts": [
+   {
+    "id": "trail",
+    "pivot": [
+     0,
+     -40
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 1.2,
+     "phase": 0
+    }
+   },
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -50
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.06,
+     "period": 1.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "motes",
+    "pivot": [
+     0,
+     -54
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 30,
+     "period": 3,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   0,
+   -54
+  ],
+  "top": 82,
+  "idle": "float"
+ },
+ "shard_golem": {
+  "parts": [
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -24
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -24,
+     -58
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2,
+     "period": 3.2,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -24
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -68
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     24,
+     -58
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   34,
+   -6
+  ],
+  "top": 96,
+  "idle": "heavy"
+ },
+ "dusk_priest": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -36.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -97.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     14,
+     -68.0
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "orb",
+    "pivot": [
+     26,
+     -122.0
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.4,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   26,
+   -122.0
+  ],
+  "top": 104
+ },
+ "star_lancer": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -73.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.6,
+     "period": 2.8,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -16,
+     -70.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.8,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -41.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -37.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -79.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.8,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -101.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.8,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     16,
+     -70.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.8,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "tip",
+    "pivot": [
+     60,
+     -122.1
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.3,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   58,
+   -120.1
+  ],
+  "top": 108
+ },
+ "eclipse_queen": {
+  "parts": [
+   {
+    "id": "sun",
+    "pivot": [
+     0,
+     -100.9
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.3,
+     "period": 3,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -82.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.6,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -100.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.0,
+     "period": 2.04,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -79.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -46.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -42.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -88.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -100.9
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -113.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.04,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -113.7
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     12,
+     -79.4
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "orb",
+    "pivot": [
+     29,
+     -138.3
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   29,
+   -138.3
+  ],
+  "top": 130,
+  "idle": "float"
+ },
+ "sky_sentinel": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -19,
+     -71.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -42.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -38.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -81.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -103.3
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     19,
+     -71.3
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   42,
+   -115.1
+  ],
+  "top": 110,
+  "idle": "heavy"
+ },
+ "storm_harpy": {
+  "parts": [
+   {
+    "id": "wings",
+    "pivot": [
+     0,
+     -68.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 0.9,
+     "phase": 0
+    },
+    "follow": true
+   },
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -83.5
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 0.84,
+     "phase": 0.5
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -11,
+     -65.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 1.4,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -38.4
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -34.4
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 1.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -73.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 1.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -83.5
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -94.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3.5999999999999996,
+     "period": 0.84,
+     "phase": 1.1
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     11,
+     -65.2
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 1.4,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "spark",
+    "pivot": [
+     30,
+     -82.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 0.8,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   30,
+   -82.2
+  ],
+  "top": 100,
+  "idle": "float"
+ },
+ "sun_acolyte": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -13,
+     -60.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.0,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -36.0
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -32.0
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.0,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -68.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.0,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -78.3
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.0,
+     "phase": 0.7
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -87.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.0,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     13,
+     -60.9
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.0,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "sun",
+    "pivot": [
+     26,
+     -106.8
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.6,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   26,
+   -106.8
+  ],
+  "top": 94
+ },
+ "cloud_serpent": {
+  "parts": [
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -20
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.04,
+     "period": 2.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     22,
+     -58
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 5,
+     "period": 2.2,
+     "phase": 0.6
+    },
+    "follow": true,
+    "role": "head"
+   }
+  ],
+  "hand": [
+   46,
+   -62
+  ],
+  "top": 96,
+  "idle": "float"
+ },
+ "gilded_knight": {
+  "parts": [
+   {
+    "id": "armBack",
+    "pivot": [
+     -17,
+     -70.8
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.8,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -41.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -37.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -79.6
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 2.8,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -101.4
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 2.8,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     17,
+     -70.8
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 2.8,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "tip",
+    "pivot": [
+     62,
+     -124.1
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 1.2,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   60,
+   -122.1
+  ],
+  "top": 108
+ },
+ "storm_king": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -80.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.4,
+     "phase": 0.6
+    },
+    "follow": true
+   },
+   {
+    "id": "storm",
+    "pivot": [
+     0,
+     -99.2
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 0.9,
+     "phase": 0.0
+    },
+    "follow": true
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -20,
+     -76.9
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 3.2,
+     "phase": 2.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -45.6
+    ]
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -41.6
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 3.2,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -87.2
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.8,
+     "period": 3.2,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "headgear",
+    "pivot": [
+     0,
+     -111.1
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     20,
+     -76.9
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 1.3
+    },
+    "follow": true,
+    "role": "weapon"
+   },
+   {
+    "id": "palm",
+    "pivot": [
+     -32,
+     -80.7
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.6,
+     "period": 0.8,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "fx"
+   }
+  ],
+  "hand": [
+   -32,
+   -82.7
+  ],
+  "top": 130,
+  "idle": "heavy"
+ },
+ "star_devourer": {
+  "parts": [
+   {
+    "id": "cosmos",
+    "pivot": [
+     0,
+     -60
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.4,
+     "period": 3,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "tendrils",
+    "pivot": [
+     0,
+     -10
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4,
+     "period": 1.8,
+     "phase": 0
+    }
+   },
+   {
+    "id": "body",
+    "pivot": [
+     0,
+     -8
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.025,
+     "period": 2.8,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "maw",
+    "pivot": [
+     0,
+     -50
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.08,
+     "period": 2.8,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -68
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.4,
+     "period": 1.4,
+     "phase": 0.0
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "horns",
+    "pivot": [
+     0,
+     -86
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.5,
+     "period": 2.8,
+     "phase": 0
+    },
+    "follow": true,
+    "role": "head"
+   }
+  ],
+  "hand": [
+   0,
+   -38
+  ],
+  "top": 118,
+  "idle": "heavy"
+ },
+ "rift_fire": {
+  "parts": [
+   {
+    "id": "ring",
+    "pivot": [
+     0,
+     -70
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 6,
+     "phase": 0
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -30
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -34,
+     -86
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -30
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -100
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     34,
+     -86
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   50,
+   -30
+  ],
+  "top": 130,
+  "idle": "heavy"
+ },
+ "rift_thorn": {
+  "parts": [
+   {
+    "id": "ring",
+    "pivot": [
+     0,
+     -70
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 6,
+     "phase": 0
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -30
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -34,
+     -86
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -30
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -100
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     34,
+     -86
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   50,
+   -30
+  ],
+  "top": 130,
+  "idle": "heavy"
+ },
+ "rift_stone": {
+  "parts": [
+   {
+    "id": "ring",
+    "pivot": [
+     0,
+     -70
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 6,
+     "phase": 0
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -30
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -34,
+     -86
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -30
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -100
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     34,
+     -86
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   50,
+   -30
+  ],
+  "top": 130,
+  "idle": "heavy"
+ },
+ "rift_tide": {
+  "parts": [
+   {
+    "id": "ring",
+    "pivot": [
+     0,
+     -70
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 6,
+     "phase": 0
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -30
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -34,
+     -86
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -30
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -100
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     34,
+     -86
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   50,
+   -30
+  ],
+  "top": 130,
+  "idle": "heavy"
+ },
+ "rift_light": {
+  "parts": [
+   {
+    "id": "ring",
+    "pivot": [
+     0,
+     -70
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 6,
+     "phase": 0
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -30
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -34,
+     -86
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -30
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -100
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     34,
+     -86
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   50,
+   -30
+  ],
+  "top": 130,
+  "idle": "heavy"
+ },
+ "rift_dark": {
+  "parts": [
+   {
+    "id": "ring",
+    "pivot": [
+     0,
+     -70
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 8,
+     "period": 6,
+     "phase": 0
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -30
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -34,
+     -86
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -30
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3.4,
+     "phase": 0.0
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -100
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "head"
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     34,
+     -86
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.4,
+     "period": 3.4,
+     "phase": 0.4
+    },
+    "follow": true,
+    "role": "weapon"
+   }
+  ],
+  "hand": [
+   50,
+   -30
+  ],
+  "top": 130,
+  "idle": "heavy"
  }
 }

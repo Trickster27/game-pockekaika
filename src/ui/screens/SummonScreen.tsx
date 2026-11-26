@@ -18,7 +18,7 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
 import type { OwnedHero } from '@/save/schema';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { SummonReveal } from '../components/SummonReveal';
 import { formatDuration, useNow } from '../hooks';
 import { FACTION_COLOR, RARITY_COLOR } from '../colors';
@@ -111,7 +111,7 @@ export default function SummonScreen() {
         <p className="altar__desc">{def.desc}</p>
         {featuredHero(scroll, now) && (
           <div className="rateup">
-            <img src={unitArtUrl(heroDef(featuredHero(scroll, now)!).art)} alt="" />
+            <img src={unitStillUrl(heroDef(featuredHero(scroll, now)!).art)} alt="" />
             <span>
               <b>{t('summon.rateUp', { name: heroDef(featuredHero(scroll, now)!).name })}</b>
               <small>{t('summon.rateUpEnds', { time: formatDuration(rateUpEndsAt(now) - now) })}</small>
@@ -209,7 +209,7 @@ export default function SummonScreen() {
                         return (
                           <div key={h.id} className={`pool__hero${owned ? '' : ' is-new'}`} title={h.name}>
                             <img
-                              src={unitArtUrl(h.art)}
+                              src={unitStillUrl(h.art)}
                               alt=""
                               style={{ borderColor: RARITY_COLOR[h.rarity] }}
                             />

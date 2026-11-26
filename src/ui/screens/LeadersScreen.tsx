@@ -3,7 +3,7 @@ import type { LeaderKind, LeaderScope, Leaderboard, LeaderRow } from '@/online';
 import { formatNumber, useT } from '@/i18n';
 import { errorText, onlineBackend, submitDefenseNow, useOnline } from '@/state/online';
 import { useGame } from '@/state/store';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { PlayerCardSheet } from '../components/PlayerCardSheet';
 import '../components/social.css';
 import './screens.css';
@@ -52,7 +52,7 @@ export default function LeadersScreen() {
       onClick={() => setOpen(r.profile.id)}
     >
       <span className={`lb-rank r${Math.min(r.rank, 4)}`}>{r.rank}</span>
-      <img src={unitArtUrl(r.profile.avatar)} alt="" />
+      <img src={unitStillUrl(r.profile.avatar)} alt="" />
       <span className="lb-name">
         {r.profile.nickname}
         {r.clanTag && <small> [{r.clanTag}]</small>}

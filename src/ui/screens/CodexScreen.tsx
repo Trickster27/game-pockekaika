@@ -28,7 +28,7 @@ import {
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import type { OwnedHero, SaveData } from '@/save/schema';
-import { unitArtUrl } from '@/assets/art';
+import { unitArtUrl, unitStillUrl } from '@/assets/art';
 import { HeroTile } from '../components/HeroTile';
 import { SkillIcon } from '../components/SkillIcon';
 import { MaterialIcon } from '../components/MaterialIcon';
@@ -393,7 +393,7 @@ function CodexCard(props: {
             const pd = heroDef(p.id);
             return (
               <button key={p.id} type="button" className="cx-partner" onClick={() => props.onOpen(p.id)}>
-                <img src={unitArtUrl(pd.art)} alt="" style={{ borderColor: RARITY_COLOR[pd.rarity] }} />
+                <img src={unitStillUrl(pd.art)} alt="" style={{ borderColor: RARITY_COLOR[pd.rarity] }} />
                 <b>{pd.name}</b>
                 <small>{t(p.reason === 'faction' ? 'codex.reasonFaction' : 'codex.reasonCovers')}</small>
               </button>
@@ -472,7 +472,7 @@ function Planner(props: {
               style={{ borderColor: RARITY_COLOR[d.rarity] }}
             >
               <button type="button" className="cx-slot__art" onClick={() => props.onOpen(id)}>
-                <img src={unitArtUrl(d.art)} alt={d.name} />
+                <img src={unitStillUrl(d.art)} alt={d.name} />
               </button>
               <span className="cx-slot__el" style={{ background: ELEMENT_COLOR[d.element] }} />
               <small>{d.name}</small>

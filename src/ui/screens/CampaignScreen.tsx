@@ -6,7 +6,7 @@ import { useGame } from '@/state/store';
 import { canSweepStage, startCampaignStage, sweepCampaignStage } from '@/state/actions';
 import { SweepButtons } from '../components/SummaryModal';
 import { platform } from '@/state/services';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { IconEnergy, IconGold, IconShard } from '../components/icons';
 import { RewardIcon } from '../components/RewardIcon';
 import './screens.css';
@@ -120,7 +120,7 @@ function StageNode(props: {
           props.onPick();
         }}
       >
-        {bossArt ? <img src={unitArtUrl(enemyDef(bossArt).art)} alt="" /> : stage.index}
+        {bossArt ? <img src={unitStillUrl(enemyDef(bossArt).art)} alt="" /> : stage.index}
         {!unlocked && (
           <svg className="node__lock" viewBox="0 0 24 24" aria-hidden="true">
             <rect
@@ -176,7 +176,7 @@ function StagePanel({ stage, teamPow }: { stage: StageDef; teamPow: number }) {
           const d = enemyDef(f.id);
           return (
             <span className={`foe${f.boss ? ' foe--boss' : ''}`} key={f.id} title={d.name}>
-              <img src={unitArtUrl(d.art)} alt={d.name} />
+              <img src={unitStillUrl(d.art)} alt={d.name} />
               {t('ui.lvl', { n: f.level })}
             </span>
           );

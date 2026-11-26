@@ -24,7 +24,7 @@ import {
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { HeroTile } from '../components/HeroTile';
 import { RewardChips } from '../components/RewardChips';
 import { IconShard } from '../components/icons';
@@ -226,7 +226,7 @@ function MissionCard(props: {
             return (
               <img
                 key={u}
-                src={unitArtUrl(d.art)}
+                src={unitStillUrl(d.art)}
                 alt={d.name}
                 style={{ borderColor: RARITY_COLOR[d.rarity] }}
               />
@@ -370,7 +370,7 @@ function PartySheet({ id, onClose }: { id: string; onClose: () => void }) {
                 onClick={() => toggle(h.uid, h.stars)}
                 style={{ borderColor: RARITY_COLOR[d.rarity] }}
               >
-                <img src={unitArtUrl(d.art)} alt="" />
+                <img src={unitStillUrl(d.art)} alt="" />
                 <small>{d.name}</small>
               </button>
             );

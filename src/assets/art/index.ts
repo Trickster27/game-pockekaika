@@ -28,8 +28,17 @@ export function unitArtUrl(key: string): string | undefined {
   return urls[key];
 }
 
+const stills = import.meta.glob<string>('./still/*.svg', { eager: true, query: '?url', import: 'default' });
+/** Статичная версия (без анимации) — для плиток в длинных списках, чтобы не грузить телефон. */
+export function unitStillUrl(key: string): string | undefined {
+  return stills[`./still/${key}.svg`] ?? urls[key];
+}
+
 export function unitArtMeta(key: string) {
-  return UNIT_ART_META[key] ?? { top: 100, scale: 1, idle: 'bob' as const };
+  const base = UNIT_ART_META[key] ?? { top: 100, scale: 1, idle: 'bob' as const };
+  // У «живых» персонажей рост и стиль стойки берутся из описания слоёв.
+  const r = RIGS_INFO()[key];
+  return r ? { ...base, top: r.top ?? base.top, idle: (r.idle as typeof base.idle) ?? base.idle } : base;
 }
 
 export const UNIT_ART_KEYS = Object.keys(urls).sort();
@@ -48,7 +57,18 @@ export interface RigPart {
   motion?: RigMotion;
   /** Едет вместе с дыханием торса. */
   follow?: boolean;
+  /** Роль для поз в бою: голова, оружие (рука с оружием), свечение. */
+  role?: 'head' | 'weapon' | 'fx';
   url: string;
+}
+
+/** Точка руки/оружия (откуда летят снаряды и где собирается сила) и рост персонажа. */
+export function unitRigInfo(key: string): { hand?: [number, number]; top?: number } | null {
+  const r = RIGS_INFO()[key];
+  return r ? { hand: r.hand, top: r.top } : null;
+}
+function RIGS_INFO() {
+  return rigsJson as unknown as Record<string, { hand?: [number, number]; top?: number; idle?: string }>;
 }
 
 const rigParts = import.meta.glob<string>('./rig/*/*.svg', { eager: true, query: '?url', import: 'default' });

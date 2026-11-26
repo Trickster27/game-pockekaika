@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -130 120 135" width="240" height="270"><defs><linearGradient id="if-fc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe4cc"/><stop offset="1" stop-color="#f3c9a8"/></linearGradient></defs><g stroke="#0d0912" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M-3 -80 L-3 -74 L3 -74 L3 -80 Z" fill="#e8b08f"/>
-<path d="M-9 -92 Q-10 -80 -4 -78 Q0 -76 4 -78 Q10 -80 9 -92 Q8 -100 0 -100 Q-8 -100 -9 -92 Z" fill="url(#if-fc)"/>
-<path d="M-6.5 -89 Q-4.5 -91 -2.5 -89 M2.5 -89 Q4.5 -91 6.5 -89" fill="none" stroke-width="1.4"/>
-<path d="M-6.2 -88.6 Q-4.5 -86.4 -2.8 -88.6 Z M2.8 -88.6 Q4.5 -86.4 6.2 -88.6 Z" fill="#ffb02a" stroke-width="1"/>
-<path d="M-2 -82.5 Q0 -81 2 -82.5 Q0 -80.4 -2 -82.5 Z" fill="#c8243a" stroke-width="1"/>
-<path d="M-8 -98 Q-14 -106 -12 -112 Q-8 -104 -5 -100 Z M8 -98 Q14 -106 12 -112 Q8 -104 5 -100 Z" fill="#2a0c12"/></g></svg>
+    <path d="M-9 -92 Q-10 -80 -4 -78 Q0 -76 4 -78 Q10 -80 9 -92 Q8 -100 0 -100 Q-8 -100 -9 -92 Z" fill="url(#if-fc)"/>
+    <path d="M-6.5 -89 Q-4.5 -91 -2.5 -89 M2.5 -89 Q4.5 -91 6.5 -89" fill="none" stroke-width="1.4"/>
+    <path d="M-6.2 -88.6 Q-4.5 -86.4 -2.8 -88.6 Z M2.8 -88.6 Q4.5 -86.4 6.2 -88.6 Z" fill="#ffb02a" stroke-width="1"/>
+    <path d="M-2 -82.5 Q0 -81 2 -82.5 Q0 -80.4 -2 -82.5 Z" fill="#c8243a" stroke-width="1"/>
+    <path d="M-8 -98 Q-14 -106 -12 -112 Q-8 -104 -5 -100 Z M8 -98 Q14 -106 12 -112 Q8 -104 5 -100 Z" fill="#2a0c12"/></g></svg>

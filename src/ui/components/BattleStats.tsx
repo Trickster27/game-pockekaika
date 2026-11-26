@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { UnitReport } from '@/core/battle';
 import { formatNumber, useT } from '@/i18n';
-import { unitArtUrl } from '@/assets/art';
+import { unitStillUrl } from '@/assets/art';
 import { ELEMENT_COLOR } from '../colors';
 import './battlestats.css';
 
@@ -40,7 +40,7 @@ export function BattleStats({ report }: { report: UnitReport[] }) {
         <div className="bst-titles">
           {titles.map((x) => (
             <div key={x.key} className={`bst-title k-${x.key}`}>
-              <img src={unitArtUrl(x.who!.art)} alt="" />
+              <img src={unitStillUrl(x.who!.art)} alt="" />
               <span>
                 <small>{t(`stats.title.${x.key}`)}</small>
                 <b>{x.who!.name}</b>
@@ -64,7 +64,7 @@ export function BattleStats({ report }: { report: UnitReport[] }) {
       <div className="bst-rows">
         {sorted.map((r) => (
           <div key={r.uid} className={`bst-row${r.alive ? '' : ' is-dead'}`}>
-            <img src={unitArtUrl(r.art)} alt="" style={{ borderColor: ELEMENT_COLOR[r.element] }} />
+            <img src={unitStillUrl(r.art)} alt="" style={{ borderColor: ELEMENT_COLOR[r.element] }} />
             <div className="bst-main">
               <div className="bst-line">
                 <b>{r.name}</b>
