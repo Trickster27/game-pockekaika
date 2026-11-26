@@ -20,6 +20,8 @@ export const TM_FULL = 1000;
 const DEFAULT_MAX_TURNS = 300;
 /** Яд по боссу с общим пулом здоровья: не больше стольких атак отравителя за тик. */
 export const POOLED_POISON_ATK = 1.2;
+/** Яд от пассивки слабее яда от навыка: он срабатывает от обычных атак. */
+export const PASSIVE_POISON = 0.5;
 /** Множители боссов поверх обычного роста. */
 const BOSS_MULT = { hp: 3.2, atk: 1.15, def: 1.2 };
 /** Ранги врагов: элита и чемпионы заметно крепче обычных. */
@@ -222,6 +224,8 @@ export class Battle {
   private pendingPassives: BattleUnit[] = [];
   /** Индекс навыка, который сейчас применяется (для пассивов «при обычной атаке»). */
   private curSkill = -1;
+  /** Статус наложен пассивкой: яд слабее, а по боссу считается от атаки, а не от его запаса здоровья. */
+  private fromPassive = false;
 
   /** Пассивы на старте: шипы, первый ход, стартовые усиления. */
   private initPassives(list: BattleUnit[]) {
@@ -454,8 +458,11 @@ export class Battle {
               this.emit({ t: 'heal', uid: src.uid, amount: src.hp - before, hp: src.hp });
             }
           }
-          if (p.kind === 'onHit' && p.status && this.curSkill === 0 && dst.alive)
+          if (p.kind === 'onHit' && p.status && this.curSkill === 0 && dst.alive) {
+            this.fromPassive = true;
             this.applyStatus(src, dst, p.status, p.turns ?? 2, p.chance ?? 0.3);
+            this.fromPassive = false;
+          }
         }
         return;
       }
@@ -544,9 +551,9 @@ export class Battle {
           value: Math.max(
             1,
             Math.round(
-              dst.pooled
+              (dst.pooled || (this.fromPassive && dst.boss)
                 ? Math.min(dst.stats.hp * STATUS_POWER.poison, src.stats.atk * POOLED_POISON_ATK)
-                : dst.stats.hp * STATUS_POWER.poison,
+                : dst.stats.hp * STATUS_POWER.poison) * (this.fromPassive ? PASSIVE_POISON : 1),
             ),
           ),
           source: src.uid,
