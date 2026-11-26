@@ -243,7 +243,10 @@ describe('рейд: Пожиратель звёзд', () => {
   });
 
   it('v16: миграция добавляет экспедиции и рейд', () => {
-    const old = { ...(createNewSave(NOW) as unknown as Record<string, unknown>), version: 15 };
+    const old: Record<string, unknown> = {
+      ...(createNewSave(NOW) as unknown as Record<string, unknown>),
+      version: 15,
+    };
     delete old.expeditions;
     delete old.raid;
     const m = migrate(old) as unknown as ReturnType<typeof createNewSave>;

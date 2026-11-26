@@ -94,7 +94,7 @@ export default function ExpeditionsScreen() {
     updateSave((s) => {
       r = refreshExpeditions(s, Date.now());
     });
-    if (r !== true) showToast(t('exp.err.noShards'));
+    if ((r as ReturnType<typeof refreshExpeditions>) !== true) showToast(t('exp.err.noShards'));
     else platform().audio.play('tap');
   };
   const claim = (id: string) => {
@@ -182,7 +182,7 @@ function MissionCard(props: {
     updateSave((s) => {
       r = rushExpedition(s, m.id, Date.now());
     });
-    if (r === 'noShards') showToast(t('exp.err.noShards'));
+    if ((r as ReturnType<typeof rushExpedition>) === 'noShards') showToast(t('exp.err.noShards'));
   };
   const recall = () => {
     updateSave((s) => {
@@ -324,8 +324,9 @@ function PartySheet({ id, onClose }: { id: string; onClose: () => void }) {
     updateSave((s) => {
       r = startExpedition(s, m.id, party, Date.now());
     });
-    if (r !== true) {
-      showToast(t(`exp.err.${r}`));
+    const res = r as ReturnType<typeof startExpedition>;
+    if (res !== true) {
+      showToast(t(`exp.err.${res}`));
       platform().haptics.notify('warning');
       return;
     }

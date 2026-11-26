@@ -45,7 +45,8 @@ export default function RaidScreen() {
     updateSave((s) => {
       r = buyRaidAttempt(s, Date.now());
     });
-    if (r !== true) showToast(t(`raid.err.${r}`));
+    const res = r as ReturnType<typeof buyRaidAttempt>;
+    if (res !== true) showToast(t(`raid.err.${res}`));
   };
   const claim = (i: number) => {
     let r: ReturnType<typeof claimRaidMilestone> = null;
