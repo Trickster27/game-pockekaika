@@ -6,11 +6,21 @@ import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
 import campMap from '@/assets/art/camp.svg?url';
 import { heroDef } from '@/content';
-import { campLevel, currentStage, IDLE_CAP_MS, pendingIdle, teamHeroes } from '@/game';
+import {
+  campLevel,
+  currentStage,
+  eventState,
+  liveopsReady,
+  passLevel,
+  IDLE_CAP_MS,
+  pendingIdle,
+  teamHeroes,
+} from '@/game';
 import { formatDuration, useNow } from '../hooks';
 import { useBadges } from '../badges';
 import './screens.css';
 import './camp.css';
+import './events.css';
 
 /** Постройки на карте: прямоугольник в координатах карты (360×480, верх карты = 130). */
 const BUILDINGS: { id: string; screen: ScreenId; box: [number, number, number, number] }[] = [
@@ -49,6 +59,7 @@ export default function CampScreen() {
   const idle = pendingIdle(save, now);
   const team = teamHeroes(save).slice(0, 3);
   const b = useBadges();
+  const ev = eventState(save, now);
   const [campOpen, setCampOpen] = useState(false);
   const badge: Record<string, boolean> = {
     quests: !!b?.quests,
@@ -94,6 +105,21 @@ export default function CampScreen() {
           {t('idle.collect').split(' ')[0]}
         </button>
       </section>
+
+      <button type="button" className="ev-banner" onClick={() => open('events')}>
+        <span>
+          <b>{t(`events.kind.${ev.def.kind}.name`)}</b>
+          <small>
+            {t('events.banner', {
+              event: t('events.points', { n: ev.points }),
+              time: formatDuration(ev.endsAt - now),
+            })}{' '}
+            · {t('events.bannerPass', { n: passLevel(save, now).level })}
+          </small>
+        </span>
+        <span className="go-card__arrow">›</span>
+        {liveopsReady(save, now) > 0 && <i className="dot" />}
+      </button>
 
       <div className="campmap">
         <img className="campmap__bg" src={campMap} alt="" />

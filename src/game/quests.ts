@@ -1,5 +1,6 @@
 import type { SaveData } from '@/save/schema';
 import { grantReward, periodKey, type ShopReward } from './shop';
+import { addPassXp, trackEvent } from './liveops';
 
 export type QuestEvent = 'login' | 'campaign' | 'dungeon' | 'summon' | 'arena' | 'tower' | 'upgrade' | 'idle';
 
@@ -36,6 +37,7 @@ function roll(save: SaveData, now: number) {
 /** Отметить событие для ежедневных заданий. */
 export function trackQuest(save: SaveData, event: QuestEvent, n = 1, now = Date.now()) {
   roll(save, now);
+  trackEvent(save, event, n, now);
   for (const q of DAILY_QUESTS)
     if (q.event === event)
       save.quests.progress[q.id] = Math.min(q.goal, (save.quests.progress[q.id] ?? 0) + n);
@@ -55,6 +57,8 @@ export function claimQuest(save: SaveData, id: string, now = Date.now()): boolea
   const q = DAILY_QUESTS.find((x) => x.id === id);
   if (!q || save.quests.claimed.includes(id) || (save.quests.progress[id] ?? 0) < q.goal) return false;
   save.quests.claimed.push(id);
+  // Очки заданий идут и в опыт сезонного пропуска.
+  addPassXp(save, q.points, now);
   return true;
 }
 

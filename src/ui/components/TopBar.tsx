@@ -31,6 +31,7 @@ export function TopBar() {
     training: 'training.title',
     leaders: 'social.leaders',
     fusion: 'fusion.title',
+    events: 'events.title',
   };
   const titleKey = titled[screen];
   return (

@@ -245,6 +245,29 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
           gold: Math.floor(num(x.gold, 0, 0)),
         })),
     },
+    events: (() => {
+      const e = isObj(raw.events) ? raw.events : {};
+      return {
+        key: typeof e.key === 'string' ? e.key : '',
+        points: Math.floor(num(e.points, 0, 0)),
+        claimed: Array.isArray(e.claimed) ? e.claimed.filter((x): x is number => typeof x === 'number') : [],
+      };
+    })(),
+    pass: (() => {
+      const p = isObj(raw.pass) ? raw.pass : {};
+      const nums = (v: unknown) =>
+        Array.isArray(v) ? v.filter((x): x is number => typeof x === 'number') : [];
+      return {
+        season: Math.floor(num(p.season, -1, -1)),
+        xp: Math.floor(num(p.xp, 0, 0)),
+        premium: p.premium === true,
+        free: nums(p.free),
+        prem: nums(p.prem),
+      };
+    })(),
+    achievements: Array.isArray(raw.achievements)
+      ? raw.achievements.filter((x): x is string => typeof x === 'string')
+      : [],
     camp: { level: Math.round(num(isObj(raw.camp) ? raw.camp.level : 1, 1, 1, 10)) },
     tutorial: (() => {
       const tu = isObj(raw.tutorial) ? raw.tutorial : {};

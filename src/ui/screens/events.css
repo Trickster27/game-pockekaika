@@ -1,0 +1,259 @@
+.cx-tabs.ev-tabs {
+  grid-template-columns: repeat(3, 1fr);
+}
+.ev-hero {
+  display: grid;
+  gap: 4px;
+  background:
+    radial-gradient(
+      120% 100% at 0% 0%,
+      color-mix(in srgb, var(--ec, #f0c860) 25%, transparent),
+      transparent 70%
+    ),
+    #17121f;
+}
+.ev-hero.k-summon {
+  --ec: #c79cff;
+}
+.ev-hero.k-campaign {
+  --ec: #7fd08a;
+}
+.ev-hero.k-forge {
+  --ec: #ff8a4a;
+}
+.ev-hero.k-ascent {
+  --ec: #7fb8ff;
+}
+.ev-hero b {
+  font: 700 19px var(--display);
+  color: var(--ec);
+}
+.ev-hero p {
+  margin: 0;
+  font-size: 13px;
+}
+.ev-hero small,
+.ev-pass small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.ev-bar {
+  height: 9px;
+  margin-top: 4px;
+}
+.ev-pts {
+  font: 700 13px var(--body);
+  color: var(--gold);
+}
+.ev-steps {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+.ev-step {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: #17121f;
+}
+.ev-step > b {
+  font: 700 16px var(--display);
+  color: var(--muted);
+  text-align: center;
+}
+.ev-step.is-ready {
+  border-color: var(--gold);
+}
+.ev-step.is-ready > b {
+  color: var(--gold);
+}
+.ev-step.is-done {
+  opacity: 0.6;
+}
+.ev-step .btn,
+.ev-a .btn {
+  min-height: 32px;
+  padding: 3px 12px;
+  font-size: 12px;
+}
+.ev-rw {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 12px;
+}
+.ev-rw i {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-style: normal;
+  font-weight: 700;
+}
+.ev-rw svg {
+  width: 16px;
+  height: 16px;
+}
+.ev-pass {
+  display: grid;
+  gap: 6px;
+}
+.ev-pass > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.ev-pass b {
+  font: 700 17px var(--display);
+}
+.ev-prem {
+  margin: 0;
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 13px;
+}
+.ev-track {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+}
+.ev-track__head,
+.ev-row {
+  display: grid;
+  grid-template-columns: 30px 1fr 1fr;
+  gap: 6px;
+  align-items: stretch;
+}
+.ev-track__head b {
+  font-size: 12px;
+  text-align: center;
+  color: var(--muted);
+}
+.ev-gold {
+  color: var(--gold) !important;
+}
+.ev-lv {
+  display: grid;
+  place-items: center;
+  font: 700 13px var(--display);
+  color: var(--muted);
+}
+.ev-row.is-open .ev-lv {
+  color: var(--gold);
+}
+.ev-cell {
+  position: relative;
+  min-height: 42px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: #15111d;
+  color: inherit;
+  display: grid;
+  place-items: center;
+}
+.ev-cell.prem {
+  background: color-mix(in srgb, var(--gold) 7%, #15111d);
+}
+.ev-cell.is-ready {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+.ev-cell:disabled:not(.is-ready) {
+  opacity: 0.55;
+}
+.ev-cell em {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-style: normal;
+  font-size: 11px;
+  color: #8fd18b;
+}
+.ev-ach {
+  display: grid;
+  gap: 8px;
+}
+.ev-a {
+  display: grid;
+  gap: 6px;
+}
+.ev-a.is-ready {
+  border-color: var(--gold);
+}
+.ev-a.is-done {
+  opacity: 0.65;
+}
+.ev-a__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ev-a__top b {
+  font-size: 14px;
+}
+.ev-a__top span {
+  display: flex;
+  gap: 3px;
+}
+.ev-a__top i {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  background: #2a2236;
+  border: 1px solid #0a0710;
+}
+.ev-a__top i.ready {
+  background: #f0b45a;
+}
+.ev-a__top i.on {
+  background: var(--gold);
+}
+.ev-a__bot {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+.ev-a__bot small {
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.ev-banner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 16%, #17121f), #17121f);
+  color: inherit;
+  text-align: left;
+  position: relative;
+}
+.ev-banner b {
+  font: 700 14px var(--display);
+}
+.ev-banner small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.ev-banner .dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--red, #e0503a);
+  border: 2px solid var(--lead, #0a0710);
+}

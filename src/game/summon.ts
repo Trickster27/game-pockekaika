@@ -5,6 +5,7 @@ import { HERO_RARITY_ORDER, type Faction, type HeroRarity } from '@/core/types';
 import type { HeroDef } from '@/core/content';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { addHero } from './heroes';
+import { RATE_UP_SHARE, featuredHero } from './liveops';
 
 /** Шансы редкости обычного призыва (свиток призыва и осколки). */
 export const SUMMON_RATES = scrollDef('basic').rates as Record<
@@ -100,6 +101,7 @@ export function summon(
     save.materials[def.material] -= count;
   }
   const rng = Rng.fromState(save.summon.rng);
+  const featured = featuredHero(id, now);
   const out: SummonResult = { heroes: [], rarities: [] };
   for (let i = 0; i < count; i++) {
     let rarity: HeroRarity;
@@ -114,7 +116,9 @@ export function summon(
       save.summon.pity[id] = rank(rarity) >= rank(def.pity.rarity) ? 0 : since + 1;
       if (def.epicEvery) save.summon.epicPity[id] = rank(rarity) >= rank('epic') ? 0 : sinceEpic + 1;
     }
-    const hero = pickHero(rng, pool, rarity);
+    // Герой недели забирает половину шанса своей редкости.
+    const feat = featured ? pool.find((h) => h.id === featured && h.rarity === rarity) : undefined;
+    const hero = feat && rng.next() < RATE_UP_SHARE ? feat : pickHero(rng, pool, rarity);
     out.heroes.push(addHero(save, hero.id, now));
     out.rarities.push(hero.rarity);
     save.summon.total += 1;
@@ -124,12 +128,18 @@ export function summon(
 }
 
 /** Шанс получить именно этого героя за один призыв из свитка (без учёта гарантий). */
-export function heroChance(h: HeroDef, id: ScrollId, faction?: Faction): number {
+export function heroChance(h: HeroDef, id: ScrollId, faction?: Faction, now = Date.now()): number {
   const def = scrollDef(id);
   const fac = def.chooseFaction ? (faction ?? h.faction) : undefined;
   if (!def.pool(h, fac)) return 0;
-  const same = HEROES.filter((x) => def.pool(x, fac) && x.rarity === h.rarity).length;
-  return (def.rates[h.rarity] ?? 0) / Math.max(1, same);
+  const same = HEROES.filter((x) => def.pool(x, fac) && x.rarity === h.rarity);
+  const rate = def.rates[h.rarity] ?? 0;
+  const feat = featuredHero(id, now);
+  if (feat && same.some((x) => x.id === feat)) {
+    const rest = (1 - RATE_UP_SHARE) / same.length;
+    return rate * (h.id === feat ? RATE_UP_SHARE + rest : rest);
+  }
+  return rate / Math.max(1, same.length);
 }
 
 /** Из каких свитков выпадает герой и с каким шансом. */

@@ -102,6 +102,14 @@ export const MIGRATIONS: Record<number, Migration> = {
   13: (s) => ({ ...s, version: 13, training: { slots: [] } }),
   // v14: книги навыков (2 в подарок), уровни навыков и таланты героев.
   14: (s) => ({ ...s, version: 14, materials: { ...(s.materials as Record<string, number>), skillBook: 2 } }),
+  // v15: события, сезонный пропуск, достижения.
+  15: (s) => ({
+    ...s,
+    version: 15,
+    events: { key: '', points: 0, claimed: [] },
+    pass: { season: -1, xp: 0, premium: false, free: [], prem: [] },
+    achievements: [],
+  }),
 };
 
 export class SaveVersionError extends Error {}

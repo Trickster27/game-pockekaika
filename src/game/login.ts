@@ -1,5 +1,6 @@
 import type { SaveData } from '@/save/schema';
 import { grantReward, periodKey, type ShopReward } from './shop';
+import { addPassXp } from './liveops';
 
 export const LOGIN_CYCLE = 28;
 
@@ -38,5 +39,6 @@ export function claimLogin(save: SaveData, now = Date.now()): { day: number; rew
   grantReward(save, reward, now);
   save.login.claimed += 1;
   save.login.lastClaimDay = periodKey('day', now);
+  addPassXp(save, 20, now);
   return { day, reward };
 }

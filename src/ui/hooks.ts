@@ -15,6 +15,7 @@ export function formatDuration(ms: number): string {
   const h = Math.floor(s / 3600),
     m = Math.floor((s % 3600) / 60),
     sec = s % 60;
+  if (h >= 48) return `${Math.floor(h / 24)} д ${h % 24} ч`;
   if (h > 0) return `${h} ч ${m} мин`;
   return `${m}:${String(sec).padStart(2, '0')}`;
 }

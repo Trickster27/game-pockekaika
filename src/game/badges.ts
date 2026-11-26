@@ -10,6 +10,7 @@ import { canClaimLogin } from './login';
 import { battlesLeft, canClaimLeague } from './arena';
 import { pendingIdle, IDLE_CAP_MS } from './idle';
 import { canUpgradeCamp } from './camp';
+import { liveopsReady } from './liveops';
 
 /**
  * Красные точки: где игрока ждёт действие. Правило жанра — точка только там,
@@ -30,6 +31,8 @@ export interface Badges {
   campUp: boolean;
   /** Тренировка закончилась или есть свободное место. */
   training: boolean;
+  /** Награды событий, пропуска и достижений. */
+  liveops: boolean;
 }
 
 export function computeBadges(save: SaveData, now: number): Badges {
@@ -54,5 +57,6 @@ export function computeBadges(save: SaveData, now: number): Badges {
     idle: pendingIdle(save, now).ms >= IDLE_CAP_MS / 2,
     campUp: canUpgradeCamp(save) === true,
     training: save.training.slots.some((s) => now >= s.endAt),
+    liveops: liveopsReady(save, now) > 0,
   };
 }

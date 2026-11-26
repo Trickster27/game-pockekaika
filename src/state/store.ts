@@ -24,6 +24,7 @@ export type ScreenId =
   | 'training'
   | 'leaders'
   | 'fusion'
+  | 'events'
   | 'chat'
   | 'settings'
   | 'placeholder';

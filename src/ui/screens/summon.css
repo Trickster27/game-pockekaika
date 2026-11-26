@@ -432,3 +432,32 @@
   font-size: 10px;
   color: var(--muted);
 }
+.rateup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--sc) 60%, transparent);
+  background: color-mix(in srgb, var(--sc) 14%, #120e18);
+}
+.rateup img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  background: #1a1530;
+  border: 2px solid var(--sc);
+}
+.rateup span {
+  display: grid;
+}
+.rateup b {
+  font-size: 13px;
+}
+.rateup small {
+  font-size: 11px;
+  color: var(--muted);
+}

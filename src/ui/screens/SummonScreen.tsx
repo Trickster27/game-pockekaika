@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { SCROLLS, scrollDef, type ScrollId } from '@/content';
+import { SCROLLS, heroDef, scrollDef, type ScrollId } from '@/content';
 import {
   trackQuest,
   PITY_EPIC,
@@ -8,6 +8,9 @@ import {
   pityLeft,
   scrollPool,
   summon,
+  summonEventPoints,
+  featuredHero,
+  rateUpEndsAt,
   type SummonPay,
 } from '@/game';
 import { FACTIONS, HERO_RARITY_ORDER, type Faction, type HeroRarity } from '@/core/types';
@@ -17,6 +20,7 @@ import { platform } from '@/state/services';
 import type { OwnedHero } from '@/save/schema';
 import { unitArtUrl } from '@/assets/art';
 import { SummonReveal } from '../components/SummonReveal';
+import { formatDuration, useNow } from '../hooks';
 import { FACTION_COLOR, RARITY_COLOR } from '../colors';
 import { IconShard } from '../components/icons';
 import { MaterialIcon } from '../components/MaterialIcon';
@@ -36,6 +40,7 @@ export default function SummonScreen() {
   const [last, setLast] = useState<{ count: 1 | 10; pay: SummonPay; faction?: Faction } | null>(null);
   const p = platform();
   const def = scrollDef(scroll);
+  const now = useNow(60_000);
   const have = save.materials[def.material];
 
   const doSummon = (count: 1 | 10, pay: SummonPay, fac = faction ?? undefined) => {
@@ -43,7 +48,10 @@ export default function SummonScreen() {
     let res: ReturnType<typeof summon> = 'noShards';
     updateSave((s) => {
       res = summon(s, count, pay, Date.now(), { faction: fac });
-      if (typeof res !== 'string') trackQuest(s, 'summon', count);
+      if (typeof res !== 'string') {
+        trackQuest(s, 'summon', count);
+        summonEventPoints(s, pay === 'shards' || pay === 'scroll' ? 'basic' : pay, count, Date.now());
+      }
     });
     const r = res as ReturnType<typeof summon>;
     if (typeof r === 'string') {
@@ -101,6 +109,15 @@ export default function SummonScreen() {
           </g>
         </svg>
         <p className="altar__desc">{def.desc}</p>
+        {featuredHero(scroll, now) && (
+          <div className="rateup">
+            <img src={unitArtUrl(heroDef(featuredHero(scroll, now)!).art)} alt="" />
+            <span>
+              <b>{t('summon.rateUp', { name: heroDef(featuredHero(scroll, now)!).name })}</b>
+              <small>{t('summon.rateUpEnds', { time: formatDuration(rateUpEndsAt(now) - now) })}</small>
+            </span>
+          </div>
+        )}
         <div className="rates">
           {HERO_RARITY_ORDER.filter((r) => def.rates[r]).map((r) => (
             <div key={r} style={{ ['--rc' as string]: RARITY_COLOR[r] }}>
