@@ -2,6 +2,7 @@ import type { HeroDef } from '@/core/content';
 import type { OwnedHero } from '@/save/schema';
 import { unitArtUrl } from '@/assets/art';
 import { useT } from '@/i18n';
+import { useGame } from '@/state/store';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
 
 export function Stars({ n, awakened }: { n: number; awakened?: boolean }) {
@@ -27,10 +28,12 @@ export function HeroTile(props: {
 }) {
   const t = useT();
   const { def, owned } = props;
+  // Герой на тренировке: тусклый и с меткой, в бой не идёт.
+  const busy = useGame((s) => !!owned && !!s.save?.training.slots.some((x) => x.heroUid === owned.uid));
   return (
     <button
       type="button"
-      className={`htile${props.selected ? ' is-sel' : ''}${props.dim || !owned ? ' is-dim' : ''}`}
+      className={`htile${props.selected ? ' is-sel' : ''}${props.dim || !owned || busy ? ' is-dim' : ''}`}
       style={{ ['--rc' as string]: RARITY_COLOR[def.rarity], ['--fc' as string]: FACTION_COLOR[def.faction] }}
       onClick={props.onClick}
       aria-label={def.name}
@@ -45,6 +48,7 @@ export function HeroTile(props: {
       />
       {owned && <span className="htile__lvl">{owned.level}</span>}
       {props.inTeam && <span className="htile__team">✓</span>}
+      {busy && <span className="htile__busy">{t('training.badge')}</span>}
       <span className="htile__name">{def.name}</span>
       {owned ? (
         <Stars n={owned.stars} awakened={owned.awakened} />

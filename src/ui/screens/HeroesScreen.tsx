@@ -5,6 +5,8 @@ import type { Element, Faction, HeroRarity, Role } from '@/core/types';
 import {
   AWAKEN_COST,
   capOf,
+  isTraining,
+  setTeam,
   awaken,
   heroPower,
   heroStats,
@@ -279,10 +281,11 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
           className="btn"
           style={{ gridColumn: '1 / -1' }}
           onClick={() => {
+            if (!inTeam && isTraining(save, hero.uid)) return showToast(t('training.inTraining'));
             if (!inTeam && save.team.length >= 5) return showToast(t('heroes.teamFull'));
-            updateSave((s) => {
-              s.team = inTeam ? s.team.filter((u) => u !== hero.uid) : [...s.team, hero.uid];
-            });
+            updateSave((s) =>
+              setTeam(s, inTeam ? s.team.filter((u) => u !== hero.uid) : [...s.team, hero.uid]),
+            );
           }}
         >
           {inTeam ? t('heroes.fromTeam') : t('heroes.toTeam')}

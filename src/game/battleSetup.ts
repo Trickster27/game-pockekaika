@@ -21,7 +21,12 @@ export function heroSpec(h: OwnedHero, save?: SaveData): UnitSpec {
 }
 
 export function teamHeroes(save: SaveData): OwnedHero[] {
-  return save.team.map((uid) => save.heroes.find((h) => h.uid === uid)).filter((h): h is OwnedHero => !!h);
+  // Герои на тренировке в бой не идут.
+  const busy = new Set(save.training?.slots.map((s) => s.heroUid) ?? []);
+  return save.team
+    .filter((uid) => !busy.has(uid))
+    .map((uid) => save.heroes.find((h) => h.uid === uid))
+    .filter((h): h is OwnedHero => !!h);
 }
 
 export function enemySpec(e: StageEnemy): UnitSpec {

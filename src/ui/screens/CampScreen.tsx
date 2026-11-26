@@ -22,6 +22,7 @@ const BUILDINGS: { id: string; screen: ScreenId; box: [number, number, number, n
   { id: 'shop', screen: 'shop', box: [142, 484, 238, 584] },
   { id: 'quests', screen: 'quests', box: [254, 484, 338, 584] },
   { id: 'clan', screen: 'clan', box: [146, 240, 250, 336] },
+  { id: 'training', screen: 'training', box: [216, 362, 284, 408] },
 ];
 const MAP_W = 360,
   MAP_TOP = 130,
@@ -54,6 +55,7 @@ export default function CampScreen() {
     summon: !!b?.summon,
     clan: !!b?.clan,
     arena: !!b?.arena,
+    training: !!b?.training,
   };
 
   const open = (s: ScreenId) => {

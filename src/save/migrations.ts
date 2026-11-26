@@ -98,6 +98,8 @@ export const MIGRATIONS: Record<number, Migration> = {
   }),
   // v12: уровень лагеря.
   12: (s) => ({ ...s, version: 12, camp: { level: 1 } }),
+  // v13: тренировочный зал.
+  13: (s) => ({ ...s, version: 13, training: { slots: [] } }),
 };
 
 export class SaveVersionError extends Error {}

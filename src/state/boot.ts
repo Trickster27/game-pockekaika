@@ -5,6 +5,7 @@ import {
   trackQuest,
   ENERGY_MAX,
   energyRegenMs,
+  nextTrainingEnd,
   IDLE_MIN_SHOW_MS,
   idleFullAt,
   pendingIdle,
@@ -39,6 +40,7 @@ export async function boot(): Promise<void> {
 
   const NOTIFY_IDLE = 1;
   const NOTIFY_ENERGY = 2;
+  const NOTIFY_TRAINING = 3;
   const scheduleReminders = async () => {
     const s = manager.data;
     if (!s.settings.notifications || !platform.notifications.supported) return;
@@ -64,6 +66,14 @@ export async function boot(): Promise<void> {
         at,
       });
     }
+    const train = nextTrainingEnd(s, now);
+    if (train && train > now + 60_000)
+      await platform.notifications.schedule({
+        id: NOTIFY_TRAINING,
+        title: tr('notify.trainingTitle'),
+        body: tr('notify.trainingBody'),
+        at: train,
+      });
   };
 
   // При уходе в фон запоминаем время выхода, пишем сейв и ставим напоминания.
@@ -86,6 +96,7 @@ export async function boot(): Promise<void> {
   platform.lifecycle.onResume(() => {
     void platform.notifications.cancel(NOTIFY_IDLE).catch(() => undefined);
     void platform.notifications.cancel(NOTIFY_ENERGY).catch(() => undefined);
+    void platform.notifications.cancel(NOTIFY_TRAINING).catch(() => undefined);
     checkIdle();
   });
 

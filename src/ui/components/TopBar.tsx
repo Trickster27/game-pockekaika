@@ -28,6 +28,7 @@ export function TopBar() {
     shop: 'shop.title',
     codex: 'codex.title',
     clan: 'clan.title',
+    training: 'training.title',
   };
   const titleKey = titled[screen];
   return (

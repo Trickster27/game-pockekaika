@@ -28,6 +28,8 @@ export interface Badges {
   idle: boolean;
   /** Лагерь можно улучшить. */
   campUp: boolean;
+  /** Тренировка закончилась или есть свободное место. */
+  training: boolean;
 }
 
 export function computeBadges(save: SaveData, now: number): Badges {
@@ -51,5 +53,6 @@ export function computeBadges(save: SaveData, now: number): Badges {
     arena: battlesLeft(save, now) > 0 || canClaimLeague(save, now),
     idle: pendingIdle(save, now).ms >= IDLE_CAP_MS / 2,
     campUp: canUpgradeCamp(save) === true,
+    training: save.training.slots.some((s) => now >= s.endAt),
   };
 }

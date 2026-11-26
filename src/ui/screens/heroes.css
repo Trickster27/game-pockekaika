@@ -788,3 +788,16 @@
   border-color: var(--gold);
   color: var(--gold);
 }
+.htile__busy {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: rgba(10, 8, 16, 0.88);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font: 700 10px/16px var(--body);
+  white-space: nowrap;
+}

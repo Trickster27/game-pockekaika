@@ -221,6 +221,24 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
         ),
       };
     })(),
+    training: {
+      slots: (Array.isArray(isObj(raw.training) ? raw.training.slots : null)
+        ? (raw.training as { slots: unknown[] }).slots
+        : []
+      )
+        .filter(
+          (x): x is Record<string, unknown> =>
+            isObj(x) && typeof x.heroUid === 'string' && heroUids.has(x.heroUid),
+        )
+        .slice(0, 5)
+        .map((x) => ({
+          heroUid: x.heroUid as string,
+          startAt: num(x.startAt, now, 0),
+          endAt: num(x.endAt, now, 0),
+          xpPerHour: Math.floor(num(x.xpPerHour, 0, 0, 100_000)),
+          gold: Math.floor(num(x.gold, 0, 0)),
+        })),
+    },
     camp: { level: Math.round(num(isObj(raw.camp) ? raw.camp.level : 1, 1, 1, 10)) },
     tutorial: (() => {
       const tu = isObj(raw.tutorial) ? raw.tutorial : {};

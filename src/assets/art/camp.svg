@@ -243,4 +243,18 @@
 <g class="bob"><path d="M245 252 L226 252 L226 284 L235.5 278 L245 284 Z" fill="#d9a94a"/><path d="M231 262 L240 262 L235.5 270 Z" fill="#fff3c8" stroke-width="1"/></g>
 <circle cx="150" cy="248" r="2.6" fill="#e8c060"/><circle cx="246" cy="248" r="2.6" fill="#e8c060"/>
 </g>
+<g id="training" stroke="#0a0710" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">
+<path d="M224 384 L240 400 M240 384 L224 400" stroke="#0a0710" stroke-width="4"/>
+<path d="M224 384 L240 400 M240 384 L224 400" stroke="#d8dce6" stroke-width="2"/>
+<circle cx="232" cy="392" r="2.6" fill="#e8c060"/>
+<path d="M270 404 L270 368" stroke-width="3.2"/>
+<path d="M270 404 L270 368" stroke="#8a5a2a" stroke-width="1.6"/>
+<path d="M259 380 L281 380" stroke-width="3.2"/>
+<path d="M259 380 L281 380" stroke="#8a5a2a" stroke-width="1.6"/>
+<ellipse cx="270" cy="386" rx="7" ry="9" fill="#d8b56a"/>
+<circle cx="270" cy="386" r="4" fill="#e0503a"/>
+<circle cx="270" cy="386" r="1.6" fill="#f6e7c0" stroke="none"/>
+<circle cx="270" cy="368" r="5" fill="#e0c27a"/>
+<path d="M262 404 L278 404" stroke-width="2.4"/>
+</g>
 </svg>
