@@ -988,3 +988,14 @@
     transform: translate(-50%, calc(-100% - 18px));
   }
 }
+
+/* Обёртки для перетаскивания не должны сжимать карточку: она заполняет ячейку целиком. */
+.tslot__hero,
+.troster__item {
+  display: grid;
+  min-width: 0;
+}
+.tslot__hero > .htile,
+.troster__item > .htile {
+  width: 100%;
+}

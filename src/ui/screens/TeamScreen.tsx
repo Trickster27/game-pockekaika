@@ -114,7 +114,7 @@ export default function TeamScreen() {
           <small>{t('team.front')}</small>
           <div
             className="row5"
-            style={{ gridTemplateColumns: 'repeat(2, minmax(0, 96px))', justifyContent: 'center' }}
+            style={{ gridTemplateColumns: 'repeat(2, minmax(0, 112px))', justifyContent: 'center' }}
           >
             {[0, 1].map(slot)}
           </div>
@@ -123,7 +123,7 @@ export default function TeamScreen() {
           <small>{t('team.back')}</small>
           <div
             className="row5"
-            style={{ gridTemplateColumns: 'repeat(3, minmax(0, 96px))', justifyContent: 'center' }}
+            style={{ gridTemplateColumns: 'repeat(3, minmax(0, 112px))', justifyContent: 'center' }}
           >
             {[2, 3, 4].map(slot)}
           </div>
