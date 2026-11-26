@@ -82,6 +82,9 @@ interface GameState {
   /** Сводка (зачистка, серия повторов). */
   summary: { title: string; note?: string; lines: RewardLine[] } | null;
   showSummary: (s: { title: string; note?: string; lines: RewardLine[] } | null) => void;
+  /** Сюжетная сцена на экране; then — что сделать после (например, начать бой). */
+  story: { id: string; then?: () => void; replay?: boolean } | null;
+  playStory: (s: { id: string; then?: () => void; replay?: boolean } | null) => void;
   /** Серия повторов боя. */
   repeat: RepeatState | null;
   setRepeat: (r: RepeatState | null) => void;
@@ -117,6 +120,8 @@ export const useGame = create<GameState>((set) => ({
   startBattle: (req) => set((s) => ({ battle: req, battleKey: s.battleKey + 1, screen: 'battle' })),
   summary: null,
   showSummary: (summary) => set({ summary }),
+  story: null,
+  playStory: (story) => set({ story }),
   repeat: null,
   setRepeat: (repeat) => set({ repeat }),
   updateSave: (mutator) => {

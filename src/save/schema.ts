@@ -6,7 +6,7 @@ import type { RaidState } from '@/game/raid';
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 16;
+export const SAVE_VERSION = 17;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -20,6 +20,8 @@ export interface Settings {
   haptics: boolean;
   battleSpeed: BattleSpeed;
   autoBattle: boolean;
+  /** В авто-бою сильные навыки (с перезарядкой) нажимает игрок. */
+  manualUlts: boolean;
   notifications: boolean;
   locale: Locale;
 }
@@ -52,6 +54,8 @@ export interface OwnedHero {
   skillLv?: number[];
   /** Изученные таланты (id узлов). */
   talents?: string[];
+  /** Выбранный облик (ключ арта); нет — облик по умолчанию. */
+  skin?: string;
 }
 
 export interface CampaignProgress {
@@ -133,6 +137,26 @@ export interface ArenaState {
   leagueClaimedDay: string;
   /** Номер обновления списка соперников. */
   refresh: number;
+  /** Сезон арены (номер двухнедельного периода) и лучший рейтинг за сезон. */
+  season?: number;
+  seasonBest?: number;
+}
+
+export interface MailItem {
+  id: string;
+  /** Ключи перевода заголовка и текста (или готовый текст). */
+  title: string;
+  body: string;
+  params?: Record<string, string | number>;
+  reward?: {
+    gold?: number;
+    shards?: number;
+    energy?: number;
+    materials?: Partial<Record<MaterialId, number>>;
+  };
+  at: number;
+  read?: boolean;
+  claimed?: boolean;
 }
 
 export interface QuestState {
@@ -206,6 +230,14 @@ export interface SaveData {
   /** Еженедельный рейд: урон за неделю, лучшая попытка, попытки сегодня. */
   raid: RaidState;
   stats: { battlesWon: number; battlesLost: number; expeditions?: number; raidBest?: number };
+  /** Просмотренные сюжетные сцены. */
+  story: { seen: string[] };
+  /** Почта: письма от игры (подарки, награды сезонов, возвращение). sent — системные письма, что уже отправлены. */
+  mail: { items: MailItem[]; seq: number; sent: string[] };
+  /** Испытание дня: попытки сегодня и пройденные уровни по видам испытаний. */
+  trial: { day: string; used: number; best: Record<string, number> };
+  /** Открытые облики героев. */
+  skins: string[];
 }
 
 export const MAX_TEAM = 5;
@@ -232,6 +264,7 @@ export const DEFAULT_SETTINGS: Settings = {
   haptics: true,
   battleSpeed: 1,
   autoBattle: false,
+  manualUlts: false,
   notifications: true,
   locale: 'ru',
 };
@@ -279,6 +312,10 @@ export function createNewSave(now: number = Date.now()): SaveData {
     achievements: [],
     training: { slots: [] },
     expeditions: { day: '', freeUsed: false, paid: 0, seq: 0, board: [] },
+    story: { seen: [] },
+    mail: { items: [], seq: 0, sent: [] },
+    trial: { day: '', used: 0, best: {} },
+    skins: [],
     raid: { week: '', damage: 0, best: 0, claimed: [], day: '', used: 0, extra: 0 },
     presets: defaultPresets(),
     idle: { lastClaimAt: now },

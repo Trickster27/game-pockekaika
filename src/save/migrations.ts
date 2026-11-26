@@ -117,6 +117,15 @@ export const MIGRATIONS: Record<number, Migration> = {
     expeditions: { day: '', freeUsed: false, paid: 0, seq: 0, board: [] },
     raid: { week: '', damage: 0, best: 0, claimed: [], day: '', used: 0, extra: 0 },
   }),
+  // v17: сюжет, почта, испытание дня, облики. Сцены уже пройденных глав можно прочитать в «Летописи».
+  17: (s) => ({
+    ...s,
+    version: 17,
+    story: { seen: [] },
+    mail: { items: [], seq: 0, sent: [] },
+    trial: { day: '', used: 0, best: {} },
+    skins: [],
+  }),
 };
 
 export class SaveVersionError extends Error {}

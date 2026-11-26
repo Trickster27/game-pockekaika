@@ -6,6 +6,7 @@ import {
   MATERIAL_IDS,
   MAX_TEAM,
   type Item,
+  type MailItem,
   type OwnedHero,
   type SaveData,
   type TeamPreset,
@@ -70,6 +71,31 @@ function normalizeExpeditions(v: unknown, heroUids: Set<string>): ExpeditionStat
 
 function isNeed(x: unknown): x is ExpNeed {
   return isObj(x) && ['faction', 'element', 'role'].includes(x.kind as string) && typeof x.value === 'string';
+}
+
+function normalizeMail(v: unknown): SaveData['mail'] {
+  const m = isObj(v) ? v : {};
+  const items = (Array.isArray(m.items) ? m.items : [])
+    .filter(
+      (x): x is Record<string, unknown> =>
+        isObj(x) && typeof x.id === 'string' && typeof x.title === 'string',
+    )
+    .slice(-60)
+    .map((x) => ({
+      id: x.id as string,
+      title: x.title as string,
+      body: typeof x.body === 'string' ? x.body : '',
+      ...(isObj(x.params) ? { params: x.params as Record<string, string | number> } : {}),
+      ...(isObj(x.reward) ? { reward: x.reward as MailItem['reward'] } : {}),
+      at: num(x.at, 0, 0),
+      ...(x.read === true ? { read: true } : {}),
+      ...(x.claimed === true ? { claimed: true } : {}),
+    }));
+  return {
+    items,
+    seq: Math.floor(num(m.seq, 0, 0)),
+    sent: (Array.isArray(m.sent) ? m.sent : []).filter((x): x is string => typeof x === 'string').slice(-200),
+  };
 }
 
 function normalizeItems(v: unknown, heroUids: Set<string>): Item[] {
@@ -137,6 +163,7 @@ function normalizeHeroes(v: unknown, now: number): OwnedHero[] | null {
       ...(Array.isArray(h.talents)
         ? { talents: h.talents.filter((x): x is string => typeof x === 'string').slice(0, 12) }
         : {}),
+      ...(typeof h.skin === 'string' && h.skin.length < 40 ? { skin: h.skin } : {}),
     });
   }
   return out;
@@ -231,6 +258,10 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
         battlesToday: Math.floor(num(a.battlesToday, 0, 0)),
         leagueClaimedDay: typeof a.leagueClaimedDay === 'string' ? a.leagueClaimedDay : '',
         refresh: Math.floor(num(a.refresh, 0, 0)),
+        ...(typeof a.season === 'number' ? { season: Math.floor(num(a.season, 0, 0)) } : {}),
+        ...(typeof a.seasonBest === 'number'
+          ? { seasonBest: Math.round(num(a.seasonBest, 1000, 0, 5000)) }
+          : {}),
       };
     })(),
     quests: (() => {
@@ -323,6 +354,28 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
         extra: Math.floor(num(r.extra, 0, 0, 10)),
       };
     })(),
+    story: {
+      seen: (isObj(raw.story) && Array.isArray(raw.story.seen) ? raw.story.seen : [])
+        .filter((x): x is string => typeof x === 'string')
+        .slice(0, 200),
+    },
+    mail: normalizeMail(raw.mail),
+    trial: (() => {
+      const t = isObj(raw.trial) ? raw.trial : {};
+      const best = isObj(t.best) ? t.best : {};
+      return {
+        day: typeof t.day === 'string' ? t.day : '',
+        used: Math.floor(num(t.used, 0, 0, 20)),
+        best: Object.fromEntries(
+          Object.entries(best)
+            .filter(([, v]) => typeof v === 'number')
+            .map(([k, v]) => [k, Math.round(num(v, 0, 0, 20))]),
+        ),
+      };
+    })(),
+    skins: (Array.isArray(raw.skins) ? raw.skins : [])
+      .filter((x): x is string => typeof x === 'string')
+      .slice(0, 200),
     camp: { level: Math.round(num(isObj(raw.camp) ? raw.camp.level : 1, 1, 1, 10)) },
     tutorial: (() => {
       const tu = isObj(raw.tutorial) ? raw.tutorial : {};
@@ -353,6 +406,7 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
       haptics: bool(s.haptics, DEFAULT_SETTINGS.haptics),
       battleSpeed: Math.round(speed) as 1 | 2 | 3,
       autoBattle: bool(s.autoBattle, DEFAULT_SETTINGS.autoBattle),
+      manualUlts: bool(s.manualUlts, DEFAULT_SETTINGS.manualUlts),
       notifications: bool(s.notifications, DEFAULT_SETTINGS.notifications),
       locale,
     },

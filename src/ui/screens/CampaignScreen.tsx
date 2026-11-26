@@ -1,7 +1,9 @@
+import { createPortal } from 'react-dom';
+import { chronicle } from '@/state/story';
 import { useMemo, useState } from 'react';
 import { CHAPTERS, enemyDef, type StageDef } from '@/content';
 import { chapterStars, currentStage, isStageUnlocked, stagePower, teamPower } from '@/game';
-import { formatNumber, useT } from '@/i18n';
+import { formatNumber, useI18n, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { canSweepStage, startCampaignStage, sweepCampaignStage } from '@/state/actions';
 import { SweepButtons } from '../components/SummaryModal';
@@ -31,6 +33,7 @@ export default function CampaignScreen() {
   const cur = currentStage(save);
   const [chapter, setChapter] = useState(cur.chapter);
   const [selId, setSelId] = useState<string>(cur.id);
+  const [chron, setChron] = useState(false);
   const ch = CHAPTERS[chapter - 1]!;
   const color = CHAPTER_COLOR[chapter - 1]!;
   const sel = ch.stages.find((s) => s.id === selId) ?? null;
@@ -69,7 +72,11 @@ export default function CampaignScreen() {
       <section className="chap-head" style={{ ['--c' as string]: color }}>
         <h2>{ch.name}</h2>
         <p>{ch.desc}</p>
+        <button type="button" className="btn chap-chron" onClick={() => setChron(true)}>
+          📜 {t('story.chronicle')}
+        </button>
       </section>
+      {chron && <Chronicle onClose={() => setChron(false)} />}
       <div className="path">
         {ch.stages.map((s) => (
           <StageNode
@@ -84,6 +91,50 @@ export default function CampaignScreen() {
       </div>
       {sel && <StagePanel stage={sel} teamPow={tp} />}
     </>
+  );
+}
+
+function Chronicle({ onClose }: { onClose: () => void }) {
+  const t = useT();
+  const locale = useI18n((s) => s.locale);
+  const playStory = useGame((s) => s.playStory);
+  const list = chronicle();
+  const chapters = [...new Set(list.map((x) => x.scene.chapter))];
+  return createPortal(
+    <div className="sheet-bg" onClick={onClose}>
+      <div className="sheet2" onClick={(e) => e.stopPropagation()}>
+        <h3 style={{ margin: 0 }}>📜 {t('story.chronicle')}</h3>
+        <p className="screen-sub" style={{ margin: 0 }}>
+          {t('story.chronicleHint')}
+        </p>
+        <div className="chron">
+          {chapters.map((c) => (
+            <div key={c} className="chron">
+              <div className="chron__ch">{t('story.chapter', { n: c })}</div>
+              {list
+                .filter((x) => x.scene.chapter === c)
+                .map(({ scene, open }) => (
+                  <button
+                    key={scene.id}
+                    type="button"
+                    disabled={!open}
+                    onClick={() => {
+                      onClose();
+                      playStory({ id: scene.id, replay: true });
+                    }}
+                  >
+                    <b>
+                      {open ? (locale === 'en' ? scene.title.en : scene.title.ru) : '🔒 ' + t('story.locked')}
+                    </b>
+                    <small>{t(`story.trigger.${scene.trigger}`)}</small>
+                  </button>
+                ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>,
+    document.querySelector('.app') ?? document.body,
   );
 }
 

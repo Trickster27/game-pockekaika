@@ -250,7 +250,7 @@ describe('рейд: Пожиратель звёзд', () => {
     delete old.expeditions;
     delete old.raid;
     const m = migrate(old) as unknown as ReturnType<typeof createNewSave>;
-    expect(m.version).toBe(16);
+    expect(m.version).toBe(17);
     expect(m.expeditions.board).toEqual([]);
     expect(m.raid.damage).toBe(0);
   });

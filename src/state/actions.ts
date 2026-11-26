@@ -27,6 +27,7 @@ import { simulate, type BattleResult } from '@/core/battle';
 import { db } from '@/content';
 import { INVENTORY_LIMIT, energyRegenMs } from '@/game';
 import { mergeRewardLines } from './rewards';
+import { storyAfterStage, storyBeforeStage } from './story';
 import { PVP } from '@/online';
 import { errorText, onlineBackend } from './online';
 import { useGame, type RewardLine } from './store';
@@ -47,7 +48,7 @@ export function newSeed(): number {
 }
 
 /** Запуск этапа кампании. Возвращает false и показывает подсказку, если начать нельзя. */
-export function startCampaignStage(stageId: string): boolean {
+export function startCampaignStage(stageId: string, opts: { skipStory?: boolean } = {}): boolean {
   const g = useGame.getState();
   const save = g.save!;
   const stage = stageById(stageId);
@@ -57,6 +58,9 @@ export function startCampaignStage(stageId: string): boolean {
     g.showToast(tr('campaign.noTeam'));
     return false;
   }
+  // Сюжет: вступление главы и встреча с боссом — один раз, перед первым боем.
+  if (!opts.skipStory && storyBeforeStage(stageId, () => startCampaignStage(stageId, { skipStory: true })))
+    return true;
   let ok = false;
   g.updateSave((s) => {
     ok = spendEnergy(s.currencies, stage.energy, Date.now(), energyRegenMs(s));
@@ -153,8 +157,9 @@ export function campaignFinish(stageId: string, result: BattleResult): RewardLin
     if (r.playerLevelUps)
       lines.push({ icon: 'star', label: tr('rewards.playerLevel'), value: `${s.player.level}` });
     for (const it of r.items) lines.push(itemLine(it));
-    if (r.ore) lines.push({ icon: 'star', label: tr('labels.material.ore'), value: `+${r.ore}` });
+    if (r.ore) lines.push({ icon: 'star', mat: 'ore', label: tr('labels.material.ore'), value: `+${r.ore}` });
   });
+  if (result.winner === 'ally') storyAfterStage(stageId);
   return lines;
 }
 

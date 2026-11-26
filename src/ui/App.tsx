@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { useOnline } from '@/state/online';
 import { refreshClan } from '@/state/clan';
 import { SummaryModal } from './components/SummaryModal';
+import { StoryOverlay } from './components/StoryOverlay';
 import { Tutorial } from './Tutorial';
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
@@ -109,6 +110,14 @@ function Screen() {
   }
 }
 
+/** Сюжетная сцена поверх всего; развязка ждёт, пока игрок выйдет из боя. */
+function StoryGate() {
+  const story = useGame((s) => s.story);
+  const screen = useGame((s) => s.screen);
+  if (!story || (screen === 'battle' && !story.then)) return null;
+  return <StoryOverlay />;
+}
+
 export function App() {
   // Фоновая музыка: в бою — боевая тема (с боссом — своя), в остальное время — тема лагеря.
   const musicId = useGame((s) =>
@@ -163,6 +172,7 @@ export function App() {
       <ConflictModal />
       <SummaryModal />
       <Tutorial />
+      <StoryGate />
       {toast && (
         <div className="toast" role="status">
           {toast}

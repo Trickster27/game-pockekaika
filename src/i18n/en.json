@@ -1351,5 +1351,17 @@
     "turnOrder": "Turn order",
     "resetFilters": "Reset filters",
     "rarity": "Rarity"
+  },
+  "story": {
+    "skip": "Skip",
+    "chapter": "Chapter {n}",
+    "chronicle": "Chronicle",
+    "chronicleHint": "Story scenes you have unlocked. Tap to watch again.",
+    "locked": "Unlocks as you progress",
+    "trigger": {
+      "intro": "Prologue",
+      "boss": "Before the boss",
+      "outro": "Aftermath"
+    }
   }
 }
