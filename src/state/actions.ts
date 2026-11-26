@@ -24,7 +24,7 @@ import {
 import { formatNumber, tr } from '@/i18n';
 import { simulate, type BattleResult } from '@/core/battle';
 import { db } from '@/content';
-import { INVENTORY_LIMIT } from '@/game';
+import { INVENTORY_LIMIT, energyRegenMs } from '@/game';
 import { mergeRewardLines } from './rewards';
 import { useGame, type RewardLine } from './store';
 import {
@@ -56,7 +56,7 @@ export function startCampaignStage(stageId: string): boolean {
   }
   let ok = false;
   g.updateSave((s) => {
-    ok = spendEnergy(s.currencies, stage.energy, Date.now());
+    ok = spendEnergy(s.currencies, stage.energy, Date.now(), energyRegenMs(s));
   });
   if (!ok) {
     g.showToast(tr('campaign.noEnergy', { n: stage.energy }));
@@ -99,7 +99,7 @@ export function startDungeon(id: DungeonId, level: number): boolean {
   const cost = dungeonEnergy(level);
   let ok = false;
   g.updateSave((s) => {
-    ok = spendEnergy(s.currencies, cost, Date.now());
+    ok = spendEnergy(s.currencies, cost, Date.now(), energyRegenMs(s));
   });
   if (!ok) {
     g.showToast(tr('campaign.noEnergy', { n: cost }));
@@ -189,7 +189,7 @@ function sweep(
     }
     let ok = false;
     g.updateSave((s) => {
-      ok = spendEnergy(s.currencies, cost, Date.now());
+      ok = spendEnergy(s.currencies, cost, Date.now(), energyRegenMs(s));
     });
     if (!ok) {
       stop = 'energy';

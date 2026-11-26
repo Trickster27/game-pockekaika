@@ -20,3 +20,4 @@ export * from './clan';
 export * from './gearPlus';
 export * from './badges';
 export * from './tutorial';
+export * from './camp';

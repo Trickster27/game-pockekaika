@@ -1,5 +1,6 @@
 import type { MaterialId, SaveData } from '@/save/schema';
 import { regenEnergy } from './energy';
+import { energyRegenMs } from './camp';
 
 /**
  * Магазин. Сейчас всё покупается за внутриигровую валюту.
@@ -160,7 +161,7 @@ export function grantReward(save: SaveData, r: ShopReward, now: number) {
   if (r.gold) save.currencies.gold += r.gold;
   if (r.shards) save.currencies.shards += r.shards;
   if (r.energy) {
-    regenEnergy(save.currencies, now);
+    regenEnergy(save.currencies, now, energyRegenMs(save));
     save.currencies.energy += r.energy;
   }
   for (const [k, v] of Object.entries(r.materials ?? {}) as [MaterialId, number][]) save.materials[k] += v;

@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 11;
+export const SAVE_VERSION = 12;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -180,6 +180,8 @@ export interface SaveData {
   clan: ClanSaveState;
   /** Обучение: текущий шаг; done — пройдено или пропущено. */
   tutorial: { step: number; done: boolean; rewarded?: boolean };
+  /** Уровень лагеря (1..10). */
+  camp: { level: number };
   stats: { battlesWon: number; battlesLost: number };
 }
 
@@ -245,6 +247,7 @@ export function createNewSave(now: number = Date.now()): SaveData {
     },
     clan: { coins: 0, bought: {} },
     tutorial: { step: 0, done: false },
+    camp: { level: 1 },
     presets: defaultPresets(),
     idle: { lastClaimAt: now },
     summon: newSummonState(now),

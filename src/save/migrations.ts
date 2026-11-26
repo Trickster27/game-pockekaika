@@ -96,6 +96,8 @@ export const MIGRATIONS: Record<number, Migration> = {
     },
     summon: { ...(s.summon as object), pity: {}, epicPity: {} },
   }),
+  // v12: уровень лагеря.
+  12: (s) => ({ ...s, version: 12, camp: { level: 1 } }),
 };
 
 export class SaveVersionError extends Error {}

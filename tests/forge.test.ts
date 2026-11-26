@@ -87,7 +87,7 @@ describe('трофеи', () => {
   });
   it('миграция до v7 добавляет руду', () => {
     const s = normalizeSave(migrate({ version: 6, materials: { xpTome: 1 } }), NOW);
-    expect(s.version).toBe(11);
+    expect(s.version).toBe(12);
     expect(s.materials.ore).toBe(20);
   });
 });

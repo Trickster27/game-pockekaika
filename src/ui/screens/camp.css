@@ -93,3 +93,24 @@
   font-size: 28px;
   color: var(--gold);
 }
+.camp-lvl-btn {
+  position: relative;
+  justify-self: start;
+  margin-bottom: 2px;
+  padding: 1px 8px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  color: var(--gold);
+  font: 700 11px var(--body);
+}
+.camp-lvl-btn .dot {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--red, #e0503a);
+  border: 2px solid var(--lead, #0a0710);
+}

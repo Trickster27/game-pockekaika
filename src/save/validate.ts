@@ -221,6 +221,7 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
         ),
       };
     })(),
+    camp: { level: Math.round(num(isObj(raw.camp) ? raw.camp.level : 1, 1, 1, 10)) },
     tutorial: (() => {
       const tu = isObj(raw.tutorial) ? raw.tutorial : {};
       return {

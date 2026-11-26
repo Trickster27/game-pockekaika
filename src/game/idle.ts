@@ -2,6 +2,7 @@ import { ALL_STAGES } from '@/content/campaign';
 import type { SaveData } from '@/save/schema';
 import { addHeroXp, type LevelUp } from './progression';
 import { teamHeroes } from './battleSetup';
+import { campLevel } from './camp';
 
 /** Лимит накопления idle-наград. */
 export const IDLE_CAP_MS = 12 * 60 * 60 * 1000;
@@ -22,7 +23,8 @@ export function clearedStages(save: SaveData): number {
   return ALL_STAGES.filter((s) => (save.campaign.stars[s.id] ?? 0) > 0).length;
 }
 
-export function idleRates(save: SaveData): IdleRates {
+/** Добыча в час без бонуса лагеря. */
+export function baseIdleRates(save: SaveData): IdleRates {
   const g = clearedStages(save);
   return {
     gold: 1200 + 260 * g,
@@ -31,6 +33,13 @@ export function idleRates(save: SaveData): IdleRates {
     starDust: 0.5 + 0.12 * g,
     awakenStone: g >= 20 ? 0.15 + 0.02 * (g - 20) : 0,
   };
+}
+
+/** Добыча в час с бонусом уровня лагеря: золото — goldMult, опыт и томы — xpMult. */
+export function idleRates(save: SaveData): IdleRates {
+  const b = baseIdleRates(save);
+  const c = campLevel(save);
+  return { ...b, gold: b.gold * c.goldMult, heroXp: b.heroXp * c.xpMult, xpTome: b.xpTome * c.xpMult };
 }
 
 export interface IdleReward {

@@ -9,6 +9,7 @@ import { questsReady } from './quests';
 import { canClaimLogin } from './login';
 import { battlesLeft, canClaimLeague } from './arena';
 import { pendingIdle, IDLE_CAP_MS } from './idle';
+import { canUpgradeCamp } from './camp';
 
 /**
  * Красные точки: где игрока ждёт действие. Правило жанра — точка только там,
@@ -25,6 +26,8 @@ export interface Badges {
   arena: boolean;
   /** Сундук лагеря заполнен больше чем наполовину. */
   idle: boolean;
+  /** Лагерь можно улучшить. */
+  campUp: boolean;
 }
 
 export function computeBadges(save: SaveData, now: number): Badges {
@@ -47,5 +50,6 @@ export function computeBadges(save: SaveData, now: number): Badges {
     quests: questsReady(save, now) > 0 || canClaimLogin(save, now),
     arena: battlesLeft(save, now) > 0 || canClaimLeague(save, now),
     idle: pendingIdle(save, now).ms >= IDLE_CAP_MS / 2,
+    campUp: canUpgradeCamp(save) === true,
   };
 }

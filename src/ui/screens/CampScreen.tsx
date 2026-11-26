@@ -1,10 +1,12 @@
+import { useState } from 'react';
+import { CampUpgrade } from '../components/CampUpgrade';
 import { useT } from '@/i18n';
 import { useGame, type ScreenId } from '@/state/store';
 import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
 import campMap from '@/assets/art/camp.svg?url';
 import { heroDef } from '@/content';
-import { currentStage, IDLE_CAP_MS, pendingIdle, teamHeroes } from '@/game';
+import { campLevel, currentStage, IDLE_CAP_MS, pendingIdle, teamHeroes } from '@/game';
 import { formatDuration, useNow } from '../hooks';
 import { useBadges } from '../badges';
 import './screens.css';
@@ -46,6 +48,7 @@ export default function CampScreen() {
   const idle = pendingIdle(save, now);
   const team = teamHeroes(save).slice(0, 3);
   const b = useBadges();
+  const [campOpen, setCampOpen] = useState(false);
   const badge: Record<string, boolean> = {
     quests: !!b?.quests,
     summon: !!b?.summon,
@@ -68,6 +71,10 @@ export default function CampScreen() {
           <path d="M7 24 L33 24 M18 18 L18 32 M22 18 L22 32" stroke="#e8c060" strokeWidth="2.4" />
         </svg>
         <div>
+          <button type="button" className="camp-lvl-btn" onClick={() => setCampOpen(true)}>
+            ⬆ {t('campUp.button', { n: campLevel(save).level })}
+            {b?.campUp && <i className="dot" />}
+          </button>
           <b>{t('idle.bar')}</b>
           <span>
             {idle.ms >= IDLE_CAP_MS ? t('idle.full') : t('idle.barText', { time: formatDuration(idle.ms) })}
@@ -109,10 +116,13 @@ export default function CampScreen() {
           type="button"
           className="campmap__b campmap__b--camp"
           style={pct([100, 372, 260, 470])}
-          onClick={() => setIdleOpen(true)}
-          aria-label={t('idle.bar')}
+          onClick={() => setCampOpen(true)}
+          aria-label={t('campUp.title', { n: campLevel(save).level })}
         >
-          <span className="plq">{t('nav.camp')}</span>
+          {b?.campUp && <i className="dot" />}
+          <span className="plq">
+            {t('nav.camp')} · {campLevel(save).level}
+          </span>
         </button>
         {BUILDINGS.map((b) => (
           <button
@@ -129,6 +139,7 @@ export default function CampScreen() {
         ))}
       </div>
 
+      {campOpen && <CampUpgrade onClose={() => setCampOpen(false)} />}
       <button type="button" className="go-card" onClick={() => open('campaign')}>
         <img src={unitArtUrl('mglaboss')} alt="" />
         <span>

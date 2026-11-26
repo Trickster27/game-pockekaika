@@ -4,7 +4,7 @@ import { tr, useI18n } from '@/i18n';
 import {
   trackQuest,
   ENERGY_MAX,
-  ENERGY_REGEN_MS,
+  energyRegenMs,
   IDLE_MIN_SHOW_MS,
   idleFullAt,
   pendingIdle,
@@ -53,9 +53,10 @@ export async function boot(): Promise<void> {
         at: full,
       });
     const c = { ...s.currencies };
-    regenEnergy(c, now);
+    const regen = energyRegenMs(s);
+    regenEnergy(c, now, regen);
     if (c.energy < ENERGY_MAX) {
-      const at = c.energyUpdatedAt + (ENERGY_MAX - c.energy) * ENERGY_REGEN_MS;
+      const at = c.energyUpdatedAt + (ENERGY_MAX - c.energy) * regen;
       await platform.notifications.schedule({
         id: NOTIFY_ENERGY,
         title: tr('notify.energyTitle'),

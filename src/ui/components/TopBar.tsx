@@ -2,7 +2,7 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { unitArtUrl } from '@/assets/art';
 import { IconBack, IconEnergy, IconGear, IconGold, IconShard } from './icons';
-import { ENERGY_MAX, nextEnergyIn, regenEnergy } from '@/game';
+import { ENERGY_MAX, energyRegenMs, nextEnergyIn, regenEnergy } from '@/game';
 import { formatDuration, useNow } from '../hooks';
 import { useOnline } from '@/state/online';
 
@@ -18,8 +18,9 @@ export function TopBar() {
     online.friends.filter((f) => f.status === 'incoming').length;
   if (!save) return null;
   const energy = { ...save.currencies };
-  regenEnergy(energy, now);
-  const nextIn = nextEnergyIn(energy, now);
+  const regen = energyRegenMs(save);
+  regenEnergy(energy, now, regen);
+  const nextIn = nextEnergyIn(energy, now, regen);
   const titled: Record<string, string> = {
     settings: 'settings.title',
     campaign: 'nav.campaign',

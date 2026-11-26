@@ -26,6 +26,6 @@ export function useBadges() {
     if (!save) return null;
     const b = computeBadges(save, now);
     const c = clanBadge(clan);
-    return { ...b, clan: c, camp: b.quests || b.arena || b.idle || c };
+    return { ...b, clan: c, camp: b.quests || b.arena || b.idle || b.campUp || c };
   }, [save, clan, now]);
 }

@@ -1,4 +1,4 @@
-import { claimIdle, idleRates, pendingIdle, trackQuest } from '@/game';
+import { campLevel, claimIdle, idleRates, pendingIdle, trackQuest } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
@@ -70,6 +70,9 @@ export function IdleModal() {
         </div>
         <p style={{ fontSize: 12 }}>
           {t('idle.rates', { gold: formatNumber(rates.gold), xp: formatNumber(rates.heroXp) })}
+
+          {campLevel(save).level > 1 &&
+            ` · ${t('idle.campBonus', { n: campLevel(save).level, g: Math.round((campLevel(save).goldMult - 1) * 100), x: Math.round((campLevel(save).xpMult - 1) * 100) })}`}
         </p>
         <button
           data-tut="idle-claim"
