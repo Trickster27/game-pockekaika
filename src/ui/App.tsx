@@ -5,6 +5,7 @@ import { SummaryModal } from './components/SummaryModal';
 import { Tutorial } from './Tutorial';
 import { useT } from '@/i18n';
 import { useGame } from '@/state/store';
+import { services } from '@/state/services';
 import { TopBar } from './components/TopBar';
 import { BottomNav } from './components/BottomNav';
 import { IconCrystal } from './components/icons';
@@ -108,6 +109,19 @@ function Screen() {
 }
 
 export function App() {
+  // Фоновая музыка: в бою — боевая тема (с боссом — своя), в остальное время — тема лагеря.
+  const musicId = useGame((s) =>
+    s.screen === 'battle' && s.battle
+      ? s.battle.mode === 'boss'
+        ? 'boss'
+        : 'battle'
+      : s.ready
+        ? 'camp'
+        : null,
+  );
+  useEffect(() => {
+    services.platform?.audio.music(musicId);
+  }, [musicId]);
   const t = useT();
   const ready = useGame((s) => s.ready);
   const screen = useGame((s) => s.screen);

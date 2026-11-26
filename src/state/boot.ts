@@ -20,6 +20,8 @@ export function applySettings(save: SaveData) {
   if (!p) return;
   p.audio.setMuted(!save.settings.sound);
   p.audio.setVolume(save.settings.volume);
+  p.audio.setMusicEnabled(save.settings.music);
+  p.audio.setMusicVolume(save.settings.musicVolume);
   p.haptics.setEnabled(save.settings.haptics);
   useI18n.getState().setLocale(save.settings.locale);
 }
@@ -78,6 +80,7 @@ export async function boot(): Promise<void> {
 
   // При уходе в фон запоминаем время выхода, пишем сейв и ставим напоминания.
   platform.lifecycle.onPause(() => {
+    platform.audio.suspend();
     manager.update((s) => {
       s.lastSeenAt = Date.now();
     });
@@ -94,6 +97,7 @@ export async function boot(): Promise<void> {
       useGame.getState().setIdleOpen(true);
   };
   platform.lifecycle.onResume(() => {
+    platform.audio.resume();
     void platform.notifications.cancel(NOTIFY_IDLE).catch(() => undefined);
     void platform.notifications.cancel(NOTIFY_ENERGY).catch(() => undefined);
     void platform.notifications.cancel(NOTIFY_TRAINING).catch(() => undefined);

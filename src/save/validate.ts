@@ -348,6 +348,8 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
     settings: {
       sound: bool(s.sound, DEFAULT_SETTINGS.sound),
       volume: num(s.volume, DEFAULT_SETTINGS.volume, 0, 1),
+      music: bool(s.music, DEFAULT_SETTINGS.music),
+      musicVolume: num(s.musicVolume, DEFAULT_SETTINGS.musicVolume, 0, 1),
       haptics: bool(s.haptics, DEFAULT_SETTINGS.haptics),
       battleSpeed: Math.round(speed) as 1 | 2 | 3,
       autoBattle: bool(s.autoBattle, DEFAULT_SETTINGS.autoBattle),

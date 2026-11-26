@@ -148,7 +148,9 @@
     "resetDone": "Прогресс сброшен",
     "about": "Версия {version} · платформа: {platform} · хранилище: {storage}",
     "saveVersion": "Версия сейва: {version}",
-    "tutorial": "Пройти обучение заново"
+    "tutorial": "Пройти обучение заново",
+    "music": "Музыка",
+    "musicVolume": "Громкость музыки"
   },
   "campaign": {
     "title": "Кампания",

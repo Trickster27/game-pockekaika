@@ -111,6 +111,24 @@ export default function SettingsScreen() {
           />
         </div>
         <div className="row">
+          <label htmlFor="s-music">{t('settings.music')}</label>
+          <Switch id="s-music" on={st.music} onChange={(v) => set('music', v)} />
+        </div>
+        <div className="row">
+          <label htmlFor="s-mvol">{t('settings.musicVolume')}</label>
+          <input
+            id="s-mvol"
+            className="range"
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={st.musicVolume}
+            disabled={!st.music}
+            onChange={(e) => set('musicVolume', Number(e.target.value))}
+          />
+        </div>
+        <div className="row">
           <label htmlFor="s-hap">{t('settings.haptics')}</label>
           <button
             type="button"

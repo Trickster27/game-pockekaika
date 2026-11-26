@@ -14,6 +14,9 @@ export type Locale = 'ru' | 'en' | 'uk';
 export interface Settings {
   sound: boolean;
   volume: number;
+  /** Фоновая музыка и её громкость. */
+  music: boolean;
+  musicVolume: number;
   haptics: boolean;
   battleSpeed: BattleSpeed;
   autoBattle: boolean;
@@ -224,6 +227,8 @@ export function starterHeroes(now: number): OwnedHero[] {
 export const DEFAULT_SETTINGS: Settings = {
   sound: true,
   volume: 0.7,
+  music: true,
+  musicVolume: 0.5,
   haptics: true,
   battleSpeed: 1,
   autoBattle: false,

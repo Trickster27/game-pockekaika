@@ -1,4 +1,5 @@
-import type { AudioAdapter, SoundId } from '../types';
+import type { AudioAdapter, MusicId, SoundId } from '../types';
+import { MusicEngine } from './music';
 
 type Tone = { f: number; to?: number; d: number; type?: OscillatorType; gain?: number; delay?: number };
 
@@ -33,6 +34,11 @@ export class WebAudioAdapter implements AudioAdapter {
   private master: GainNode | null = null;
   private volume = 0.7;
   private muted = false;
+  private musicEngine: MusicEngine | null = null;
+  private musicWant: MusicId | null = null;
+  private musicOn = true;
+  private musicVol = 0.5;
+  private hidden = false;
 
   private ensure(): AudioContext | null {
     if (this.ctx) return this.ctx;
@@ -49,7 +55,45 @@ export class WebAudioAdapter implements AudioAdapter {
 
   unlock() {
     const ctx = this.ensure();
-    if (ctx?.state === 'suspended') void ctx.resume();
+    if (ctx?.state === 'suspended' && !this.hidden) void ctx.resume();
+    this.syncMusic();
+  }
+
+  private syncMusic() {
+    const ctx = this.ensure();
+    if (!ctx) return;
+    if (!this.musicEngine) {
+      // Пока звук не разблокирован жестом, музыку не создаём: запомненная тема начнётся по первому касанию.
+      if (ctx.state !== 'running' || !this.musicOn || !this.musicWant) return;
+      this.musicEngine = new MusicEngine(ctx, ctx.destination);
+      this.musicEngine.setVolume(this.musicVol * 0.6);
+    }
+    this.musicEngine.play(this.musicOn ? this.musicWant : null);
+  }
+
+  music(id: MusicId | null) {
+    this.musicWant = id;
+    this.syncMusic();
+  }
+
+  setMusicVolume(volume: number) {
+    this.musicVol = Math.max(0, Math.min(1, volume));
+    this.musicEngine?.setVolume(this.musicVol * 0.6);
+  }
+
+  setMusicEnabled(on: boolean) {
+    this.musicOn = on;
+    if (this.musicEngine || on) this.syncMusic();
+  }
+
+  suspend() {
+    this.hidden = true;
+    if (this.ctx?.state === 'running') void this.ctx.suspend();
+  }
+
+  resume() {
+    this.hidden = false;
+    if (this.ctx?.state === 'suspended') void this.ctx.resume().then(() => this.syncMusic());
   }
 
   play(id: SoundId) {

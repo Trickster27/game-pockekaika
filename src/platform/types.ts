@@ -45,7 +45,16 @@ export interface AudioAdapter {
   setMuted(muted: boolean): void;
   /** Браузеры разрешают звук только после жеста пользователя. */
   unlock(): void;
+  /** Фоновая музыка: тема или тишина (null). */
+  music(id: MusicId | null): void;
+  setMusicVolume(volume: number): void;
+  setMusicEnabled(on: boolean): void;
+  /** Приложение ушло в фон / вернулось: музыка замолкает и продолжает. */
+  suspend(): void;
+  resume(): void;
 }
+
+export type MusicId = 'camp' | 'battle' | 'boss';
 
 export type SoundId = 'tap' | 'hit' | 'crit' | 'heal' | 'victory' | 'reward';
 
