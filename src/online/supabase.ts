@@ -11,6 +11,18 @@ import type {
   ClanState,
   ClanToday,
 } from './clanTypes';
+import type {
+  DefenseUnit,
+  LeaderKind,
+  LeaderScope,
+  Leaderboard,
+  PlayerCard,
+  PvpBattle,
+  PvpOpponent,
+  PvpOutcome,
+  PvpState,
+  StatsSubmit,
+} from './socialTypes';
 import {
   SERVER_ERROR_CODES,
   type OnlineErrorCode,
@@ -531,6 +543,130 @@ export class SupabaseOnlineBackend implements OnlineBackend {
   async sendClanMessage(body: string) {
     const j = await this.rpc<ClanMsgJson>('send_clan_message', { p_body: body.slice(0, MAX_MESSAGE) });
     return toClanMsg(j);
+  }
+
+  // ———————————————————— лидеры и PvP ————————————————————
+
+  async submitStats(s: StatsSubmit) {
+    await this.rpc('submit_stats', {
+      p_power: Math.floor(s.power),
+      p_level: Math.floor(s.level),
+      p_tower: Math.floor(s.tower),
+      p_collection: Math.floor(s.collection),
+      p_team: s.team,
+      p_team_power: Math.floor(s.teamPower),
+    });
+  }
+
+  async leaderboard(kind: LeaderKind, scope: LeaderScope): Promise<Leaderboard> {
+    type Row = { rank: number; profile: ProfileRow; value: number; clan_tag: string | null };
+    const j = await this.rpc<{ rows: Row[]; me: Row | null }>('leaderboard', {
+      p_kind: kind,
+      p_scope: scope,
+    });
+    const map = (r: Row) => ({
+      rank: Number(r.rank),
+      profile: toProfile(r.profile),
+      value: Number(r.value),
+      clanTag: r.clan_tag,
+    });
+    return { rows: j.rows.map(map), me: j.me ? map(j.me) : null };
+  }
+
+  private toOpp(o: {
+    profile: ProfileRow;
+    rating: number;
+    power: number;
+    team: DefenseUnit[];
+    revenge?: boolean;
+  }): PvpOpponent {
+    return {
+      profile: toProfile(o.profile),
+      rating: o.rating,
+      power: o.power,
+      team: o.team,
+      revenge: !!o.revenge,
+    };
+  }
+
+  private toPvpState(j: {
+    rating: number;
+    attacks_left: number;
+    defense: DefenseUnit[];
+    opponents: {
+      profile: ProfileRow;
+      rating: number;
+      power: number;
+      team: DefenseUnit[];
+      revenge?: boolean;
+    }[];
+    log: {
+      id: number;
+      attacker: ProfileRow;
+      defender: ProfileRow;
+      attacker_won: boolean;
+      delta: number;
+      at: string;
+      revenge: boolean;
+    }[];
+  }): PvpState {
+    return {
+      rating: j.rating,
+      attacksLeft: j.attacks_left,
+      defense: j.defense,
+      opponents: j.opponents.map((o) => this.toOpp(o)),
+      log: j.log.map((l) => ({
+        id: String(l.id),
+        attacker: toProfile(l.attacker),
+        defender: toProfile(l.defender),
+        attackerWon: l.attacker_won,
+        delta: l.delta,
+        at: Date.parse(l.at),
+        revenge: l.revenge,
+      })),
+    };
+  }
+
+  async pvpState() {
+    return this.toPvpState(await this.rpc('pvp_state'));
+  }
+  async pvpRefresh() {
+    return this.toPvpState(await this.rpc('pvp_refresh'));
+  }
+  async pvpBegin(defenderId: string): Promise<PvpBattle> {
+    const j = await this.rpc<{
+      battle_id: number;
+      seed: number;
+      defender: Parameters<SupabaseOnlineBackend['toOpp']>[0];
+    }>('pvp_begin', { p_defender: defenderId });
+    return { battleId: String(j.battle_id), seed: Number(j.seed) >>> 0, defender: this.toOpp(j.defender) };
+  }
+  async pvpFinish(battleId: string, attackerWon: boolean): Promise<PvpOutcome> {
+    return this.rpc<PvpOutcome>('pvp_finish', { p_battle: Number(battleId), p_won: attackerWon });
+  }
+  async playerCard(userId: string): Promise<PlayerCard> {
+    const j = await this.rpc<{
+      profile: ProfileRow;
+      power: number;
+      level: number;
+      tower: number;
+      pvp_rating: number;
+      collection: number;
+      team: DefenseUnit[];
+      clan_tag: string | null;
+      clan_name: string | null;
+    }>('player_card', { p_user: userId });
+    return {
+      profile: toProfile(j.profile),
+      power: j.power,
+      level: j.level,
+      tower: j.tower,
+      pvpRating: j.pvp_rating,
+      collection: j.collection,
+      team: j.team,
+      clanTag: j.clan_tag,
+      clanName: j.clan_name,
+    };
   }
 
   subscribe(cb: (e: OnlineEvent) => void) {

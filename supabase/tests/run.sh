@@ -16,4 +16,7 @@ psql "$TEST_URL" -q -c "drop role if exists anon" -c "drop role if exists authen
 for f in tests/00_supabase_stub.sql migrations/*.sql; do
   psql "$TEST_URL" -v ON_ERROR_STOP=1 -q -f "$f" 2>&1 | grep -E "ERROR" && exit 1 || true
 done
-psql "$TEST_URL" -q -At -F ' | ' -f tests/clans_scenario.sql
+for f in tests/*_scenario.sql; do
+  echo "== $f"
+  psql "$TEST_URL" -q -At -F ' | ' -f "$f"
+done

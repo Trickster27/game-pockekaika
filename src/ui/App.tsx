@@ -33,6 +33,7 @@ const AccountScreen = lazy(() => import('./screens/AccountScreen'));
 const FriendsScreen = lazy(() => import('./screens/FriendsScreen'));
 const ClanScreen = lazy(() => import('./screens/ClanScreen'));
 const TrainingScreen = lazy(() => import('./screens/TrainingScreen'));
+const LeadersScreen = lazy(() => import('./screens/LeadersScreen'));
 const ChatScreen = lazy(() => import('./screens/ChatScreen'));
 const PlaceholderScreen = lazy(() => import('./screens/PlaceholderScreen'));
 
@@ -79,6 +80,8 @@ function Screen() {
       return <QuestsScreen />;
     case 'account':
       return <AccountScreen />;
+    case 'leaders':
+      return <LeadersScreen />;
     case 'training':
       return <TrainingScreen />;
     case 'clan':

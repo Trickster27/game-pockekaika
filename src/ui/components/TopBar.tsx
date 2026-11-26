@@ -29,6 +29,7 @@ export function TopBar() {
     codex: 'codex.title',
     clan: 'clan.title',
     training: 'training.title',
+    leaders: 'social.leaders',
   };
   const titleKey = titled[screen];
   return (
@@ -56,6 +57,35 @@ export function TopBar() {
               <b>{online.profile?.nickname ?? save.player.name}</b>
               <span>{t('camp.level', { level: save.player.level })}</span>
             </div>
+            <button
+              className="icon-btn"
+              type="button"
+              aria-label={t('social.leaders')}
+              onClick={() => go('leaders')}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22">
+                <path
+                  d="M7 4 L17 4 L17 9 Q17 14 12 15 Q7 14 7 9 Z"
+                  fill="#f0c860"
+                  stroke="#0a0710"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M7 6 L4 6 Q4 10 7.5 11 M17 6 L20 6 Q20 10 16.5 11"
+                  fill="none"
+                  stroke="#f0c860"
+                  strokeWidth="1.6"
+                />
+                <path
+                  d="M10 15 L14 15 L14.5 18 L9.5 18 Z M8 18 L16 18 L16 21 L8 21 Z"
+                  fill="#c98a45"
+                  stroke="#0a0710"
+                  strokeWidth="1.4"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
             <button
               className="icon-btn"
               type="button"

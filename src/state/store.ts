@@ -22,6 +22,7 @@ export type ScreenId =
   | 'friends'
   | 'clan'
   | 'training'
+  | 'leaders'
   | 'chat'
   | 'settings'
   | 'placeholder';

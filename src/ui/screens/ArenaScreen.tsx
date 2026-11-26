@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { ArenaPvp } from '../components/ArenaPvp';
 import { heroDef } from '@/content';
 import {
   ARENA_DAILY_BATTLES,
@@ -20,8 +21,26 @@ import { useNow } from '../hooks';
 import './screens.css';
 import './heroes.css';
 import './modes.css';
+import './codex.css';
 
 export default function ArenaScreen() {
+  const t = useT();
+  const [tab, setTab] = useState<'ai' | 'players'>('players');
+  return (
+    <>
+      <div className="cx-tabs arena-tabs" role="tablist">
+        {(['players', 'ai'] as const).map((x) => (
+          <button key={x} type="button" role="tab" aria-selected={tab === x} onClick={() => setTab(x)}>
+            {t(`pvp.tab.${x}`)}
+          </button>
+        ))}
+      </div>
+      {tab === 'ai' ? <ArenaAi /> : <ArenaPvp />}
+    </>
+  );
+}
+
+function ArenaAi() {
   const t = useT();
   const save = useGame((s) => s.save)!;
   const updateSave = useGame((s) => s.updateSave);

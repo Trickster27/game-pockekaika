@@ -11,7 +11,7 @@ import {
   type Profile,
 } from '@/online';
 import { SAVE_VERSION, type SaveData } from '@/save';
-import { teamHeroes, teamPower } from '@/game';
+import { heroSpec, teamHeroes, teamPower } from '@/game';
 import { heroDef } from '@/content';
 import { tr } from '@/i18n';
 import { platform, saves } from './services';
@@ -224,6 +224,37 @@ async function publishProfile() {
   });
   await backend!.touch();
   set({ profile: await backend!.myProfile() });
+  // Статистика для таблиц лидеров и защитная команда для арены игроков.
+  await backend!.submitStats(statsOf(s)).catch(() => undefined);
+}
+
+/** Что отправляем серверу: сила команды, уровень, башня, коллекция и защита (текущая команда). */
+export function statsOf(s: SaveData) {
+  const team = teamHeroes(s);
+  return {
+    power: teamPower(s),
+    level: s.player.level,
+    tower: s.tower.floor,
+    collection: new Set(s.heroes.map((h) => h.heroId)).size,
+    team: team.map((h) => {
+      const spec = heroSpec(h, s);
+      return {
+        defId: spec.defId,
+        level: spec.level,
+        stars: spec.stars ?? 1,
+        awakened: spec.awakened,
+        bonus: spec.bonus as Record<string, number> | undefined,
+        bonusPct: spec.bonusPct as Record<string, number> | undefined,
+      };
+    }),
+    teamPower: teamPower(s),
+  };
+}
+
+/** Обновить защиту сейчас (после смены команды). */
+export async function submitDefenseNow() {
+  if (!backend || !useOnline.getState().userId) return;
+  await backend.submitStats(statsOf(saves().data));
 }
 
 /** Игрок выбирает, какую копию оставить. */

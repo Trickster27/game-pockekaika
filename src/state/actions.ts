@@ -26,6 +26,8 @@ import { simulate, type BattleResult } from '@/core/battle';
 import { db } from '@/content';
 import { INVENTORY_LIMIT, energyRegenMs } from '@/game';
 import { mergeRewardLines } from './rewards';
+import { PVP } from '@/online';
+import { errorText, onlineBackend } from './online';
 import { useGame, type RewardLine } from './store';
 import {
   trackQuest,
@@ -357,6 +359,66 @@ export function startArena(opp: ArenaOpponent): boolean {
         lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
       });
       return lines;
+    },
+  });
+  return true;
+}
+
+/** Бой против защиты живого игрока: сервер выдаёт seed и засчитывает итог, рейтинг считает сервер. */
+export async function startPvp(defenderId: string, onDone?: () => void): Promise<boolean> {
+  const g = useGame.getState();
+  const save = g.save!;
+  const team = teamHeroes(save);
+  const be = onlineBackend();
+  if (!be) return false;
+  if (team.length === 0) {
+    g.showToast(tr('campaign.noTeam'));
+    return false;
+  }
+  let battle;
+  try {
+    battle = await be.pvpBegin(defenderId);
+  } catch (e) {
+    g.showToast(errorText(e));
+    return false;
+  }
+  const opp = battle.defender;
+  g.startBattle({
+    title: opp.profile.nickname,
+    subtitle: tr('pvp.title'),
+    scene: (['mist', 'cathedral', 'forge', 'dusk'] as const)[opp.rating % 4]!,
+    setup: {
+      allies: team.map((h) => heroSpec(h, save)),
+      waves: [opp.team.map((u) => ({ ...u, kind: 'hero' as const }))],
+      seed: battle.seed,
+    },
+    returnTo: 'arena',
+    finish: async (result) => {
+      const won = result.winner === 'ally';
+      try {
+        const out = await be.pvpFinish(battle.battleId, won);
+        const r = won ? PVP.winReward : PVP.loseReward;
+        useGame.getState().updateSave((s) => {
+          s.currencies.gold += r.gold;
+          s.currencies.shards += r.shards;
+          if (won) s.stats.battlesWon += 1;
+          else s.stats.battlesLost += 1;
+          trackQuest(s, 'arena');
+        });
+        onDone?.();
+        const lines: RewardLine[] = [
+          {
+            icon: 'star',
+            label: tr('pvp.rating'),
+            value: `${out.delta > 0 ? '+' : ''}${out.delta} → ${out.rating}`,
+          },
+          { icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` },
+        ];
+        if (r.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
+        return lines;
+      } catch (e) {
+        return [{ icon: 'star', label: errorText(e), value: '' }];
+      }
     },
   });
   return true;

@@ -3,6 +3,7 @@ import { DemoOnlineBackend } from './demo';
 
 export * from './types';
 export * from './clanTypes';
+export * from './socialTypes';
 export { decideSync, type SyncAction } from './sync';
 
 /**

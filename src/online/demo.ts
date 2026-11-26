@@ -11,6 +11,9 @@ import {
 } from './types';
 import type { ClanCreateInput, ClanMessage, ClanPatch } from './clanTypes';
 import { ClanSim, emptyClanDB, type ClanDB } from './clanSim';
+import { SocialSim, emptySocialDB, type SocialDB } from './socialSim';
+import type { LeaderKind, LeaderScope, StatsSubmit } from './socialTypes';
+import { dayIndex, weekIndex } from '@/game/clan';
 import { bossHp, type DonationId, type WeeklyGoalId } from '@/game/clan';
 
 /**
@@ -43,6 +46,7 @@ interface DB {
   session: string | null;
   seq: number;
   clans?: ClanDB;
+  social?: SocialDB & { refresh?: Record<string, number> };
 }
 
 const KEY = 'kaelmor:demo-online';
@@ -612,6 +616,68 @@ export class DemoOnlineBackend implements OnlineBackend {
       }
     }, this.opts.botDelayMs ?? 1500);
     return msg;
+  }
+
+  // ———————————————————— лидеры и PvP ————————————————————
+
+  private social<T>(fn: (sim: SocialSim, me: string, db: DB) => T): T {
+    const db = this.load();
+    const me = this.me(db);
+    for (const p of clanBotProfiles()) if (!db.profiles.some((x) => x.id === p.id)) db.profiles.push(p);
+    db.social ??= emptySocialDB();
+    db.clans ??= seedClans(this.now());
+    const clans = db.clans;
+    const clanOf = (id: string) => {
+      const m = clans.members.find((x) => x.userId === id);
+      const c = m && clans.clans.find((x) => x.id === m.clanId);
+      return c ? { id: c.id, tag: c.tag, name: c.name } : null;
+    };
+    const week = weekIndex(dayIndex(this.now()));
+    const sim = new SocialSim(db.social, (id) => db.profiles.find((x) => x.id === id), {
+      friendsOf: (id) =>
+        db.friendships
+          .filter((f) => f.status === 'accepted' && (f.requester === id || f.addressee === id))
+          .map((f) => (f.requester === id ? f.addressee : f.requester)),
+      clanOf,
+      bossDamageWeek: (id) =>
+        clans.attempts
+          .filter((a) => a.userId === id && weekIndex(a.day) === week)
+          .reduce((s, a) => s + (a.damage ?? 0), 0),
+    });
+    sim.simulateBots(
+      db.profiles.filter((p) => p.id.startsWith('bot-')).map((p) => p.id),
+      me,
+      this.now(),
+    );
+    const out = fn(sim, me, db);
+    this.save(db);
+    return out;
+  }
+
+  async submitStats(s: StatsSubmit) {
+    this.social((sim, me) => sim.submit(me, s, this.now()));
+  }
+  async leaderboard(kind: LeaderKind, scope: LeaderScope) {
+    return this.social((sim, me) => sim.leaderboard(me, kind, scope));
+  }
+  async pvpState() {
+    return this.social((sim, me, db) => sim.state(me, this.now(), db.social!.refresh?.[me] ?? 0));
+  }
+  async pvpRefresh() {
+    return this.social((sim, me, db) => {
+      const r = (db.social!.refresh ??= {});
+      r[me] = (r[me] ?? 0) + 1;
+      return sim.state(me, this.now(), r[me]);
+    });
+  }
+  async pvpBegin(defenderId: string) {
+    return this.social((sim, me) => sim.begin(me, defenderId, this.now()));
+  }
+  async pvpFinish(battleId: string, attackerWon: boolean) {
+    return this.social((sim, me) => sim.finish(me, battleId, attackerWon, this.now()));
+  }
+  async playerCard(userId: string) {
+    return this.social((sim) => sim.card(userId));
   }
 
   subscribe(cb: (e: OnlineEvent) => void) {

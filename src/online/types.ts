@@ -1,5 +1,6 @@
 /** Онлайн-часть игры: аккаунт, облачный сейв, друзья, сообщения, кланы. Провайдер прячется за этим интерфейсом. */
 import type { ClanApi, ClanMessage } from './clanTypes';
+import type { SocialApi } from './socialTypes';
 
 export interface Profile {
   id: string;
@@ -61,7 +62,9 @@ export type OnlineErrorCode =
   | 'clan_officers'
   | 'no_keys'
   | 'no_gold'
-  | 'expired';
+  | 'expired'
+  | 'no_attacks'
+  | 'self';
 
 /** Коды, которые сервер присылает текстом исключения. */
 export const SERVER_ERROR_CODES: readonly OnlineErrorCode[] = [
@@ -80,6 +83,8 @@ export const SERVER_ERROR_CODES: readonly OnlineErrorCode[] = [
   'no_keys',
   'no_gold',
   'expired',
+  'no_attacks',
+  'self',
 ];
 
 export class OnlineError extends Error {
@@ -91,7 +96,7 @@ export class OnlineError extends Error {
   }
 }
 
-export interface OnlineBackend extends ClanApi {
+export interface OnlineBackend extends ClanApi, SocialApi {
   readonly kind: 'supabase' | 'demo';
   /** Текущий пользователь (если сессия сохранена). */
   currentUserId(): Promise<string | null>;
