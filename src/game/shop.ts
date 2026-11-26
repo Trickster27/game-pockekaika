@@ -23,7 +23,18 @@ export interface ShopOffer {
   id: string;
   name: string;
   desc: string;
-  icon: 'energy' | 'scroll' | 'tome' | 'dust' | 'stone' | 'gold' | 'pack';
+  icon:
+    | 'energy'
+    | 'scroll'
+    | 'tome'
+    | 'dust'
+    | 'stone'
+    | 'gold'
+    | 'pack'
+    | 'ancientScroll'
+    | 'factionScroll'
+    | 'voidScroll'
+    | 'goldScroll';
   price: ShopPrice;
   reward: ShopReward;
   /** Лимит покупок за период. */
@@ -48,6 +59,42 @@ export const SHOP_OFFERS: ShopOffer[] = [
     price: { kind: 'shards', amount: 90 },
     reward: { materials: { scroll: 1 } },
     limit: { per: 'day', count: 5 },
+  },
+  {
+    id: 'ancient1',
+    name: 'Древний свиток',
+    desc: 'Призыв редкого героя или лучше',
+    icon: 'ancientScroll',
+    price: { kind: 'shards', amount: 200 },
+    reward: { materials: { ancientScroll: 1 } },
+    limit: { per: 'day', count: 2 },
+  },
+  {
+    id: 'faction1',
+    name: 'Свиток фракции',
+    desc: 'Герой выбранной фракции, от редкого',
+    icon: 'factionScroll',
+    price: { kind: 'shards', amount: 450 },
+    reward: { materials: { factionScroll: 1 } },
+    limit: { per: 'week', count: 3 },
+  },
+  {
+    id: 'void1',
+    name: 'Свиток Сумрака',
+    desc: 'Герои Света и Тьмы, сумрачные — только здесь',
+    icon: 'voidScroll',
+    price: { kind: 'shards', amount: 700 },
+    reward: { materials: { voidScroll: 1 } },
+    limit: { per: 'week', count: 2 },
+  },
+  {
+    id: 'gold1',
+    name: 'Золотой свиток',
+    desc: 'Эпики, легендарки и мифические герои',
+    icon: 'goldScroll',
+    price: { kind: 'shards', amount: 1800 },
+    reward: { materials: { goldScroll: 1 } },
+    limit: { per: 'week', count: 1 },
   },
   {
     id: 'tome5',

@@ -1,17 +1,17 @@
 import { useMemo, useState } from 'react';
-import { HEROES, heroDef, skillDef } from '@/content';
+import { HEROES, heroDef, scrollDef, skillDef } from '@/content';
 import {
   baseStats,
   statsAt,
   STAT_KEYS,
-  RARITY_ORDER,
+  HERO_RARITY_ORDER,
   ELEMENTS,
   FACTIONS,
   ROLES,
   FACTION_BONUS,
 } from '@/core';
 import type { HeroDef } from '@/core/content';
-import type { Element, Faction, Rarity, Role, Stats } from '@/core/types';
+import type { Element, Faction, HeroRarity, Role, Stats } from '@/core/types';
 import {
   analyzeTeam,
   elementMatchups,
@@ -22,6 +22,7 @@ import {
   RARITY_START_STARS,
   setTeam,
   summonChance,
+  heroSources,
   type Advice,
 } from '@/game';
 import { formatNumber, useT } from '@/i18n';
@@ -30,6 +31,7 @@ import type { OwnedHero, SaveData } from '@/save/schema';
 import { unitArtUrl } from '@/assets/art';
 import { HeroTile } from '../components/HeroTile';
 import { SkillIcon } from '../components/SkillIcon';
+import { MaterialIcon } from '../components/MaterialIcon';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
 import './screens.css';
 import './heroes.css';
@@ -107,7 +109,7 @@ function Catalog({ onOpen }: { onOpen: (id: string) => void }) {
   const [q, setQ] = useState('');
   const [faction, setFaction] = useState<Faction | 'all'>('all');
   const [element, setElement] = useState<Element | 'all'>('all');
-  const [rarity, setRarity] = useState<Rarity | 'all'>('all');
+  const [rarity, setRarity] = useState<HeroRarity | 'all'>('all');
   const [role, setRole] = useState<Role | 'all'>('all');
   const [own, setOwn] = useState<Own>('all');
 
@@ -125,7 +127,7 @@ function Catalog({ onOpen }: { onOpen: (id: string) => void }) {
       );
     }).sort(
       (a, b) =>
-        RARITY_ORDER.indexOf(b.rarity) - RARITY_ORDER.indexOf(a.rarity) ||
+        HERO_RARITY_ORDER.indexOf(b.rarity) - HERO_RARITY_ORDER.indexOf(a.rarity) ||
         FACTIONS.indexOf(a.faction) - FACTIONS.indexOf(b.faction),
     );
   }, [save.heroes, q, faction, element, rarity, role, own]);
@@ -164,7 +166,7 @@ function Catalog({ onOpen }: { onOpen: (id: string) => void }) {
           ))}
         </div>
         <div className="chips">
-          {(['all', ...RARITY_ORDER] as const).map((r) => (
+          {(['all', ...HERO_RARITY_ORDER] as const).map((r) => (
             <button key={r} type="button" aria-pressed={rarity === r} onClick={() => setRarity(r)}>
               {r !== 'all' && <i style={{ ['--c' as string]: RARITY_COLOR[r] }} />}
               {r === 'all' ? t('heroes.all') : t(`labels.rarity.${r}`)}
@@ -269,10 +271,25 @@ function CodexCard(props: {
           <p className={`cx-own${o.count ? ' is-yes' : ''}`}>
             {o.count ? t('codex.owned', { n: o.count }) : t('codex.notOwned')}
           </p>
-          <p className="cx-line">
-            {t('codex.chance')}: <b>{t('codex.chanceVal', { p: (summonChance(d) * 100).toFixed(2) })}</b>
-          </p>
         </div>
+      </section>
+
+      <section className="card">
+        <h3 className="cx-h">{t('codex.sources')}</h3>
+        {d.rarity === 'mythic' && <p className="cx-line cx-muted">{t('codex.mythicNote')}</p>}
+        {heroSources(d).map((src) => {
+          const sd = scrollDef(src.id);
+          return (
+            <p key={src.id} className="cx-line cx-src">
+              <MaterialIcon id={sd.material} />
+              <span>{sd.name}</span>
+              <b>
+                {(src.chance * 100).toFixed(2)}%
+                {sd.chooseFaction ? ` · ${t(`labels.factionShort.${d.faction}`)}` : ''}
+              </b>
+            </p>
+          );
+        })}
       </section>
 
       <section className="card">

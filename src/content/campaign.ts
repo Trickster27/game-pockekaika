@@ -24,7 +24,7 @@ export interface ChapterDef {
   name: string;
   desc: string;
   /** Ключ фона для рендера. */
-  scene: 'mist' | 'cathedral' | 'forge';
+  scene: 'mist' | 'cathedral' | 'forge' | 'dusk';
   stages: StageDef[];
 }
 
@@ -102,6 +102,27 @@ const SPECS: ChapterSpec[] = [
       'Сердце горнила',
       'Трон углей',
       'Престол Владыки',
+    ],
+  },
+  {
+    name: 'Сумрачный предел',
+    desc: 'Край мира, где Солнце навсегда застыло в затмении. Свет и тьма здесь воюют сами с собой.',
+    scene: 'dusk',
+    minions: ['dusk_wisp', 'eclipse_wolf', 'shard_golem', 'dusk_priest', 'star_lancer'],
+    boss: 'eclipse_queen',
+    baseLevel: 47,
+    energy: 12,
+    stageNames: [
+      'Граница теней',
+      'Поле застывших звёзд',
+      'Волчья лощина',
+      'Осколочный каньон',
+      'Храм сумерек',
+      'Мост затмения',
+      'Хрустальный лес',
+      'Обсерватория',
+      'Венец полумрака',
+      'Трон Королевы Затмения',
     ],
   },
 ];

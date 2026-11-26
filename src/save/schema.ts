@@ -4,7 +4,7 @@
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 10;
+export const SAVE_VERSION = 11;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -51,8 +51,27 @@ export interface CampaignProgress {
 }
 
 /** Материалы прокачки. */
-export type MaterialId = 'xpTome' | 'starDust' | 'awakenStone' | 'scroll' | 'ore';
-export const MATERIAL_IDS: readonly MaterialId[] = ['xpTome', 'starDust', 'awakenStone', 'scroll', 'ore'];
+export type MaterialId =
+  | 'xpTome'
+  | 'starDust'
+  | 'awakenStone'
+  | 'scroll'
+  | 'ore'
+  | 'ancientScroll'
+  | 'factionScroll'
+  | 'voidScroll'
+  | 'goldScroll';
+export const MATERIAL_IDS: readonly MaterialId[] = [
+  'xpTome',
+  'starDust',
+  'awakenStone',
+  'scroll',
+  'ancientScroll',
+  'factionScroll',
+  'voidScroll',
+  'goldScroll',
+  'ore',
+];
 
 export interface TeamPreset {
   name: string;
@@ -67,6 +86,10 @@ export interface SummonState {
   /** Призывов подряд без эпического или легендарного героя. */
   sinceEpic: number;
   total: number;
+  /** Призывов подряд без лучшей редкости — по каждому свитку (кроме обычного). */
+  pity: Record<string, number>;
+  /** Эпический или лучше: счётчик по свиткам с такой гарантией. */
+  epicPity: Record<string, number>;
 }
 
 export interface ShopState {
@@ -209,7 +232,17 @@ export function createNewSave(now: number = Date.now()): SaveData {
     team: STARTER_HERO_IDS.map((_, i) => `h${i + 1}`),
     campaign: { stars: {} },
     seq: STARTER_HERO_IDS.length + 1,
-    materials: { xpTome: 5, starDust: 0, awakenStone: 0, scroll: 3, ore: 20 },
+    materials: {
+      xpTome: 5,
+      starDust: 0,
+      awakenStone: 0,
+      scroll: 3,
+      ore: 20,
+      ancientScroll: 1,
+      factionScroll: 0,
+      voidScroll: 0,
+      goldScroll: 0,
+    },
     clan: { coins: 0, bought: {} },
     tutorial: { step: 0, done: false },
     presets: defaultPresets(),
@@ -236,7 +269,14 @@ export function defaultPresets(): TeamPreset[] {
 }
 
 export function newSummonState(seed: number): SummonState {
-  return { rng: (seed ^ 0x9e3779b9) >>> 0, sinceLegendary: 0, sinceEpic: 0, total: 0 };
+  return {
+    rng: (seed ^ 0x9e3779b9) >>> 0,
+    sinceLegendary: 0,
+    sinceEpic: 0,
+    total: 0,
+    pity: {},
+    epicPity: {},
+  };
 }
 
 export function newArena(): ArenaState {

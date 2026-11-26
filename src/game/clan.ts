@@ -246,7 +246,19 @@ export function grantClanReward(save: SaveData, r: ClanReward, now = Date.now())
 export interface ClanShopOffer {
   id: string;
   /** Ключ иконки для RewardIcon/MaterialIcon. */
-  icon: 'scroll' | 'tome' | 'dust' | 'stone' | 'ore' | 'energy' | 'shards' | 'item';
+  icon:
+    | 'scroll'
+    | 'tome'
+    | 'dust'
+    | 'stone'
+    | 'ore'
+    | 'energy'
+    | 'shards'
+    | 'item'
+    | 'ancientScroll'
+    | 'factionScroll'
+    | 'voidScroll'
+    | 'goldScroll';
   price: number;
   limit: number;
   /** Нужный уровень клана. */
@@ -262,6 +274,38 @@ export const CLAN_SHOP: ClanShopOffer[] = [
   { id: 'energy', icon: 'energy', price: 80, limit: 5, minLevel: 1, reward: { energy: 60 } },
   { id: 'dust', icon: 'dust', price: 150, limit: 3, minLevel: 2, reward: { materials: { starDust: 20 } } },
   { id: 'scroll', icon: 'scroll', price: 300, limit: 2, minLevel: 2, reward: { materials: { scroll: 1 } } },
+  {
+    id: 'ancient',
+    icon: 'ancientScroll',
+    price: 250,
+    limit: 2,
+    minLevel: 2,
+    reward: { materials: { ancientScroll: 1 } },
+  },
+  {
+    id: 'factionScroll',
+    icon: 'factionScroll',
+    price: 450,
+    limit: 1,
+    minLevel: 3,
+    reward: { materials: { factionScroll: 1 } },
+  },
+  {
+    id: 'voidScroll',
+    icon: 'voidScroll',
+    price: 800,
+    limit: 1,
+    minLevel: 5,
+    reward: { materials: { voidScroll: 1 } },
+  },
+  {
+    id: 'goldScroll',
+    icon: 'goldScroll',
+    price: 2500,
+    limit: 1,
+    minLevel: 8,
+    reward: { materials: { goldScroll: 1 } },
+  },
   {
     id: 'stone',
     icon: 'stone',

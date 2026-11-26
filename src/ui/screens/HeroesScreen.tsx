@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { HEROES, heroDef, skillDef } from '@/content';
-import { maxLevel, STAT_KEYS, RARITY_ORDER, ELEMENTS, FACTIONS, ROLES } from '@/core';
-import type { Element, Faction, Rarity, Role } from '@/core/types';
+import { maxLevel, STAT_KEYS, HERO_RARITY_ORDER, ELEMENTS, FACTIONS, ROLES } from '@/core';
+import type { Element, Faction, HeroRarity, Role } from '@/core/types';
 import {
   AWAKEN_COST,
+  capOf,
   awaken,
   heroPower,
   heroStats,
@@ -36,7 +37,7 @@ export default function HeroesScreen() {
   const go = useGame((s) => s.go);
   const [faction, setFaction] = useState<Faction | 'all'>('all');
   const [element, setElement] = useState<Element | 'all'>('all');
-  const [rarity, setRarity] = useState<Rarity | 'all'>('all');
+  const [rarity, setRarity] = useState<HeroRarity | 'all'>('all');
   const [role, setRole] = useState<Role | 'all'>('all');
   const [sort, setSort] = useState<Sort>('power');
   const [collection, setCollection] = useState(false);
@@ -58,7 +59,7 @@ export default function HeroesScreen() {
         ? heroPower(h)
         : sort === 'level'
           ? h.level * 10 + h.stars
-          : RARITY_ORDER.indexOf(heroDef(h.heroId).rarity) * 1000 + h.stars * 100 + h.level;
+          : HERO_RARITY_ORDER.indexOf(heroDef(h.heroId).rarity) * 1000 + h.stars * 100 + h.level;
     owned.sort((a, b) => key(b) - key(a));
     const missing = collection
       ? HEROES.filter((d) => pass(d.id) && !save.heroes.some((h) => h.heroId === d.id))
@@ -110,7 +111,7 @@ export default function HeroesScreen() {
           ))}
         </div>
         <div className="chips">
-          {(['all', ...RARITY_ORDER] as const).map((r) => (
+          {(['all', ...HERO_RARITY_ORDER] as const).map((r) => (
             <button key={r} type="button" aria-pressed={rarity === r} onClick={() => setRarity(r)}>
               {r !== 'all' && <i style={{ ['--c' as string]: RARITY_COLOR[r] }} />}
               {r === 'all' ? t('heroes.all') : t(`labels.rarity.${r}`)}
@@ -167,7 +168,7 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
   const [comparing, setComparing] = useState(false);
   const d = heroDef(hero.heroId);
   const stats = heroStats(hero, save);
-  const cap = maxLevel(hero.stars);
+  const cap = capOf(hero);
   const inTeam = save.team.includes(hero.uid);
   const p = platform();
 
@@ -347,6 +348,7 @@ function StarSheet(props: {
   const { hero } = props;
   const cost = starUpCost(hero.stars);
   const [picked, setPicked] = useState<string[]>([]);
+  // Для повышения звёзд нужен потолок по звёздам (у мифических он ниже их потолка уровня).
   const cap = maxLevel(hero.stars);
   const fodder = save.heroes.filter((f) => isValidFodder(hero, f) && !save.team.includes(f.uid));
   const ready = hero.level >= cap;

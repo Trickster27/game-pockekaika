@@ -83,6 +83,19 @@ export const MIGRATIONS: Record<number, Migration> = {
     const played = (st.battlesWon ?? 0) + (st.battlesLost ?? 0) > 0;
     return { ...s, version: 10, tutorial: { step: 0, done: played } };
   },
+  // v11: новые свитки призыва (по одному древнему в подарок) и гарантии по каждому свитку.
+  11: (s) => ({
+    ...s,
+    version: 11,
+    materials: {
+      ...(s.materials as Record<string, number>),
+      ancientScroll: 1,
+      factionScroll: 0,
+      voidScroll: 0,
+      goldScroll: 0,
+    },
+    summon: { ...(s.summon as object), pity: {}, epicPity: {} },
+  }),
 };
 
 export class SaveVersionError extends Error {}

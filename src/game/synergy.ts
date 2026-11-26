@@ -3,7 +3,7 @@ import { activeFactionBonus, factionCounts } from '@/core/factions';
 import { ELEMENTS, FACTIONS, ROLES, type Element, type Faction, type Role } from '@/core/types';
 import type { HeroDef } from '@/core/content';
 import { HEROES, heroDef, skillDef, ENEMIES } from '@/content';
-import { SUMMON_RATES } from './summon';
+import { heroSources } from './summon';
 
 /** Метки умений героя — по ним видно, что он даёт команде. */
 export type Tag =
@@ -102,10 +102,9 @@ export function elementMatchups(e: Element): { strong: Element[]; weak: Element[
   };
 }
 
-/** Шанс получить именно этого героя за один призыв (без учёта гарантий). */
+/** Лучший шанс получить именно этого героя за один призыв (по всем свиткам, без учёта гарантий). */
 export function summonChance(h: HeroDef): number {
-  const same = HEROES.filter((x) => x.rarity === h.rarity).length;
-  return SUMMON_RATES[h.rarity] / Math.max(1, same);
+  return Math.max(0, ...heroSources(h).map((x) => x.chance));
 }
 
 /** С кем герой хорошо сочетается: своя фракция (бонус) и герои, закрывающие то, чего ему не хватает. */

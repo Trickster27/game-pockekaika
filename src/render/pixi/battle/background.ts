@@ -1,7 +1,7 @@
 import { Texture } from 'pixi.js';
 import { Rng } from '@/core/rng';
 
-export type SceneKey = 'mist' | 'cathedral' | 'forge';
+export type SceneKey = 'mist' | 'cathedral' | 'forge' | 'dusk';
 export const FIELD = { width: 360, height: 520 } as const;
 const LEAD = '#0a0710';
 
@@ -29,6 +29,13 @@ const PALETTES: Record<
     near: ['#2a1a16', '#3a2018', '#24140f', '#33201a'],
     light: [180, 520, 300, '#ff6a2a'],
     seed: 42,
+  },
+  dusk: {
+    sky: ['#1a1036', '#24124a', '#2e1658', '#180c30'],
+    mid: ['#2a1a4a', '#34205a', '#22143e'],
+    near: ['#1e1630', '#261c3c', '#1a1228', '#2c2044'],
+    light: [250, 70, 200, '#ffd9a0'],
+    seed: 77,
   },
 };
 
@@ -202,6 +209,64 @@ export function sceneTexture(key: SceneKey, resolution = 2): Texture {
       x.fill();
     }
     x.globalCompositeOperation = 'source-over';
+  } else if (key === 'dusk') {
+    // Затмение: тёмный диск с огненной короной.
+    x.globalCompositeOperation = 'lighter';
+    const cg = x.createRadialGradient(250, 70, 20, 250, 70, 90);
+    cg.addColorStop(0, 'rgba(255,220,160,.9)');
+    cg.addColorStop(0.35, 'rgba(255,140,90,.35)');
+    cg.addColorStop(1, 'rgba(160,80,255,0)');
+    x.fillStyle = cg;
+    x.fillRect(150, 0, 210, 180);
+    x.globalCompositeOperation = 'source-over';
+    x.fillStyle = '#0c0718';
+    x.beginPath();
+    x.arc(250, 70, 26, 0, Math.PI * 2);
+    x.fill();
+    x.strokeStyle = 'rgba(255,230,180,.9)';
+    x.lineWidth = 2;
+    x.stroke();
+    x.strokeStyle = LEAD;
+    // Парящие осколки.
+    const rr = new Rng(99);
+    for (let i = 0; i < 9; i++) {
+      const cx = rr.int(10, 350),
+        cy = rr.int(110, 300),
+        s = rr.int(6, 16);
+      x.fillStyle = i % 3 === 0 ? '#b48cff' : i % 3 === 1 ? '#6a4ac6' : '#ffd9a0';
+      poly(x, [
+        [cx, cy - s],
+        [cx + s * 0.55, cy],
+        [cx, cy + s * 1.2],
+        [cx - s * 0.55, cy],
+      ]);
+      x.fill();
+      x.lineWidth = 1.5;
+      x.stroke();
+    }
+    x.lineWidth = 2;
+    // Арка-разлом на горизонте.
+    x.fillStyle = '#140c26';
+    poly(x, [
+      [20, 170],
+      [40, 110],
+      [70, 96],
+      [92, 120],
+      [100, 170],
+    ]);
+    x.fill();
+    x.stroke();
+    x.globalCompositeOperation = 'lighter';
+    x.fillStyle = 'rgba(180,140,255,.35)';
+    poly(x, [
+      [52, 168],
+      [58, 124],
+      [70, 116],
+      [78, 132],
+      [80, 168],
+    ]);
+    x.fill();
+    x.globalCompositeOperation = 'source-over';
   } else {
     x.fillStyle = '#1a090b';
     poly(x, [
@@ -265,4 +330,5 @@ export const SCENE_TINT: Record<SceneKey, string> = {
   mist: '#a37cff',
   cathedral: '#4fd6e0',
   forge: '#ff7a2a',
+  dusk: '#c79cff',
 };

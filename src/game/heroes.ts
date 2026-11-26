@@ -1,6 +1,6 @@
-import { MAX_STARS, maxLevel } from '@/core/stats';
+import { MAX_STARS, heroLevelCap, maxLevel } from '@/core/stats';
 import { heroDef } from '@/content';
-import type { Rarity } from '@/core/types';
+import type { HeroRarity } from '@/core/types';
 import { MAX_TEAM, type OwnedHero, type SaveData } from '@/save/schema';
 import { addHeroXp, heroXpToNext } from './progression';
 
@@ -8,12 +8,24 @@ export const XP_TOME_VALUE = 1500;
 export const AWAKEN_COST = { stones: 40, gold: 60_000 };
 
 /** Цена повышения звёзд: золото + либо герои-копии, либо звёздная пыль. */
+/** Потолок уровня героя с учётом редкости (мифические — сразу 60). */
+export function capOf(h: OwnedHero): number {
+  return heroLevelCap(heroDef(h.heroId).rarity, h.stars);
+}
+
 export function starUpCost(stars: number) {
   return { gold: 600 * stars * stars, fodder: stars, dust: 15 * stars };
 }
 
 /** С какими звёздами герой приходит из призыва. */
-export const RARITY_START_STARS: Record<Rarity, number> = { common: 1, rare: 2, epic: 3, legendary: 4 };
+/** Мифические приходят с 1★, но качаются сразу до 60 уровня (см. heroLevelCap). */
+export const RARITY_START_STARS: Record<HeroRarity, number> = {
+  common: 1,
+  rare: 2,
+  epic: 3,
+  legendary: 4,
+  mythic: 1,
+};
 
 export function addHero(save: SaveData, heroId: string, now = Date.now()): OwnedHero {
   const d = heroDef(heroId);
@@ -60,10 +72,10 @@ export type ActionError =
 export function spendXpTomes(save: SaveData, uid: string, count: number): { used: number } | ActionError {
   const h = findHero(save, uid);
   if (!h) return 'notFound';
-  if (h.level >= maxLevel(h.stars)) return 'maxLevel';
+  if (h.level >= capOf(h)) return 'maxLevel';
   if (save.materials.xpTome <= 0) return 'noTomes';
   let used = 0;
-  while (used < count && save.materials.xpTome > 0 && h.level < maxLevel(h.stars)) {
+  while (used < count && save.materials.xpTome > 0 && h.level < capOf(h)) {
     addHeroXp(h, XP_TOME_VALUE);
     save.materials.xpTome -= 1;
     used++;
@@ -121,6 +133,6 @@ export function setTeam(save: SaveData, uids: string[]) {
 }
 
 export function xpProgress(h: OwnedHero): number {
-  if (h.level >= maxLevel(h.stars)) return 1;
+  if (h.level >= capOf(h)) return 1;
   return Math.min(1, h.xp / heroXpToNext(h.level));
 }

@@ -4,6 +4,7 @@ export const RARITY_COLOR = {
   rare: '#5fa8ff',
   epic: '#b07cff',
   legendary: '#f0c860',
+  mythic: '#ff5d7a',
 } as const;
 export const FACTION_COLOR = {
   order: '#d9a94a',

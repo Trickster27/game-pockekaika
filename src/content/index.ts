@@ -6,6 +6,7 @@ import { CLAN_BOSSES, CLAN_BOSS_SKILLS } from './clanBoss';
 
 export { HEROES, STARTER_HEROES, ENEMIES, SKILLS };
 export * from './campaign';
+export * from './scrolls';
 export * from './clanBoss';
 
 const heroMap = new Map(HEROES.map((h) => [h.id, h]));

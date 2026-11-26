@@ -12,7 +12,7 @@ import { RewardIcon } from '../components/RewardIcon';
 import './screens.css';
 import './campaign.css';
 
-const CHAPTER_COLOR = ['#a37cff', '#4fd6e0', '#ff7a2a'];
+const CHAPTER_COLOR = ['#a37cff', '#4fd6e0', '#ff7a2a', '#c79cff'];
 
 const Star = ({ on }: { on: boolean }) => (
   <svg viewBox="0 0 24 24" aria-hidden="true">

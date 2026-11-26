@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { heroDef } from '@/content';
-import { RARITY_ORDER, type Rarity } from '@/core/types';
+import { HERO_RARITY_ORDER, type HeroRarity } from '@/core/types';
 import { useT } from '@/i18n';
 import { platform } from '@/state/services';
 import type { OwnedHero } from '@/save/schema';
@@ -16,8 +16,14 @@ import './summonfx.css';
  * 3) эпический и легендарный герой получают отдельный показ крупным планом.
  * «Пропустить» доступно всегда; при «уменьшении движения» анимации короче и без тряски.
  */
-const RANK = (r: Rarity) => RARITY_ORDER.indexOf(r);
-const PORTAL_MS: Record<Rarity, number> = { common: 1100, rare: 1200, epic: 1500, legendary: 2100 };
+const RANK = (r: HeroRarity) => HERO_RARITY_ORDER.indexOf(r);
+const PORTAL_MS: Record<HeroRarity, number> = {
+  common: 1100,
+  rare: 1200,
+  epic: 1500,
+  legendary: 2100,
+  mythic: 2600,
+};
 const reduced = () =>
   typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -33,7 +39,7 @@ export function SummonReveal(props: {
     () =>
       props.heroes
         .map((h) => heroDef(h.heroId).rarity)
-        .reduce((a, r) => (RANK(r) > RANK(a) ? r : a), 'common' as Rarity),
+        .reduce((a, r) => (RANK(r) > RANK(a) ? r : a), 'common' as HeroRarity),
     [props.heroes],
   );
   // «Новый!» — только на первой копии героя, которого раньше не было.

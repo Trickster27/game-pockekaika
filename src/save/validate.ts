@@ -21,6 +21,15 @@ export class SaveFormatError extends Error {}
 
 const RARITIES = ['common', 'rare', 'epic', 'legendary'] as const;
 
+function counters(v: unknown): Record<string, number> {
+  if (!isObj(v)) return {};
+  return Object.fromEntries(
+    Object.entries(v)
+      .filter(([, x]) => typeof x === 'number' && Number.isFinite(x))
+      .map(([k, x]) => [k, Math.max(0, Math.floor(x as number))]),
+  );
+}
+
 function normalizeItems(v: unknown, heroUids: Set<string>): Item[] {
   if (!Array.isArray(v)) return [];
   const out: Item[] = [];
@@ -158,6 +167,8 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
       sinceLegendary: Math.floor(num(sm.sinceLegendary, 0, 0)),
       sinceEpic: Math.floor(num(sm.sinceEpic, 0, 0)),
       total: Math.floor(num(sm.total, 0, 0)),
+      pity: counters(sm.pity),
+      epicPity: counters(sm.epicPity),
     },
     shop: { bought },
     items: normalizeItems(raw.items, heroUids),

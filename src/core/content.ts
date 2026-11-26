@@ -1,4 +1,4 @@
-import type { Element, Faction, Rarity, Role, Stats } from './types';
+import type { Element, Faction, HeroRarity, Role, Stats } from './types';
 
 /** Статусы. Баффы вешаются на союзников, дебаффы — на врагов (с проверкой меткости). */
 export type StatusId =
@@ -59,12 +59,14 @@ export interface HeroDef {
   title: string;
   faction: Faction;
   element: Element;
-  rarity: Rarity;
+  rarity: HeroRarity;
   role: Role;
   art: string;
   skills: string[];
   mod?: Partial<Stats>;
   lore?: string;
+  /** Особый пул призыва: такие герои выпадают только из своего свитка. */
+  pool?: 'void' | 'gold';
 }
 
 export interface EnemyDef {

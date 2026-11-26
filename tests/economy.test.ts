@@ -106,15 +106,15 @@ describe('призыв', () => {
   it('шансы примерно соответствуют заявленным', () => {
     const s = rich();
     s.summon.rng = 777;
-    const counts = { common: 0, rare: 0, epic: 0, legendary: 0 };
+    const counts: Record<string, number> = { common: 0, rare: 0, epic: 0, legendary: 0 };
     for (let i = 0; i < 400; i++) {
       const r = summon(s, 10, 'shards', NOW) as Exclude<ReturnType<typeof summon>, string>;
-      for (const x of r.rarities) counts[x]++;
+      for (const x of r.rarities) counts[x] = (counts[x] ?? 0) + 1;
     }
     const total = 4000;
-    expect(counts.common / total).toBeGreaterThan(0.38);
-    expect(counts.legendary / total).toBeGreaterThan(0.03);
-    expect(counts.legendary / total).toBeLessThan(0.08);
+    expect(counts.common! / total).toBeGreaterThan(0.38);
+    expect(counts.legendary! / total).toBeGreaterThan(0.03);
+    expect(counts.legendary! / total).toBeLessThan(0.08);
   });
 
   it('один и тот же сейв даёт одинаковый результат (перезагрузка не помогает)', () => {

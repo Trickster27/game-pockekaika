@@ -3,6 +3,8 @@
 export type Element = 'fire' | 'thorn' | 'stone' | 'tide' | 'light' | 'dark';
 export type Faction = 'order' | 'grove' | 'ash' | 'abyss' | 'forge';
 export type Rarity = 'common' | 'rare' | 'epic' | 'legendary';
+/** Редкость героя: сверх обычных — мифическая (только из золотого свитка). */
+export type HeroRarity = Rarity | 'mythic';
 export type Role = 'attacker' | 'defender' | 'support' | 'healer';
 
 export interface Stats {
@@ -32,6 +34,7 @@ export const STAT_KEYS: readonly (keyof Stats)[] = [
 ];
 
 export const RARITY_ORDER: readonly Rarity[] = ['common', 'rare', 'epic', 'legendary'];
+export const HERO_RARITY_ORDER: readonly HeroRarity[] = ['common', 'rare', 'epic', 'legendary', 'mythic'];
 export const ELEMENTS: readonly Element[] = ['fire', 'thorn', 'stone', 'tide', 'light', 'dark'];
 export const FACTIONS: readonly Faction[] = ['order', 'grove', 'ash', 'abyss', 'forge'];
 export const ROLES: readonly Role[] = ['attacker', 'defender', 'support', 'healer'];

@@ -22,6 +22,11 @@ function OfferIcon({ icon }: { icon: ShopOffer['icon'] }) {
       return <MaterialIcon id="starDust" />;
     case 'stone':
       return <MaterialIcon id="awakenStone" />;
+    case 'ancientScroll':
+    case 'factionScroll':
+    case 'voidScroll':
+    case 'goldScroll':
+      return <MaterialIcon id={icon} />;
     default:
       return <IconShard />;
   }

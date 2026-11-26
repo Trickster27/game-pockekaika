@@ -1,4 +1,5 @@
-import { maxLevel } from '@/core/stats';
+import { heroLevelCap } from '@/core/stats';
+import { heroDef } from '@/content';
 import type { OwnedHero, SaveData } from '@/save/schema';
 
 /** Опыт до следующего уровня героя. */
@@ -20,7 +21,7 @@ export interface LevelUp {
 /** Даёт герою опыт. Уровень упирается в потолок по звёздам, лишний опыт копится до повышения звёзд. */
 export function addHeroXp(h: OwnedHero, amount: number): LevelUp | null {
   const from = h.level;
-  const cap = maxLevel(h.stars);
+  const cap = heroLevelCap(heroDef(h.heroId).rarity, h.stars);
   h.xp += Math.max(0, Math.floor(amount));
   while (h.level < cap && h.xp >= heroXpToNext(h.level)) {
     h.xp -= heroXpToNext(h.level);

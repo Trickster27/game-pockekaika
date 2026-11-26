@@ -41,6 +41,27 @@ export function MaterialIcon({ id }: { id: MaterialId }) {
           <path d="M9 13 L12 11 L14 15 M15 8 L17 12" fill="none" stroke="#7fe7ff" strokeWidth="1.8" />
         </svg>
       );
+    case 'ancientScroll':
+    case 'factionScroll':
+    case 'voidScroll':
+    case 'goldScroll': {
+      const c = {
+        ancientScroll: ['#cfe0ff', '#5fa8ff'],
+        factionScroll: ['#e2f2d8', '#5fb070'],
+        voidScroll: ['#2a1c3e', '#c79cff'],
+        goldScroll: ['#ffe9a8', '#d9a94a'],
+      }[id];
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 4 L17 4 Q20 4 20 7 L20 20 L8 20 Q5 20 5 17 Z" fill={c[0]} {...s} />
+          <path d="M14 9.5 L17 13 L14 16.5 L11 13 Z" fill={c[1]} {...s} strokeWidth={1.2} />
+          <path d="M8 8 L12 8" stroke={id === 'voidScroll' ? '#c79cff' : '#8a7a5e'} strokeWidth="1.4" />
+          {id === 'goldScroll' && (
+            <circle cx="14" cy="13" r="6" fill="none" stroke="#fff4c8" strokeWidth="0.8" />
+          )}
+        </svg>
+      );
+    }
     case 'scroll':
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true">

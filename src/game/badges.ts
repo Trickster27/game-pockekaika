@@ -1,4 +1,5 @@
-import { maxLevel, MAX_STARS } from '@/core/stats';
+import { heroLevelCap, maxLevel, MAX_STARS } from '@/core/stats';
+import { heroDef } from '@/content';
 import { SLOTS } from '@/content/gear';
 import type { SaveData } from '@/save/schema';
 import { teamHeroes } from './battleSetup';
@@ -30,9 +31,9 @@ export function computeBadges(save: SaveData, now: number): Badges {
   const team = teamHeroes(save);
   const freeSlots = new Set(save.items.filter((i) => !i.heroUid).map((i) => i.slot));
   const heroes = team.some((h) => {
-    const cap = maxLevel(h.stars);
+    const cap = heroLevelCap(heroDef(h.heroId).rarity, h.stars);
     if (h.level < cap && save.materials.xpTome > 0) return true;
-    if (h.level >= cap && h.stars < MAX_STARS) {
+    if (h.level >= maxLevel(h.stars) && h.stars < MAX_STARS) {
       const c = starUpCost(h.stars);
       if (save.currencies.gold >= c.gold && save.materials.starDust >= c.dust) return true;
     }

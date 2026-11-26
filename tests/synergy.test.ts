@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { HEROES } from '@/content';
 import { RARITY_ORDER } from '@/core';
-import { analyzeTeam, elementMatchups, goodPartners, heroTags, summonChance, SUMMON_RATES } from '@/game';
+import { analyzeTeam, elementMatchups, goodPartners, heroTags, SUMMON_RATES, heroChance } from '@/game';
 
 describe('synergy', () => {
   it('у каждого героя есть хотя бы одна метка', () => {
@@ -14,7 +14,10 @@ describe('synergy', () => {
 
   it('шансы призыва по редкости в сумме дают шанс редкости', () => {
     for (const r of RARITY_ORDER) {
-      const sum = HEROES.filter((h) => h.rarity === r).reduce((a, h) => a + summonChance(h), 0);
+      const sum = HEROES.filter((h) => h.rarity === r && !h.pool).reduce(
+        (a, h) => a + heroChance(h, 'basic'),
+        0,
+      );
       expect(sum).toBeCloseTo(SUMMON_RATES[r], 6);
     }
   });

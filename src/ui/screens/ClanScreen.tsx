@@ -1110,6 +1110,10 @@ const SHOP_MATERIAL: Record<string, MaterialId> = {
   dust: 'starDust',
   scroll: 'scroll',
   stone: 'awakenStone',
+  ancientScroll: 'ancientScroll',
+  factionScroll: 'factionScroll',
+  voidScroll: 'voidScroll',
+  goldScroll: 'goldScroll',
 };
 
 function Shop({ st }: { st: ClanState }) {

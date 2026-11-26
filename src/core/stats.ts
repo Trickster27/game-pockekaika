@@ -1,4 +1,4 @@
-import type { Rarity, Role, Stats } from './types';
+import type { HeroRarity, Role, Stats } from './types';
 
 /** Базовые характеристики роли на 1 уровне, 1 звезде, редкость «обычный». */
 export const ROLE_BASE: Record<Role, Stats> = {
@@ -8,15 +8,22 @@ export const ROLE_BASE: Record<Role, Stats> = {
   healer: { hp: 1300, atk: 92, def: 92, spd: 104, critRate: 0.1, critDmg: 0.5, acc: 15, res: 20 },
 };
 
-export const RARITY_MULT: Record<Rarity, { core: number; spd: number; accRes: number }> = {
+export const RARITY_MULT: Record<HeroRarity, { core: number; spd: number; accRes: number }> = {
   common: { core: 1, spd: 0, accRes: 0 },
   rare: { core: 1.12, spd: 3, accRes: 10 },
   epic: { core: 1.26, spd: 6, accRes: 20 },
   legendary: { core: 1.42, spd: 9, accRes: 30 },
+  // Мифические: сильнее легендарных при тех же звёздах и уровне.
+  mythic: { core: 1.75, spd: 12, accRes: 40 },
 };
 
+/** Потолок уровня героя: у мифических — сразу 60, звёзды дают только прибавку к характеристикам. */
+export function heroLevelCap(rarity: HeroRarity, stars: number): number {
+  return rarity === 'mythic' ? MAX_LEVEL_BY_STARS[6] : maxLevel(stars);
+}
+
 /** Базовые характеристики героя с учётом роли, редкости и личного модификатора. */
-export function baseStats(role: Role, rarity: Rarity, mod: Partial<Stats> = {}): Stats {
+export function baseStats(role: Role, rarity: HeroRarity, mod: Partial<Stats> = {}): Stats {
   const b = ROLE_BASE[role];
   const r = RARITY_MULT[rarity];
   const pct = (k: 'hp' | 'atk' | 'def') => Math.round(b[k] * r.core * (1 + (mod[k] ?? 0)));
