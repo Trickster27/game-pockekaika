@@ -1,3 +1,5 @@
+import type { ExpNeed, ExpeditionMission, ExpeditionState } from '@/game/expeditions';
+import type { ShopReward } from '@/game/shop';
 import {
   createNewSave,
   DEFAULT_SETTINGS,
@@ -28,6 +30,46 @@ function counters(v: unknown): Record<string, number> {
       .filter(([, x]) => typeof x === 'number' && Number.isFinite(x))
       .map(([k, x]) => [k, Math.max(0, Math.floor(x as number))]),
   );
+}
+
+function normalizeExpeditions(v: unknown, heroUids: Set<string>): ExpeditionState {
+  const e = isObj(v) ? v : {};
+  const strs = (x: unknown) => (Array.isArray(x) ? x.filter((y): y is string => typeof y === 'string') : []);
+  const board = (Array.isArray(e.board) ? e.board : [])
+    .filter((m): m is Record<string, unknown> => isObj(m) && typeof m.id === 'string')
+    .slice(0, 24)
+    .map((m) => {
+      const party = strs(m.party).filter((u) => heroUids.has(u));
+      const out: ExpeditionMission = {
+        id: m.id as string,
+        tier: Math.round(num(m.tier, 1, 1, 5)),
+        hours: num(m.hours, 1, 0, 48),
+        size: Math.round(num(m.size, 1, 1, 5)),
+        minStars: Math.round(num(m.minStars, 1, 1, 7)),
+        needs: (Array.isArray(m.needs) ? m.needs : []).filter(isNeed),
+        reward: isObj(m.reward) ? (m.reward as ShopReward) : {},
+      };
+      if (isNeed(m.bonus)) out.bonus = m.bonus;
+      if (m.done === true) out.done = true;
+      else if (party.length && typeof m.startAt === 'number' && typeof m.endAt === 'number') {
+        out.party = party;
+        out.startAt = m.startAt;
+        out.endAt = m.endAt;
+        if (m.bonusMet === true) out.bonusMet = true;
+      }
+      return out;
+    });
+  return {
+    day: typeof e.day === 'string' ? e.day : '',
+    freeUsed: e.freeUsed === true,
+    paid: Math.floor(num(e.paid, 0, 0, 100)),
+    seq: Math.floor(num(e.seq, 0, 0)),
+    board,
+  };
+}
+
+function isNeed(x: unknown): x is ExpNeed {
+  return isObj(x) && ['faction', 'element', 'role'].includes(x.kind as string) && typeof x.value === 'string';
 }
 
 function normalizeItems(v: unknown, heroUids: Set<string>): Item[] {
@@ -268,6 +310,19 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
     achievements: Array.isArray(raw.achievements)
       ? raw.achievements.filter((x): x is string => typeof x === 'string')
       : [],
+    expeditions: normalizeExpeditions(raw.expeditions, heroUids),
+    raid: (() => {
+      const r = isObj(raw.raid) ? raw.raid : {};
+      return {
+        week: typeof r.week === 'string' ? r.week : '',
+        damage: Math.floor(num(r.damage, 0, 0)),
+        best: Math.floor(num(r.best, 0, 0)),
+        claimed: Array.isArray(r.claimed) ? r.claimed.filter((x): x is number => typeof x === 'number') : [],
+        day: typeof r.day === 'string' ? r.day : '',
+        used: Math.floor(num(r.used, 0, 0, 10)),
+        extra: Math.floor(num(r.extra, 0, 0, 10)),
+      };
+    })(),
     camp: { level: Math.round(num(isObj(raw.camp) ? raw.camp.level : 1, 1, 1, 10)) },
     tutorial: (() => {
       const tu = isObj(raw.tutorial) ? raw.tutorial : {};
@@ -287,6 +342,8 @@ export function normalizeSave(raw: RawSave, now: number = Date.now()): SaveData 
     stats: {
       battlesWon: Math.floor(num(st.battlesWon, 0, 0)),
       battlesLost: Math.floor(num(st.battlesLost, 0, 0)),
+      ...(typeof st.expeditions === 'number' ? { expeditions: Math.floor(num(st.expeditions, 0, 0)) } : {}),
+      ...(typeof st.raidBest === 'number' ? { raidBest: Math.floor(num(st.raidBest, 0, 0)) } : {}),
     },
     settings: {
       sound: bool(s.sound, DEFAULT_SETTINGS.sound),

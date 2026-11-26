@@ -1,6 +1,6 @@
 import { Rng } from '@/core/rng';
 import type { Rarity } from '@/core/types';
-import { SETS, SLOTS, type SetId, type Slot } from '@/content/gear';
+import { SETS, SKY_SETS, SLOTS, type SetId, type Slot } from '@/content/gear';
 import type { Item, SaveData } from '@/save/schema';
 import { generateItem, INVENTORY_LIMIT } from './gear';
 
@@ -56,7 +56,11 @@ export function rollGearDrop(save: SaveData, weights: RarityWeights, chance: num
     const rarity = rng.weighted(
       (Object.entries(weights) as [Rarity, number][]).map(([r, w]) => ({ item: r, weight: w })),
     );
-    item = generateItem(save, rng, { slot: rng.pick(SLOTS), set: rng.pick(SETS).id, rarity });
+    item = generateItem(save, rng, {
+      slot: rng.pick(SLOTS),
+      set: rng.pick(SETS.filter((x) => !SKY_SETS.includes(x.id))).id,
+      rarity,
+    });
     save.items.push(item);
   }
   save.gearRng = rng.state;

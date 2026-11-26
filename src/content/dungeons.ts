@@ -3,13 +3,13 @@ import type { MaterialId } from '@/save/schema';
 import type { SetId } from './gear';
 import type { StageEnemy } from './campaign';
 
-export type DungeonId = 'crypt' | 'starcave' | 'forgevault';
+export type DungeonId = 'crypt' | 'starcave' | 'forgevault' | 'skyspire';
 
 export interface DungeonDef {
   id: DungeonId;
   name: string;
   desc: string;
-  scene: 'mist' | 'cathedral' | 'forge';
+  scene: 'mist' | 'cathedral' | 'forge' | 'sky';
   minions: [string, string];
   boss: string;
   /** Что падает: снаряжение каких сетов или какие материалы. */
@@ -46,6 +46,15 @@ export const DUNGEONS: DungeonDef[] = [
     minions: ['imp', 'golem'],
     boss: 'emberlord',
     materials: { awakenStone: [1, 3], scroll: [0, 1] },
+  },
+  {
+    id: 'skyspire',
+    name: 'Небесный шпиль',
+    desc: 'Сокровищница Короля Бурь над облаками. Только здесь — сеты Жестокость, Титан и Буря.',
+    scene: 'sky',
+    minions: ['storm_harpy', 'sky_sentinel'],
+    boss: 'storm_king',
+    gearSets: ['cruelty', 'titan', 'tempest'],
   },
 ];
 

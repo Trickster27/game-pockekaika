@@ -1,7 +1,7 @@
 import { Texture } from 'pixi.js';
 import { Rng } from '@/core/rng';
 
-export type SceneKey = 'mist' | 'cathedral' | 'forge' | 'dusk';
+export type SceneKey = 'mist' | 'cathedral' | 'forge' | 'dusk' | 'sky';
 export const FIELD = { width: 360, height: 520 } as const;
 const LEAD = '#0a0710';
 
@@ -36,6 +36,13 @@ const PALETTES: Record<
     near: ['#1e1630', '#261c3c', '#1a1228', '#2c2044'],
     light: [250, 70, 200, '#ffd9a0'],
     seed: 77,
+  },
+  sky: {
+    sky: ['#2a5a9a', '#3a6aaa', '#4a7cba', '#2f5f9f'],
+    mid: ['#5a86c0', '#6a94c8', '#4f7ab4'],
+    near: ['#8aa4c8', '#9ab2d2', '#7e98bc', '#a6bcd8'],
+    light: [90, 60, 220, '#fff4c8'],
+    seed: 88,
   },
 };
 
@@ -209,6 +216,66 @@ export function sceneTexture(key: SceneKey, resolution = 2): Texture {
       x.fill();
     }
     x.globalCompositeOperation = 'source-over';
+  } else if (key === 'sky') {
+    // Солнце, облака и парящие острова.
+    x.globalCompositeOperation = 'lighter';
+    const sg = x.createRadialGradient(90, 60, 6, 90, 60, 80);
+    sg.addColorStop(0, 'rgba(255,250,220,.95)');
+    sg.addColorStop(0.4, 'rgba(255,230,160,.35)');
+    sg.addColorStop(1, 'rgba(255,230,160,0)');
+    x.fillStyle = sg;
+    x.fillRect(0, 0, 220, 160);
+    x.globalCompositeOperation = 'source-over';
+    x.fillStyle = '#fff6d8';
+    x.beginPath();
+    x.arc(90, 60, 18, 0, Math.PI * 2);
+    x.fill();
+    x.stroke();
+    const cloud = (cx: number, cy: number, s: number) => {
+      x.fillStyle = 'rgba(240,246,255,.92)';
+      x.beginPath();
+      x.arc(cx, cy, 14 * s, Math.PI, 0);
+      x.arc(cx + 18 * s, cy - 6 * s, 16 * s, Math.PI, 0);
+      x.arc(cx + 38 * s, cy, 13 * s, Math.PI, 0);
+      x.closePath();
+      x.fill();
+      x.lineWidth = 1.5;
+      x.stroke();
+    };
+    cloud(170, 110, 1.1);
+    cloud(20, 150, 0.8);
+    cloud(280, 70, 0.9);
+    // Парящий остров с башенкой.
+    x.lineWidth = 2;
+    x.fillStyle = '#7a8a6a';
+    poly(x, [
+      [230, 150],
+      [330, 150],
+      [310, 172],
+      [282, 196],
+      [258, 172],
+    ]);
+    x.fill();
+    x.stroke();
+    x.fillStyle = '#5a7a4a';
+    poly(x, [
+      [230, 150],
+      [330, 150],
+      [324, 144],
+      [236, 144],
+    ]);
+    x.fill();
+    x.stroke();
+    x.fillStyle = '#d8dce6';
+    poly(x, [
+      [268, 144],
+      [268, 112],
+      [276, 100],
+      [284, 112],
+      [284, 144],
+    ]);
+    x.fill();
+    x.stroke();
   } else if (key === 'dusk') {
     // Затмение: тёмный диск с огненной короной.
     x.globalCompositeOperation = 'lighter';
@@ -331,4 +398,5 @@ export const SCENE_TINT: Record<SceneKey, string> = {
   cathedral: '#4fd6e0',
   forge: '#ff7a2a',
   dusk: '#c79cff',
+  sky: '#bfe0ff',
 };

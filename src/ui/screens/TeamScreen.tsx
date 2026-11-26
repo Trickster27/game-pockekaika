@@ -1,7 +1,7 @@
 import { heroDef } from '@/content';
 import { activeFactionBonus, factionCounts } from '@/core';
 import type { Faction } from '@/core/types';
-import { heroPower, isTraining, setTeam, teamPower } from '@/game';
+import { busyKind, heroPower, setTeam, teamPower } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
@@ -30,7 +30,8 @@ export default function TeamScreen() {
           s.team.filter((u) => u !== uid),
         ),
       );
-    else if (isTraining(save, uid)) showToast(t('training.inTraining'));
+    else if (busyKind(save, uid))
+      showToast(t(busyKind(save, uid) === 'training' ? 'training.inTraining' : 'exp.inExpedition'));
     else if (save.team.length >= 5) showToast(t('heroes.teamFull'));
     else updateSave((s) => setTeam(s, [...s.team, uid]));
   };

@@ -110,6 +110,13 @@ export const MIGRATIONS: Record<number, Migration> = {
     pass: { season: -1, xp: 0, premium: false, free: [], prem: [] },
     achievements: [],
   }),
+  // v16: экспедиции и еженедельный рейд.
+  16: (s) => ({
+    ...s,
+    version: 16,
+    expeditions: { day: '', freeUsed: false, paid: 0, seq: 0, board: [] },
+    raid: { week: '', damage: 0, best: 0, claimed: [], day: '', used: 0, extra: 0 },
+  }),
 };
 
 export class SaveVersionError extends Error {}

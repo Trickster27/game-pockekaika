@@ -281,8 +281,8 @@ describe('контент', () => {
     for (const r of ['attacker', 'defender', 'support', 'healer'])
       expect(HEROES.some((h) => h.role === r)).toBe(true);
   });
-  it('4 главы по 10 этапов, босс в конце каждой', () => {
-    expect(CHAPTERS.length).toBe(4);
+  it('5 глав по 10 этапов, босс в конце каждой', () => {
+    expect(CHAPTERS.length).toBe(5);
     for (const c of CHAPTERS) {
       expect(c.stages.length).toBe(10);
       expect(c.stages[9]!.boss).toBe(true);

@@ -39,7 +39,7 @@ import {
   type ArenaOpponent,
 } from '@/game';
 
-const SCENES = ['mist', 'cathedral', 'forge', 'dusk'] as const;
+const SCENES = ['mist', 'cathedral', 'forge', 'dusk', 'sky'] as const;
 
 export function newSeed(): number {
   return (Date.now() ^ Math.floor(Math.random() * 0x7fffffff)) >>> 0;

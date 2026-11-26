@@ -11,6 +11,9 @@ import { battlesLeft, canClaimLeague } from './arena';
 import { pendingIdle, IDLE_CAP_MS } from './idle';
 import { canUpgradeCamp } from './camp';
 import { liveopsReady } from './liveops';
+import { activeParties, expeditionParties, expeditionsReady } from './expeditions';
+import { raidAttemptsLeft, raidClaimable } from './raid';
+import { periodKey } from './shop';
 
 /**
  * Красные точки: где игрока ждёт действие. Правило жанра — точка только там,
@@ -33,6 +36,10 @@ export interface Badges {
   training: boolean;
   /** Награды событий, пропуска и достижений. */
   liveops: boolean;
+  /** Экспедиция вернулась или есть свободный отряд и поручения. */
+  expeditions: boolean;
+  /** Есть попытки рейда или награда недели. */
+  raid: boolean;
 }
 
 export function computeBadges(save: SaveData, now: number): Badges {
@@ -58,5 +65,11 @@ export function computeBadges(save: SaveData, now: number): Badges {
     campUp: canUpgradeCamp(save) === true,
     training: save.training.slots.some((s) => now >= s.endAt),
     liveops: liveopsReady(save, now) > 0,
+    expeditions:
+      expeditionsReady(save, now) > 0 ||
+      (activeParties(save) < expeditionParties(save) &&
+        (save.expeditions.day !== periodKey('day', now) ||
+          save.expeditions.board.some((m) => !m.party && !m.done))),
+    raid: raidAttemptsLeft(save, now) > 0 || raidClaimable(save, now) > 0,
   };
 }

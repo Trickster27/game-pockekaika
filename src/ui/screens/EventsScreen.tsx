@@ -18,42 +18,12 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
 import { formatDuration, useNow } from '../hooks';
-import { IconGold, IconShard, IconEnergy } from '../components/icons';
-import { MaterialIcon } from '../components/MaterialIcon';
-import type { MaterialId } from '@/save/schema';
+import { RewardChips as Reward } from '../components/RewardChips';
 import './screens.css';
 import './codex.css';
 import './events.css';
 
 type Tab = 'event' | 'pass' | 'achievements';
-
-/** Короткая запись награды иконками. */
-function Reward({ r }: { r: ShopReward }) {
-  return (
-    <span className="ev-rw">
-      {r.gold ? (
-        <i>
-          <IconGold /> {formatNumber(r.gold)}
-        </i>
-      ) : null}
-      {r.shards ? (
-        <i>
-          <IconShard /> {r.shards}
-        </i>
-      ) : null}
-      {r.energy ? (
-        <i>
-          <IconEnergy /> {r.energy}
-        </i>
-      ) : null}
-      {Object.entries(r.materials ?? {}).map(([m, n]) => (
-        <i key={m}>
-          <MaterialIcon id={m as MaterialId} /> {n}
-        </i>
-      ))}
-    </span>
-  );
-}
 
 export default function EventsScreen() {
   const t = useT();

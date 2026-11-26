@@ -1,3 +1,4 @@
+import { busyKind } from '@/game';
 import type { HeroDef } from '@/core/content';
 import type { OwnedHero } from '@/save/schema';
 import { unitArtUrl } from '@/assets/art';
@@ -28,8 +29,8 @@ export function HeroTile(props: {
 }) {
   const t = useT();
   const { def, owned } = props;
-  // Герой на тренировке: тусклый и с меткой, в бой не идёт.
-  const busy = useGame((s) => !!owned && !!s.save?.training.slots.some((x) => x.heroUid === owned.uid));
+  // Герой на тренировке или в экспедиции: тусклый и с меткой, в бой не идёт.
+  const busy = useGame((s) => (owned && s.save ? busyKind(s.save, owned.uid) : null));
   return (
     <button
       type="button"
@@ -48,7 +49,7 @@ export function HeroTile(props: {
       />
       {owned && <span className="htile__lvl">{owned.level}</span>}
       {props.inTeam && <span className="htile__team">✓</span>}
-      {busy && <span className="htile__busy">{t('training.badge')}</span>}
+      {busy && <span className="htile__busy">{t(busy === 'training' ? 'training.badge' : 'exp.badge')}</span>}
       <span className="htile__name">{def.name}</span>
       {owned ? (
         <Stars n={owned.stars} awakened={owned.awakened} />

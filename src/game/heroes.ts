@@ -3,6 +3,7 @@ import { heroDef } from '@/content';
 import type { HeroRarity } from '@/core/types';
 import { MAX_TEAM, type OwnedHero, type SaveData } from '@/save/schema';
 import { addHeroXp, heroXpToNext } from './progression';
+import { busyUids, isBusy } from './busy';
 
 export const XP_TOME_VALUE = 1500;
 export const AWAKEN_COST = { stones: 40, gold: 60_000 };
@@ -98,7 +99,7 @@ export function starUp(save: SaveData, uid: string, fodder: string[] = []): { st
   if (save.currencies.gold < cost.gold) return 'noGold';
   if (fodder.length) {
     if (fodder.length !== cost.fodder) return 'noFodder';
-    if (fodder.some((u) => save.training?.slots.some((t) => t.heroUid === u))) return 'badFodder';
+    if (fodder.some((u) => isBusy(save, u))) return 'badFodder';
     const list = fodder.map((u) => findHero(save, u));
     if (list.some((f) => !f || !isValidFodder(h, f))) return 'badFodder';
     removeHeroes(save, fodder);
@@ -130,7 +131,7 @@ export function awaken(save: SaveData, uid: string): true | ActionError {
 
 export function setTeam(save: SaveData, uids: string[]) {
   const owned = new Set(save.heroes.map((h) => h.uid));
-  const busy = new Set(save.training?.slots.map((s) => s.heroUid) ?? []);
+  const busy = busyUids(save);
   save.team = [...new Set(uids.filter((u) => owned.has(u) && !busy.has(u)))].slice(0, MAX_TEAM);
 }
 

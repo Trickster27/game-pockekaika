@@ -3,6 +3,7 @@ import { RARITY_ORDER } from '@/core';
 import type { Rarity } from '@/core/types';
 import {
   SETS,
+  SKY_SETS,
   SLOTS,
   SLOT_MAIN,
   SLOT_NAME,
@@ -78,7 +79,7 @@ export function ForgePanel() {
       </div>
       <b>{t('forge.set')}</b>
       <div className="chips" style={{ flexWrap: 'wrap' }}>
-        {SETS.map((s) => (
+        {SETS.filter((s) => !SKY_SETS.includes(s.id)).map((s) => (
           <button key={s.id} type="button" aria-pressed={set === s.id} onClick={() => setSet(s.id)}>
             <i style={{ ['--c' as string]: s.color }} />
             {s.name}

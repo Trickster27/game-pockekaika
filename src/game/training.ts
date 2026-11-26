@@ -3,6 +3,7 @@ import { heroLevelCap } from '@/core/stats';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { addHeroXp, heroXpToNext, type LevelUp } from './progression';
 import { campLevel } from './camp';
+import { isBusy } from './busy';
 
 /**
  * Тренировочный зал. Герой тренируется выбранное время и получает опыт за золото,
@@ -100,7 +101,7 @@ export function startTraining(
 ): TrainingSlot | TrainingError {
   const h = save.heroes.find((x) => x.uid === uid);
   if (!h) return 'notFound';
-  if (isTraining(save, uid)) return 'busy';
+  if (isBusy(save, uid)) return 'busy';
   if (save.training.slots.length >= trainingSlots(save)) return 'noSlot';
   const plan = planTraining(save, h, hours);
   if (plan.xp <= 0) return 'atCap';

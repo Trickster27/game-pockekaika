@@ -5,7 +5,7 @@ import type { Element, Faction, HeroRarity, Role } from '@/core/types';
 import {
   AWAKEN_COST,
   capOf,
-  isTraining,
+  busyKind,
   setTeam,
   awaken,
   heroPower,
@@ -284,7 +284,10 @@ function HeroDetail({ hero, onBack }: { hero: OwnedHero; onBack: () => void }) {
           className="btn"
           style={{ gridColumn: '1 / -1' }}
           onClick={() => {
-            if (!inTeam && isTraining(save, hero.uid)) return showToast(t('training.inTraining'));
+            if (!inTeam && busyKind(save, hero.uid))
+              return showToast(
+                t(busyKind(save, hero.uid) === 'training' ? 'training.inTraining' : 'exp.inExpedition'),
+              );
             if (!inTeam && save.team.length >= 5) return showToast(t('heroes.teamFull'));
             updateSave((s) =>
               setTeam(s, inTeam ? s.team.filter((u) => u !== hero.uid) : [...s.team, hero.uid]),

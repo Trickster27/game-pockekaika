@@ -47,7 +47,8 @@ export const SUB_ROLL: Record<GearStat, [number, number]> = {
   res: [6, 12],
 };
 
-export type SetId = 'fury' | 'bulwark' | 'life' | 'swift' | 'precision' | 'warding';
+export type SetId =
+  'fury' | 'bulwark' | 'life' | 'swift' | 'precision' | 'warding' | 'cruelty' | 'titan' | 'tempest';
 
 export interface SetDef {
   id: SetId;
@@ -70,7 +71,31 @@ export const SETS: SetDef[] = [
   { id: 'swift', name: 'Быстрота', color: '#7fe7ff', two: { spd: 12 }, four: { spd: 18 } },
   { id: 'precision', name: 'Точность', color: '#f0c860', two: { acc: 40 }, four: { acc: 40, critRate: 0.1 } },
   { id: 'warding', name: 'Оберег', color: '#b07cff', two: { res: 40 }, four: { res: 40, hpPct: 0.1 } },
+  // Только из Небесного шпиля.
+  {
+    id: 'cruelty',
+    name: 'Жестокость',
+    color: '#e0503a',
+    two: { critDmg: 0.15 },
+    four: { critRate: 0.08, atkPct: 0.12 },
+  },
+  {
+    id: 'titan',
+    name: 'Титан',
+    color: '#c9a46a',
+    two: { hpPct: 0.1, defPct: 0.1 },
+    four: { hpPct: 0.15, defPct: 0.15 },
+  },
+  {
+    id: 'tempest',
+    name: 'Буря',
+    color: '#7fb8ff',
+    two: { spd: 8, acc: 20 },
+    four: { spd: 14, critRate: 0.05 },
+  },
 ];
+/** Сеты, которые падают только в Небесном шпиле (не в кузне и не в обычных трофеях). */
+export const SKY_SETS: SetId[] = ['cruelty', 'titan', 'tempest'];
 
 export const SLOT_NAME: Record<Slot, string> = {
   weapon: 'Оружие',

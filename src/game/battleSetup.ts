@@ -3,6 +3,7 @@ import type { StageEnemy } from '@/content/campaign';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { gearBonus, heroItems } from './gear';
 import { depthBonus, mergeBonus } from './depth';
+import { busyUids } from './busy';
 
 /** Боец для движка: уровень, звёзды и бонусы надетого снаряжения. */
 export function heroSpec(h: OwnedHero, save?: SaveData): UnitSpec {
@@ -24,7 +25,7 @@ export function heroSpec(h: OwnedHero, save?: SaveData): UnitSpec {
 
 export function teamHeroes(save: SaveData): OwnedHero[] {
   // Герои на тренировке в бой не идут.
-  const busy = new Set(save.training?.slots.map((s) => s.heroUid) ?? []);
+  const busy = busyUids(save);
   return save.team
     .filter((uid) => !busy.has(uid))
     .map((uid) => save.heroes.find((h) => h.uid === uid))

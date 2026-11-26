@@ -7,7 +7,7 @@ import {
   campLevel,
   claimTraining,
   heroPower,
-  isTraining,
+  isBusy,
   levelAfter,
   planTraining,
   rushCost,
@@ -181,7 +181,7 @@ function Picker({ onClose }: { onClose: () => void }) {
   const list = useMemo(
     () =>
       save.heroes
-        .filter((h) => !isTraining(save, h.uid))
+        .filter((h) => !isBusy(save, h.uid))
         .sort(
           (a, b) =>
             Number(save.team.includes(b.uid)) - Number(save.team.includes(a.uid)) ||

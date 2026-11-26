@@ -33,6 +33,8 @@ const AccountScreen = lazy(() => import('./screens/AccountScreen'));
 const FriendsScreen = lazy(() => import('./screens/FriendsScreen'));
 const ClanScreen = lazy(() => import('./screens/ClanScreen'));
 const TrainingScreen = lazy(() => import('./screens/TrainingScreen'));
+const ExpeditionsScreen = lazy(() => import('./screens/ExpeditionsScreen'));
+const RaidScreen = lazy(() => import('./screens/RaidScreen'));
 const LeadersScreen = lazy(() => import('./screens/LeadersScreen'));
 const FusionScreen = lazy(() => import('./screens/FusionScreen'));
 const EventsScreen = lazy(() => import('./screens/EventsScreen'));
@@ -90,6 +92,10 @@ function Screen() {
       return <LeadersScreen />;
     case 'training':
       return <TrainingScreen />;
+    case 'expeditions':
+      return <ExpeditionsScreen />;
+    case 'raid':
+      return <RaidScreen />;
     case 'clan':
       return <ClanScreen />;
     case 'friends':

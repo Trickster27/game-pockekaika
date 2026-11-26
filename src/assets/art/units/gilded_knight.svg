@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -130 120 135" width="240" height="270">
+<g stroke="#0d0912" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+<circle cx="0" cy="-58" r="50" fill="#ffe08a" opacity=".14" stroke="none"/>
+<path d="M-30 2 L26 -108" stroke="#0d0912" stroke-width="5"/>
+<path d="M-30 2 L26 -108" stroke="#f0c860" stroke-width="2.4"/>
+<path d="M26 -108 L20 -94 L32 -98 Z" fill="#fff4c8"/>
+<path d="M-14 0 L-12 -22 L-3 -22 L-3 0 Z M14 0 L12 -22 L3 -22 L3 0 Z" fill="#8a6a2a"/>
+<path d="M-22 -18 L-24 -52 L0 -58 L24 -52 L22 -18 Z" fill="#d9a94a"/>
+<path d="M-22 -18 L-24 -52 L0 -58 L0 -18 Z" fill="#f0c860" stroke="none"/>
+<path d="M-22 -18 L-24 -52 L0 -58 L24 -52 L22 -18 Z" fill="none"/>
+<path d="M-8 -50 L0 -30 L8 -50 Z" fill="#fff4c8"/>
+<path d="M-28 -54 L-18 -60 L-12 -50 L-22 -42 Z M28 -54 L18 -60 L12 -50 L22 -42 Z" fill="#f0c860"/>
+<path d="M-12 -60 Q-14 -84 0 -86 Q14 -84 12 -60 Z" fill="#d9a94a"/>
+<path d="M-8 -70 L8 -70" stroke-width="3"/>
+<path d="M0 -86 Q-10 -100 -2 -112 Q4 -100 6 -92 Z" fill="#e0503a"/>
+</g>
+</svg>

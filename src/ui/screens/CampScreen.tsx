@@ -15,12 +15,20 @@ import {
   IDLE_CAP_MS,
   pendingIdle,
   teamHeroes,
+  activeParties,
+  expeditionParties,
+  expeditionsReady,
+  raidAttemptsLeft,
+  raidWeek,
 } from '@/game';
+import { formatNumber } from '@/i18n';
 import { formatDuration, useNow } from '../hooks';
 import { useBadges } from '../badges';
 import './screens.css';
 import './camp.css';
 import './events.css';
+import './expeditions.css';
+import expIcon from '@/assets/art/expedition.svg?url';
 
 /** Постройки на карте: прямоугольник в координатах карты (360×480, верх карты = 130). */
 const BUILDINGS: { id: string; screen: ScreenId; box: [number, number, number, number] }[] = [
@@ -120,6 +128,37 @@ export default function CampScreen() {
         <span className="go-card__arrow">›</span>
         {liveopsReady(save, now) > 0 && <i className="dot" />}
       </button>
+
+      <div className="camp-acts">
+        <button type="button" className="camp-act" onClick={() => open('expeditions')}>
+          <img src={expIcon} alt="" />
+          <span>
+            <b>{t('camp.acts.exp')}</b>
+            <small>
+              {expeditionsReady(save, now) > 0
+                ? t('camp.acts.expReady', { n: expeditionsReady(save, now) })
+                : activeParties(save) < expeditionParties(save)
+                  ? t('camp.acts.expFree', { n: expeditionParties(save) - activeParties(save) })
+                  : t('camp.acts.expBusy')}
+            </small>
+          </span>
+          {b?.expeditions && <i className="dot" />}
+        </button>
+        <button type="button" className="camp-act" onClick={() => open('raid')}>
+          <img src={unitArtUrl('star_devourer')} alt="" />
+          <span>
+            <b>{t('camp.acts.raid')}</b>
+            <small>
+              {raidAttemptsLeft(save, now) > 0
+                ? t('camp.acts.raidLeft', { n: raidAttemptsLeft(save, now) })
+                : t('camp.acts.raidDone', {
+                    n: formatNumber(save.raid.week === raidWeek(now).week ? save.raid.damage : 0),
+                  })}
+            </small>
+          </span>
+          {b?.raid && <i className="dot" />}
+        </button>
+      </div>
 
       <div className="campmap">
         <img className="campmap__bg" src={campMap} alt="" />

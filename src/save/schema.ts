@@ -1,10 +1,12 @@
+import type { ExpeditionState } from '@/game/expeditions';
+import type { RaidState } from '@/game/raid';
 /**
  * Формат сохранения. При любом изменении структуры:
  * 1) увеличьте SAVE_VERSION;
  * 2) добавьте шаг в migrations.ts, который переводит версию N-1 в N;
  * 3) добавьте тест на этот шаг.
  */
-export const SAVE_VERSION = 15;
+export const SAVE_VERSION = 16;
 
 export type BattleSpeed = 1 | 2 | 3;
 export type Locale = 'ru' | 'en' | 'uk';
@@ -196,7 +198,11 @@ export interface SaveData {
   camp: { level: number };
   /** Тренировочный зал: кто и до какого времени тренируется. */
   training: { slots: { heroUid: string; startAt: number; endAt: number; xpPerHour: number; gold: number }[] };
-  stats: { battlesWon: number; battlesLost: number };
+  /** Экспедиции: доска поручений на день и отряды в пути. */
+  expeditions: ExpeditionState;
+  /** Еженедельный рейд: урон за неделю, лучшая попытка, попытки сегодня. */
+  raid: RaidState;
+  stats: { battlesWon: number; battlesLost: number; expeditions?: number; raidBest?: number };
 }
 
 export const MAX_TEAM = 5;
@@ -267,6 +273,8 @@ export function createNewSave(now: number = Date.now()): SaveData {
     pass: { season: -1, xp: 0, premium: false, free: [], prem: [] },
     achievements: [],
     training: { slots: [] },
+    expeditions: { day: '', freeUsed: false, paid: 0, seq: 0, board: [] },
+    raid: { week: '', damage: 0, best: 0, claimed: [], day: '', used: 0, extra: 0 },
     presets: defaultPresets(),
     idle: { lastClaimAt: now },
     summon: newSummonState(now),

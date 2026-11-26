@@ -24,7 +24,7 @@ export interface ChapterDef {
   name: string;
   desc: string;
   /** Ключ фона для рендера. */
-  scene: 'mist' | 'cathedral' | 'forge' | 'dusk';
+  scene: 'mist' | 'cathedral' | 'forge' | 'dusk' | 'sky';
   stages: StageDef[];
 }
 
@@ -123,6 +123,27 @@ const SPECS: ChapterSpec[] = [
       'Обсерватория',
       'Венец полумрака',
       'Трон Королевы Затмения',
+    ],
+  },
+  {
+    name: 'Небесная цитадель',
+    desc: 'Крепость Короля Бурь среди облаков. Сюда ведёт последняя тропа из Сумрачного предела.',
+    scene: 'sky',
+    minions: ['sky_sentinel', 'storm_harpy', 'sun_acolyte', 'cloud_serpent', 'gilded_knight'],
+    boss: 'storm_king',
+    baseLevel: 62,
+    energy: 14,
+    stageNames: [
+      'Облачный мост',
+      'Гнёзда гарпий',
+      'Золотые ворота',
+      'Сад ветров',
+      'Звонница грома',
+      'Небесные казармы',
+      'Змеиный перевал',
+      'Храм полудня',
+      'Шпиль молний',
+      'Трон Короля Бурь',
     ],
   },
 ];

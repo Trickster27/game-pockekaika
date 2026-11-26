@@ -29,6 +29,8 @@ export function TopBar() {
     codex: 'codex.title',
     clan: 'clan.title',
     training: 'training.title',
+    expeditions: 'exp.title',
+    raid: 'raid.title',
     leaders: 'social.leaders',
     fusion: 'fusion.title',
     events: 'events.title',

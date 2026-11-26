@@ -22,7 +22,12 @@ import './screens.css';
 import './heroes.css';
 import './campaign.css';
 
-const COLORS: Record<DungeonId, string> = { crypt: '#4fd6e0', starcave: '#a37cff', forgevault: '#ff7a2a' };
+const COLORS: Record<DungeonId, string> = {
+  crypt: '#4fd6e0',
+  starcave: '#a37cff',
+  forgevault: '#ff7a2a',
+  skyspire: '#7fb8ff',
+};
 
 export default function DungeonsScreen() {
   const t = useT();

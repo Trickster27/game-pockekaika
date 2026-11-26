@@ -22,6 +22,8 @@ export type ScreenId =
   | 'friends'
   | 'clan'
   | 'training'
+  | 'expeditions'
+  | 'raid'
   | 'leaders'
   | 'fusion'
   | 'events'

@@ -3,6 +3,7 @@ import { FACTIONS, type Faction, type Stats } from '@/core/types';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import type { GearBonus } from './gear';
 import { findHero } from './heroes';
+import { busyUids } from './busy';
 
 /**
  * Глубина героев: книги навыков, таланты и бонус коллекции.
@@ -185,7 +186,7 @@ export const FUSIONS: FusionRecipe[] = [
 
 /** Подходящая копия для слияния: нужные звёзды, не на тренировке; лучше не из команды и с меньшим уровнем. */
 export function fusionPick(save: SaveData, heroId: string, stars: number): OwnedHero | null {
-  const busy = new Set(save.training.slots.map((s) => s.heroUid));
+  const busy = busyUids(save);
   const list = save.heroes
     .filter((h) => h.heroId === heroId && h.stars >= stars && !busy.has(h.uid))
     .sort(
