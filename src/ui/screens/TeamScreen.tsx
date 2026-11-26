@@ -1,16 +1,23 @@
 import { heroDef } from '@/content';
 import { activeFactionBonus, factionCounts } from '@/core';
 import type { Faction } from '@/core/types';
-import { busyKind, heroPower, leaderAura, setTeam, teamPower } from '@/game';
+import { busyKind, heroPower, leaderAura, moveTeamSlot, placeInTeam, setTeam, teamPower } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
+import { createPortal } from 'react-dom';
+import { unitStillUrl } from '@/assets/art';
+import { skinCss } from '@/content/skins';
 import { HeroTile } from '../components/HeroTile';
+import { useDragDrop } from '../components/useDragDrop';
 import { FACTION_COLOR } from '../colors';
 import './screens.css';
 import './heroes.css';
 
 const PCT = new Set(['hp', 'atk', 'def', 'critDmg']);
+
+/** Что тащим: герой и его ячейка в отряде (null — из списка героев). */
+type DragSrc = { uid: string; slot: number | null };
 
 export default function TeamScreen() {
   const t = useT();
@@ -37,16 +44,66 @@ export default function TeamScreen() {
     else updateSave((s) => setTeam(s, [...s.team, uid]));
   };
 
+  const { drag, source } = useDragDrop<DragSrc>({
+    onStart: () => {
+      platform().haptics.impact('light');
+      platform().audio.play('tap');
+    },
+    onDrop: (src, target) => {
+      if (target === 'roster') {
+        // Вытащили из отряда в список — герой уходит в запас.
+        if (src.slot !== null)
+          updateSave((s) =>
+            setTeam(
+              s,
+              s.team.filter((u) => u !== src.uid),
+            ),
+          );
+        return;
+      }
+      const to = Number(target.slice(5));
+      if (src.slot === to) return;
+      if (src.slot !== null) {
+        updateSave((s) => moveTeamSlot(s, src.slot!, to));
+      } else {
+        const kind = busyKind(save, src.uid);
+        if (kind) return showToast(t(kind === 'training' ? 'training.inTraining' : 'exp.inExpedition'));
+        updateSave((s) => placeInTeam(s, src.uid, to));
+      }
+      platform().haptics.impact('medium');
+    },
+  });
+
+  // Куда встанет герой при отпускании: на свободную ячейку — первой свободной (отряд без пропусков).
+  const overSlot = drag?.over?.startsWith('slot-') ? Number(drag.over.slice(5)) : null;
+  const landing =
+    overSlot === null
+      ? null
+      : overSlot < team.length
+        ? overSlot
+        : Math.min(team.length - (drag?.src.slot !== null ? 1 : 0), 4);
+
   const slot = (i: number) => {
     const h = team[i];
-    if (!h)
-      return (
-        <span className="slot-empty" key={i}>
-          {t('team.empty')}
-        </span>
-      );
-    return <HeroTile key={h.uid} def={heroDef(h.heroId)} owned={h} onClick={() => toggle(h.uid)} />;
+    const cls = `tslot${landing === i ? ' is-over' : ''}${drag?.src.slot === i ? ' is-src' : ''}${i === 0 ? ' is-lead' : ''}`;
+    return (
+      <div key={i} className={cls} data-drop={`slot-${i}`}>
+        {h ? (
+          <div key={`${h.uid}-${i}`} className="tslot__hero" {...source({ uid: h.uid, slot: i })}>
+            <HeroTile def={heroDef(h.heroId)} owned={h} onClick={() => toggle(h.uid)} />
+          </div>
+        ) : (
+          <span className="slot-empty">{t('team.empty')}</span>
+        )}
+        {i === 0 && h && (
+          <span className="tslot__crown" title={t('team.leaderSlot')}>
+            👑
+          </span>
+        )}
+      </div>
+    );
   };
+  const dragDef = drag ? save.heroes.find((h) => h.uid === drag.src.uid) : undefined;
 
   return (
     <>
@@ -150,18 +207,42 @@ export default function TeamScreen() {
 
       <h3 style={{ margin: '16px 0 4px', fontSize: 17 }}>{t('team.roster')}</h3>
       <p className="screen-sub">{t('team.hint')}</p>
-      <div className="hgrid">
+      <div
+        className={`hgrid troster${drag?.src.slot != null ? ' is-drop' : ''}${drag?.over === 'roster' && drag.src.slot !== null ? ' is-over' : ''}`}
+        data-drop="roster"
+        data-drop-label={t('team.dropOut')}
+      >
         {roster.map((h) => (
-          <HeroTile
+          <div
             key={h.uid}
-            def={heroDef(h.heroId)}
-            owned={h}
-            inTeam={save.team.includes(h.uid)}
-            selected={save.team.includes(h.uid)}
-            onClick={() => toggle(h.uid)}
-          />
+            className={`troster__item${drag?.src.uid === h.uid ? ' is-src' : ''}`}
+            {...source({ uid: h.uid, slot: null }, true)}
+          >
+            <HeroTile
+              def={heroDef(h.heroId)}
+              owned={h}
+              inTeam={save.team.includes(h.uid)}
+              selected={save.team.includes(h.uid)}
+              onClick={() => toggle(h.uid)}
+            />
+          </div>
         ))}
       </div>
+
+      {drag &&
+        dragDef &&
+        createPortal(
+          <div className="tdrag" style={{ left: drag.x, top: drag.y }} aria-hidden>
+            <img
+              src={unitStillUrl(heroDef(dragDef.heroId).art)}
+              alt=""
+              draggable={false}
+              style={{ filter: skinCss(dragDef.skin) }}
+            />
+            <b>{heroDef(dragDef.heroId).name}</b>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

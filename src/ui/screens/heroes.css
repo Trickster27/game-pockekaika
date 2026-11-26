@@ -862,3 +862,129 @@
 .skill--passive small {
   color: #ffd36b;
 }
+
+/* ———————— перетаскивание в отряде ———————— */
+.tslot {
+  position: relative;
+  border-radius: 14px;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.tslot > .slot-empty {
+  height: 100%;
+}
+.tslot__hero {
+  /* Ячейки отряда берутся сразу: браузер не должен листать страницу под пальцем. */
+  touch-action: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+  animation: tslot-in 0.22s ease-out;
+}
+.tslot__hero img,
+.troster__item img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.tslot.is-src .tslot__hero {
+  opacity: 0.3;
+  filter: grayscale(0.6);
+}
+.tslot.is-over {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 2px #ffd36b,
+    0 0 18px #ffd36b88;
+}
+.tslot.is-over > .slot-empty {
+  border-color: #ffd36b;
+  color: #ffd36b;
+}
+.tslot__crown {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  filter: drop-shadow(0 2px 2px #000a);
+  pointer-events: none;
+}
+@keyframes tslot-in {
+  from {
+    transform: scale(0.85);
+    opacity: 0.4;
+  }
+}
+
+.troster {
+  position: relative;
+  border-radius: 14px;
+  transition:
+    box-shadow 0.15s,
+    background 0.15s;
+}
+.troster__item {
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+.troster__item.is-src {
+  opacity: 0.35;
+}
+/* Тащим героя из отряда: весь список — зона «убрать». */
+.troster.is-drop {
+  outline: 2px dashed #e0607a88;
+  outline-offset: 4px;
+}
+.troster.is-drop::before {
+  content: attr(data-drop-label);
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  grid-column: 1 / -1;
+  padding: 8px;
+  border-radius: 10px;
+  background: #2a1018ee;
+  color: #ffb0be;
+  font-size: 13px;
+  text-align: center;
+}
+.troster.is-over {
+  background: #e0607a22;
+  outline-color: #e0607a;
+}
+
+.tdrag {
+  position: fixed;
+  z-index: 1000;
+  width: 96px;
+  /* над пальцем, чтобы была видна подсвеченная ячейка */
+  transform: translate(-50%, calc(-100% - 18px)) rotate(-4deg);
+  opacity: 0.94;
+  pointer-events: none;
+  display: grid;
+  justify-items: center;
+  padding: 4px 4px 6px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #2a2038ee, #140f1cee);
+  border: 2px solid #ffd36b;
+  box-shadow:
+    0 14px 30px #000b,
+    0 0 20px #ffd36b55;
+}
+.tdrag img {
+  width: 74px;
+  height: 80px;
+  object-fit: contain;
+}
+.tdrag b {
+  font-size: 12px;
+  color: #ffe2a0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tslot__hero {
+    animation: none;
+  }
+  .tdrag {
+    transform: translate(-50%, calc(-100% - 18px));
+  }
+}

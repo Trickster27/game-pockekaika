@@ -135,6 +135,42 @@ export function setTeam(save: SaveData, uids: string[]) {
   save.team = [...new Set(uids.filter((u) => owned.has(u) && !busy.has(u)))].slice(0, MAX_TEAM);
 }
 
+/**
+ * Переставить героев отряда: ячейка from ↔ ячейка to. Отряд хранится без пропусков,
+ * поэтому перенос на свободную ячейку ставит героя последним.
+ */
+export function moveTeamSlot(save: SaveData, from: number, to: number) {
+  const team = [...save.team];
+  if (from < 0 || from >= team.length || from === to) return;
+  if (to >= team.length) {
+    const [u] = team.splice(from, 1);
+    team.push(u!);
+  } else {
+    [team[from], team[to]] = [team[to]!, team[from]!];
+  }
+  setTeam(save, team);
+}
+
+/**
+ * Поставить героя в ячейку отряда. Уже в отряде — обмен местами; ячейка занята — замена
+ * (прежний герой уходит в запас); свободна — герой добавляется последним.
+ */
+export function placeInTeam(save: SaveData, uid: string, slot: number): true | 'busy' | 'missing' {
+  if (!save.heroes.some((h) => h.uid === uid)) return 'missing';
+  const at = save.team.indexOf(uid);
+  if (at >= 0) {
+    moveTeamSlot(save, at, slot);
+    return true;
+  }
+  if (busyUids(save).has(uid)) return 'busy';
+  const team = [...save.team];
+  if (slot < team.length) team[slot] = uid;
+  else if (team.length < MAX_TEAM) team.push(uid);
+  else team[MAX_TEAM - 1] = uid;
+  setTeam(save, team);
+  return true;
+}
+
 export function xpProgress(h: OwnedHero): number {
   if (h.level >= capOf(h)) return 1;
   return Math.min(1, h.xp / heroXpToNext(h.level));

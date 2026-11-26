@@ -313,9 +313,11 @@
     "loaded": "Lineup loaded",
     "emptyPreset": "empty",
     "roster": "Your heroes",
-    "hint": "Tap a hero to add or remove them",
+    "hint": "Tap a hero to add or remove. Drag a card to swap places; in the list, press and hold, then drag.",
     "leader": "Leader: {name}",
-    "aura": "Leader aura: +{pct}% {stat} to the team. The first slot is the leader."
+    "aura": "Leader aura: +{pct}% {stat} to the team. The first slot is the leader.",
+    "dropOut": "Release to remove from the team",
+    "leaderSlot": "Leader slot: their aura affects the whole team"
   },
   "idle": {
     "title": "Welcome back, Warden!",
