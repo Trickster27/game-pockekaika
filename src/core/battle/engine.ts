@@ -103,6 +103,7 @@ function buildUnit(spec: UnitSpec, side: Side, slot: number, db: ContentDb, uid:
     alive: true,
     ccImmune: spec.ccImmune ?? false,
     thorns: Math.max(0, Math.min(0.8, spec.thorns ?? ('thorns' in def ? (def.thorns ?? 0) : 0))),
+    ...('passive' in def && def.passive ? { passive: def.passive } : {}),
     ...(spec.skin ? { skin: spec.skin } : {}),
     pooled: spec.hpMax != null,
     enrage: spec.enrage ?? 0,
@@ -185,6 +186,7 @@ export class Battle {
     for (const a of allies) this.track(a);
     this.spawnWave(0);
     this.emit({ t: 'start', wave: 1, waves: setup.waves.length });
+    this.initPassives(allies);
   }
 
   get allies() {
@@ -212,6 +214,48 @@ export class Battle {
     for (const u of spawned) this.track(u);
     this.wave = index;
     if (index > 0) this.emit({ t: 'wave', wave: index + 1, spawned: spawned.map((u) => u.uid) });
+    // Пассивы врагов-героев (арена, PvP); у первой волны — после события start.
+    if (index > 0) this.initPassives(spawned);
+    else this.pendingPassives = spawned;
+  }
+
+  private pendingPassives: BattleUnit[] = [];
+  /** Индекс навыка, который сейчас применяется (для пассивов «при обычной атаке»). */
+  private curSkill = -1;
+
+  /** Пассивы на старте: шипы, первый ход, стартовые усиления. */
+  private initPassives(list: BattleUnit[]) {
+    const all = [...list, ...this.pendingPassives];
+    this.pendingPassives = [];
+    for (const u of all) {
+      const p = u.passive;
+      if (!p) continue;
+      if (p.kind === 'thorns') u.thorns = Math.min(0.8, u.thorns + (p.value ?? 0));
+      if (p.kind === 'firstStrike') u.tm = Math.min(TM_FULL, u.tm + (p.value ?? 0) * TM_FULL);
+      if (p.kind === 'startStatus' && p.status) {
+        const targets = p.allies ? this.aliveOf(u.side) : [u];
+        for (const t of targets) this.applyStatus(u, t, p.status, p.turns ?? 2, 1);
+      }
+    }
+  }
+
+  /** Множитель урона от пассива атакующего. */
+  private passiveMult(src: BattleUnit, dst: BattleUnit): number {
+    const p = src.passive;
+    if (!p) return 1;
+    const v = p.value ?? 0;
+    if (p.kind === 'execute' && dst.hp / dst.stats.hp < 0.35) return 1 + v;
+    if (p.kind === 'vsDebuffed' && dst.statuses.some((s) => DEBUFFS.includes(s.id))) return 1 + v;
+    if (p.kind === 'desperate' && src.hp / src.stats.hp < 0.5) return 1 + v;
+    return 1;
+  }
+
+  /** Защита союзников: лучший «страж» среди живых соратников цели (кроме неё самой). */
+  private guardOf(dst: BattleUnit): number {
+    let g = 0;
+    for (const f of this.aliveOf(dst.side))
+      if (f !== dst && f.passive?.kind === 'guardian') g = Math.max(g, f.passive.value ?? 0);
+    return g;
   }
 
   /** Продвигает шкалу хода до следующего бойца. Обрабатывает яд и оглушение. null — бой окончен. */
@@ -334,6 +378,7 @@ export class Battle {
     const allTargets = (scope: Scope): BattleUnit[] => this.resolveScope(u, scope, target);
     for (const eff of skill.effects) for (const x of allTargets(eff.to ?? 'target')) touched.add(x.uid);
     this.emit({ t: 'skill', uid: u.uid, skill: skill.id, skillIndex, targets: [...touched], fx: skill.fx });
+    this.curSkill = skillIndex;
 
     for (const eff of skill.effects) {
       for (const x of allTargets(eff.to ?? 'target')) {
@@ -382,11 +427,13 @@ export class Battle {
         const de = effective(dst);
         const powerStat = eff.stat ?? 'atk';
         const power = powerStat === 'hp' ? src.stats.hp : se[powerStat];
+        const pm = this.passiveMult(src, dst);
+        let dealt = 0;
         for (let h = 0; h < hits && dst.alive; h++) {
           const r = rollDamage(
             {
               power,
-              multiplier: eff.mult / hits,
+              multiplier: (eff.mult / hits) * pm,
               def: de.def,
               critRate: se.critRate,
               critDmg: se.critDmg,
@@ -395,13 +442,27 @@ export class Battle {
             },
             this.rng,
           );
-          this.dealDamage(src, dst, r.amount, r.crit);
+          dealt += this.dealDamage(src, dst, r.amount, r.crit);
+        }
+        const p = src.passive;
+        if (p && src.alive && src.side !== dst.side) {
+          if (p.kind === 'lifesteal' && dealt > 0) {
+            const before = src.hp;
+            src.hp = Math.min(src.stats.hp, src.hp + Math.round(dealt * (p.value ?? 0)));
+            if (src.hp > before) {
+              this.stat(src).healed += src.hp - before;
+              this.emit({ t: 'heal', uid: src.uid, amount: src.hp - before, hp: src.hp });
+            }
+          }
+          if (p.kind === 'onHit' && p.status && this.curSkill === 0 && dst.alive)
+            this.applyStatus(src, dst, p.status, p.turns ?? 2, p.chance ?? 0.3);
         }
         return;
       }
       case 'heal': {
         if (!dst.alive) return;
-        const amount = Math.round(dst.stats.hp * eff.pct);
+        const boost = src.passive?.kind === 'healBoost' ? 1 + (src.passive.value ?? 0) : 1;
+        const amount = Math.round(dst.stats.hp * eff.pct * boost);
         const before = dst.hp;
         dst.hp = Math.min(dst.stats.hp, dst.hp + amount);
         this.stat(src).healed += dst.hp - before;
@@ -514,7 +575,17 @@ export class Battle {
     this.emit({ t: 'status', uid: dst.uid, status: id, turns, landed: true });
   }
 
-  private dealDamage(src: BattleUnit, dst: BattleUnit, amount: number, crit: boolean, reflect = false) {
+  private dealDamage(
+    src: BattleUnit,
+    dst: BattleUnit,
+    amount: number,
+    crit: boolean,
+    reflect = false,
+  ): number {
+    if (!reflect && src.side !== dst.side) {
+      const g = this.guardOf(dst);
+      if (g > 0) amount = Math.max(1, Math.round(amount * (1 - g)));
+    }
     let left = amount;
     let absorbed = 0;
     if (dst.shield > 0) {
@@ -540,11 +611,27 @@ export class Battle {
       ...(reflect ? { reflect: true } : {}),
     });
     if (dst.hp <= 0) this.kill(dst);
+    // «Последний рубеж»: впервые ниже 35% — щит и ярость.
+    const ls = dst.passive;
+    if (ls?.kind === 'lastStand' && !dst.lastStandUsed && dst.alive && dst.hp / dst.stats.hp < 0.35) {
+      dst.lastStandUsed = true;
+      dst.shield = Math.max(dst.shield, Math.round(dst.stats.hp * (ls.value ?? 0.25)));
+      dst.shieldTurns = Math.max(dst.shieldTurns, 2);
+      this.emit({ t: 'shield', uid: dst.uid, amount: dst.shield });
+      this.applyStatus(dst, dst, 'atkUp', 2, 1);
+    }
+    // Рывок за добивание.
+    if (!dst.alive && src.alive && src.side !== dst.side && src.passive?.kind === 'killRush') {
+      const before = src.tm;
+      src.tm = Math.min(TM_FULL, src.tm + (src.passive.value ?? 0) * TM_FULL);
+      this.emit({ t: 'tm', uid: src.uid, delta: src.tm - before, tm: src.tm });
+    }
     // Шипы: часть урона возвращается атакующему (не бесконечно — отражённый урон не отражается снова).
     if (!reflect && dst.thorns > 0 && src.alive && src.side !== dst.side && lost + absorbed > 0) {
       const back = Math.max(1, Math.round((lost + absorbed) * dst.thorns));
       this.dealDamage(dst, src, back, false, true);
     }
+    return lost + absorbed;
   }
 
   private track(u: BattleUnit) {

@@ -152,7 +152,7 @@ interface Tween {
 export interface BattleViewOptions {
   scene: SceneKey;
   onUnitTap?: (uid: string) => void;
-  onImpact?: (kind: 'hit' | 'crit' | 'heal' | 'death') => void;
+  onImpact?: (kind: 'hit' | 'crit' | 'heal' | 'death', element?: Element) => void;
 }
 
 /**
@@ -709,7 +709,7 @@ export class BattleView {
             this.shake = Math.max(this.shake, 7);
             this.screenFlash('#fff3c4', 0.15);
           } else this.shake = Math.max(this.shake, 2.5);
-          this.opts.onImpact?.(e.crit ? 'crit' : 'hit');
+          this.opts.onImpact?.(e.crit ? 'crit' : 'hit', from.element);
           await this.wait(60);
           break;
         }

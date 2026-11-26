@@ -1,3 +1,4 @@
+import { PassiveLine } from './PassiveLine';
 import { useState } from 'react';
 import { heroDef, skillDef } from '@/content';
 import { levelSkill } from '@/core/battle';
@@ -54,6 +55,7 @@ export function HeroSkills({ hero }: { hero: OwnedHero }) {
           <MaterialIcon id="skillBook" /> {save.materials.skillBook}
         </span>
       </div>
+      <PassiveLine def={d} />
       {d.skills.map((id, i) => {
         const base = skillDef(id);
         const s = levelSkill(base, lv[i]!);

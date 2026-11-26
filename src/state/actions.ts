@@ -18,9 +18,9 @@ import {
   isDungeonLevelUnlocked,
   isStageUnlocked,
   makeSetup,
-  heroSpec,
   spendEnergy,
   teamHeroes,
+  teamSpecs,
 } from '@/game';
 import { formatNumber, tr } from '@/i18n';
 import { simulate, type BattleResult } from '@/core/battle';
@@ -74,11 +74,7 @@ export function startCampaignStage(stageId: string, opts: { skipStory?: boolean 
     title: `${stage.id} · ${stage.name}`,
     subtitle: chapter.name,
     scene: SCENES[stage.chapter - 1] ?? 'mist',
-    setup: makeSetup(
-      team.map((h) => heroSpec(h, save)),
-      stage.waves,
-      newSeed(),
-    ),
+    setup: makeSetup(teamSpecs(save), stage.waves, newSeed()),
     returnTo: 'campaign',
     repeatable: true,
     finish: (result) => campaignFinish(stageId, result),
@@ -116,11 +112,7 @@ export function startDungeon(id: DungeonId, level: number): boolean {
     title: `${d.name} · ${tr('dungeons.level', { n: level })}`,
     subtitle: tr('dungeons.title'),
     scene: d.scene,
-    setup: makeSetup(
-      team.map((h) => heroSpec(h, save)),
-      dungeonWaves(d, level),
-      newSeed(),
-    ),
+    setup: makeSetup(teamSpecs(save), dungeonWaves(d, level), newSeed()),
     returnTo: 'dungeons',
     repeatable: true,
     finish: (result) => dungeonFinish(id, level, result),
@@ -240,14 +232,7 @@ export function sweepCampaignStage(stageId: string, times: number) {
     stage.energy,
     (seed) => {
       const sv = useGame.getState().save!;
-      const { result } = simulate(
-        makeSetup(
-          teamHeroes(sv).map((h) => heroSpec(h, sv)),
-          stage.waves,
-          seed,
-        ),
-        db,
-      );
+      const { result } = simulate(makeSetup(teamSpecs(sv), stage.waves, seed), db);
       return { result, lines: campaignFinish(stageId, result) };
     },
     tr('sweep.title', { name: `${stage.id} · ${stage.name}` }),
@@ -270,14 +255,7 @@ export function sweepDungeon(id: DungeonId, level: number, times: number) {
     dungeonEnergy(level),
     (seed) => {
       const sv = useGame.getState().save!;
-      const { result } = simulate(
-        makeSetup(
-          teamHeroes(sv).map((h) => heroSpec(h, sv)),
-          dungeonWaves(d, level),
-          seed,
-        ),
-        db,
-      );
+      const { result } = simulate(makeSetup(teamSpecs(sv), dungeonWaves(d, level), seed), db);
       return { result, lines: dungeonFinish(id, level, result) };
     },
     tr('sweep.title', { name: `${d.name} · ${tr('dungeons.level', { n: level })}` }),
@@ -298,11 +276,7 @@ export function startTower(floor: number): boolean {
     title: tr('tower.floor', { n: floor }),
     subtitle: tr('tower.title'),
     scene: towerScene(floor),
-    setup: makeSetup(
-      team.map((h) => heroSpec(h, save)),
-      towerWaves(floor),
-      newSeed(),
-    ),
+    setup: makeSetup(teamSpecs(save), towerWaves(floor), newSeed()),
     returnTo: 'tower',
     finish: (result) => {
       const lines: RewardLine[] = [];
@@ -359,7 +333,7 @@ export function startArena(opp: ArenaOpponent): boolean {
     title: opp.name,
     subtitle: tr('arena.title'),
     scene: scenes[opp.rating % 3]!,
-    setup: { allies: team.map((h) => heroSpec(h, save)), waves: [opp.team], seed: newSeed() },
+    setup: { allies: teamSpecs(save), waves: [opp.team], seed: newSeed() },
     returnTo: 'arena',
     finish: (result) => {
       const lines: RewardLine[] = [];
@@ -403,7 +377,7 @@ export async function startPvp(defenderId: string, onDone?: () => void): Promise
     subtitle: tr('pvp.title'),
     scene: (['mist', 'cathedral', 'forge', 'dusk'] as const)[opp.rating % 4]!,
     setup: {
-      allies: team.map((h) => heroSpec(h, save)),
+      allies: teamSpecs(save),
       waves: [opp.team.map((u) => ({ ...u, kind: 'hero' as const }))],
       seed: battle.seed,
     },

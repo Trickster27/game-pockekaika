@@ -3,7 +3,7 @@ import { ELEMENTS, FACTIONS, type Element, type Faction } from '@/core/types';
 import type { BattleSetup, UnitSpec } from '@/core/battle/types';
 import { heroDef } from '@/content';
 import type { SaveData } from '@/save/schema';
-import { heroSpec, teamHeroes } from './battleSetup';
+import { teamHeroes, teamSpecs } from './battleSetup';
 import { grantReward, periodKey, type ShopReward } from './shop';
 
 /**
@@ -145,9 +145,9 @@ export function raidBossSpec(save: SaveData, now: number): UnitSpec {
 /** Состав на рейд: герои благословлённой фракции получают +25% атаки. */
 export function raidSetup(save: SaveData, now: number, seed: number): BattleSetup {
   const w = raidWeek(now);
-  const allies = teamHeroes(save).map((h) => {
-    const s = heroSpec(h, save);
-    if (heroDef(h.heroId).faction === w.blessed)
+  const team = teamHeroes(save);
+  const allies = teamSpecs(save).map((s, i) => {
+    if (heroDef(team[i]!.heroId).faction === w.blessed)
       s.bonusPct = { ...s.bonusPct, atk: (s.bonusPct?.atk ?? 0) + RAID.blessing };
     return s;
   });

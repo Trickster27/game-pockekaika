@@ -3,6 +3,7 @@ import { HEROES, STARTER_HEROES } from './heroes';
 import { ENEMIES } from './enemies';
 import { SKILLS } from './skills';
 import { CLAN_BOSSES, CLAN_BOSS_SKILLS } from './clanBoss';
+import { passiveOf } from './passives';
 
 export { HEROES, STARTER_HEROES, ENEMIES, SKILLS };
 export * from './campaign';
@@ -10,7 +11,21 @@ export * from './scrolls';
 export * from './clanBoss';
 export * from './story';
 export * from './skins';
+export * from './passives';
 
+// Пассивы героев: прикрепляем к описаниям, чтобы движок видел их через db.hero().
+for (const h of HEROES) {
+  const pv = passiveOf(h.id, h.art);
+  if (pv)
+    h.passive = {
+      kind: pv.kind,
+      value: pv.value,
+      status: pv.status,
+      turns: pv.turns,
+      chance: pv.chance,
+      allies: pv.allies,
+    };
+}
 const heroMap = new Map(HEROES.map((h) => [h.id, h]));
 const enemyMap = new Map([...ENEMIES, ...CLAN_BOSSES].map((e) => [e.id, e]));
 const skillMap = new Map([...SKILLS, ...CLAN_BOSS_SKILLS].map((s) => [s.id, s]));

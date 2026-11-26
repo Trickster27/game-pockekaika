@@ -53,6 +53,28 @@ export interface SkillDef {
   fx?: string;
 }
 
+/** Пассивная способность (описание параметров; тексты — в content/passives). */
+export interface PassiveSpec {
+  kind:
+    | 'lifesteal'
+    | 'execute'
+    | 'vsDebuffed'
+    | 'onHit'
+    | 'startStatus'
+    | 'healBoost'
+    | 'lastStand'
+    | 'killRush'
+    | 'thorns'
+    | 'firstStrike'
+    | 'guardian'
+    | 'desperate';
+  value?: number;
+  status?: StatusId;
+  turns?: number;
+  chance?: number;
+  allies?: boolean;
+}
+
 export interface HeroDef {
   id: string;
   name: string;
@@ -67,6 +89,8 @@ export interface HeroDef {
   lore?: string;
   /** Особый пул призыва: такие герои выпадают только из своего свитка. */
   pool?: 'void' | 'gold' | 'fusion';
+  /** Пассивная способность. */
+  passive?: PassiveSpec;
 }
 
 export interface EnemyDef {

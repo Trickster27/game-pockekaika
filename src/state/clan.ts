@@ -20,7 +20,6 @@ import {
   clanLevel,
   clanPerks,
   grantClanReward,
-  heroSpec,
   killReward,
   rankReward,
   teamHeroes,
@@ -28,6 +27,7 @@ import {
   type ClanReward,
   type DonationId,
   type WeeklyGoalId,
+  teamSpecs,
 } from '@/game';
 import type { BattleResult } from '@/core/battle';
 import type { Item } from '@/save/schema';
@@ -387,7 +387,7 @@ export async function startClanBoss(): Promise<boolean> {
     subtitle: tr(`labels.element.${element}`),
     scene: 'cathedral',
     setup: {
-      allies: team.map((h) => heroSpec(h, save)),
+      allies: teamSpecs(save),
       waves: [[bossSpec(att.level, element, att.hp)]],
       seed: att.seed,
       bossTurns: CLAN.bossTurns,

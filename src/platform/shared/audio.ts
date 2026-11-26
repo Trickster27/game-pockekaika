@@ -10,6 +10,28 @@ type Tone = { f: number; to?: number; d: number; type?: OscillatorType; gain?: n
 const SOUNDS: Record<SoundId, Tone[]> = {
   tap: [{ f: 660, d: 0.04, type: 'triangle', gain: 0.15 }],
   hit: [{ f: 180, to: 80, d: 0.12, type: 'square', gain: 0.18 }],
+  // Удары по стихиям: у каждой свой тембр, чтобы бой было слышно.
+  hit_fire: [
+    { f: 260, to: 90, d: 0.14, type: 'sawtooth', gain: 0.14 },
+    { f: 1400, to: 600, d: 0.08, type: 'square', gain: 0.05, delay: 0.01 },
+  ],
+  hit_thorn: [
+    { f: 420, to: 180, d: 0.09, type: 'triangle', gain: 0.16 },
+    { f: 900, to: 700, d: 0.05, type: 'square', gain: 0.05, delay: 0.03 },
+  ],
+  hit_stone: [{ f: 120, to: 50, d: 0.16, type: 'square', gain: 0.22 }],
+  hit_tide: [
+    { f: 340, to: 160, d: 0.16, type: 'sine', gain: 0.2 },
+    { f: 520, to: 260, d: 0.12, type: 'sine', gain: 0.08, delay: 0.04 },
+  ],
+  hit_light: [
+    { f: 880, to: 440, d: 0.1, type: 'triangle', gain: 0.13 },
+    { f: 1760, to: 1320, d: 0.12, type: 'sine', gain: 0.06, delay: 0.02 },
+  ],
+  hit_dark: [
+    { f: 150, to: 60, d: 0.2, type: 'sawtooth', gain: 0.15 },
+    { f: 75, to: 40, d: 0.2, type: 'sine', gain: 0.15, delay: 0.02 },
+  ],
   crit: [
     { f: 220, to: 60, d: 0.18, type: 'sawtooth', gain: 0.22 },
     { f: 880, to: 1320, d: 0.12, type: 'triangle', gain: 0.12, delay: 0.03 },

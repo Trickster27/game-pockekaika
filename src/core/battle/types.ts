@@ -85,6 +85,9 @@ export interface BattleUnit {
   alive: boolean;
   ccImmune: boolean;
   thorns: number;
+  passive?: import('../content').PassiveSpec;
+  /** «Последний рубеж» уже сработал. */
+  lastStandUsed?: boolean;
   skin?: string;
   /** Здоровье из общего пула (босс клана): яд ограничен атакой отравителя. */
   pooled: boolean;

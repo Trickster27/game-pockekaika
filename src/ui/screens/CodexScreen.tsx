@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { HEROES, heroDef, scrollDef, skillDef } from '@/content';
+import { PassiveLine } from '../components/PassiveLine';
 import {
   baseStats,
   statsAt,
@@ -369,6 +370,7 @@ function CodexCard(props: {
 
       <section className="card">
         <h3 className="cx-h">{t('heroes.skills')}</h3>
+        <PassiveLine def={d} />
         {d.skills.map((id) => {
           const s = skillDef(id);
           return (

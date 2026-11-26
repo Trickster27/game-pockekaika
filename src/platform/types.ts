@@ -56,7 +56,19 @@ export interface AudioAdapter {
 
 export type MusicId = 'camp' | 'battle' | 'boss';
 
-export type SoundId = 'tap' | 'hit' | 'crit' | 'heal' | 'victory' | 'reward';
+export type SoundId =
+  | 'tap'
+  | 'hit'
+  | 'crit'
+  | 'heal'
+  | 'victory'
+  | 'reward'
+  | 'hit_fire'
+  | 'hit_thorn'
+  | 'hit_stone'
+  | 'hit_tide'
+  | 'hit_light'
+  | 'hit_dark';
 
 export type Unsubscribe = () => void;
 

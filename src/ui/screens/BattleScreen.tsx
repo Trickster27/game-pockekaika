@@ -59,6 +59,8 @@ export default function BattleScreen() {
   const battleRef = useRef<Battle | null>(null);
   const autoRef = useRef(settings?.autoBattle ?? false);
   const pendingRef = useRef<Pending | null>(null);
+  const ultsRef = useRef(settings?.manualUlts ?? false);
+  const [ults, setUlts] = useState(settings?.manualUlts ?? false);
   const selRef = useRef(0);
   const [auto, setAuto] = useState(settings?.autoBattle ?? false);
   const [speed, setSpeed] = useState<number>(settings?.battleSpeed ?? 1);
@@ -123,7 +125,7 @@ export default function BattleScreen() {
       const view = await BattleView.create(el, {
         scene: req.scene,
         onUnitTap: (uid) => onUnitTap(uid),
-        onImpact: (kind) => {
+        onImpact: (kind, element) => {
           const now = performance.now();
           if (kind === 'crit') {
             p.audio.play('crit');
@@ -132,7 +134,7 @@ export default function BattleScreen() {
           else if (kind === 'death') p.haptics.impact('medium');
           else if (now - lastHit > 70) {
             lastHit = now;
-            p.audio.play('hit');
+            p.audio.play(element ? `hit_${element}` : 'hit');
           }
         },
       });
@@ -170,7 +172,9 @@ export default function BattleScreen() {
         await flush();
         if (!u || !alive) break;
         let action: Action;
-        if (u.side === 'ally' && !autoRef.current) {
+        // В авто с «ручными ультами» бой ждёт игрока, когда готов сильный навык.
+        const ultReady = ultsRef.current && u.skills.some((sk, i) => sk.cooldown > 0 && battle.isReady(u, i));
+        if (u.side === 'ally' && (!autoRef.current || ultReady)) {
           const first =
             [...u.skills.keys()].reverse().find((i) => battle.isReady(u, i) && u.skills[i]!.cooldown > 0) ??
             0;
@@ -264,7 +268,17 @@ export default function BattleScreen() {
     });
     const p = pendingRef.current;
     const b = battleRef.current;
-    if (v && p && b) finishPending(chooseAction(b, p.unit));
+    if (v && p && b && !ultsRef.current) finishPending(chooseAction(b, p.unit));
+  };
+
+  const toggleUlts = () => {
+    const v = !ultsRef.current;
+    ultsRef.current = v;
+    setUlts(v);
+    updateSave((s) => {
+      s.settings.manualUlts = v;
+    });
+    platform().audio.play('tap');
   };
 
   const onSkill = (i: number) => {
@@ -318,6 +332,17 @@ export default function BattleScreen() {
         >
           {t('battle.auto')}
         </button>
+        {auto && (
+          <button
+            className={`chip${ults ? ' is-on' : ''}`}
+            type="button"
+            aria-pressed={ults}
+            title={t('battle.manualUltsHint')}
+            onClick={toggleUlts}
+          >
+            ⚡{t('battle.manualUlts')}
+          </button>
+        )}
         <button
           className="chip"
           type="button"

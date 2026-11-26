@@ -1,7 +1,7 @@
 import { heroDef } from '@/content';
 import { activeFactionBonus, factionCounts } from '@/core';
 import type { Faction } from '@/core/types';
-import { busyKind, heroPower, setTeam, teamPower } from '@/game';
+import { busyKind, heroPower, leaderAura, setTeam, teamPower } from '@/game';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { platform } from '@/state/services';
@@ -19,6 +19,7 @@ export default function TeamScreen() {
   const showToast = useGame((s) => s.showToast);
   const team = save.team.map((u) => save.heroes.find((h) => h.uid === u)).filter((h) => !!h);
   const counts = factionCounts(team.map((h) => heroDef(h.heroId).faction));
+  const aura = leaderAura(save);
   const roster = [...save.heroes].sort((a, b) => heroPower(b) - heroPower(a));
 
   const toggle = (uid: string) => {
@@ -71,6 +72,15 @@ export default function TeamScreen() {
           </div>
         </div>
       </section>
+
+      {aura && (
+        <section className="card bonus" style={{ marginTop: 10 }}>
+          <b>👑 {t('team.leader', { name: heroDef(aura.heroId).name })}</b>
+          <span>
+            {t('team.aura', { stat: t(`labels.stat.${aura.stat}`), pct: Math.round(aura.pct * 100) })}
+          </span>
+        </section>
+      )}
 
       <section className="card bonus" style={{ marginTop: 10 }}>
         <b>{t('team.bonus')}</b>

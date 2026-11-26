@@ -6,7 +6,6 @@ import {
   TRIAL_LEVELS,
   beginTrial,
   finishTrial,
-  heroSpec,
   makeSetup,
   teamHeroes,
   trialAttemptsLeft,
@@ -16,6 +15,7 @@ import {
   trialUnlocked,
   trialWaves,
   type TrialKind,
+  teamSpecs,
 } from '@/game';
 import { formatNumber, tr, useT } from '@/i18n';
 import { useGame, type RewardLine } from '@/state/store';
@@ -44,11 +44,7 @@ function startTrial(kind: TrialKind, level: number): boolean {
     title: `${tr(`trial.kind.${kind}`)} · ${tr('dungeons.level', { n: level })}`,
     subtitle: tr('trial.title'),
     scene: d.scene,
-    setup: makeSetup(
-      team.map((h) => heroSpec(h, save)),
-      trialWaves(kind, level),
-      r.seed,
-    ),
+    setup: makeSetup(teamSpecs(save), trialWaves(kind, level), r.seed),
     returnTo: 'trial',
     finish: (res) => {
       let reward: ReturnType<typeof finishTrial> = null;

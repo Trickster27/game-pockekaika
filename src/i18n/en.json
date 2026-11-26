@@ -116,7 +116,9 @@
     "leaveBoss": "End battle",
     "exitBoss": "End the battle early? Damage dealt so far will count.",
     "bossHud": "Boss turn {turn}/{max} · damage {dmg}",
-    "submitting": "Sending the result…"
+    "submitting": "Sending the result…",
+    "manualUlts": "Ults",
+    "manualUltsHint": "In auto battle you cast the strong skills yourself"
   },
   "settings": {
     "title": "Settings",
@@ -292,7 +294,8 @@
       "notMaxLevel": "Needs max level"
     },
     "starDone": "Now {n}★!",
-    "awakenDone": "Hero awakened!"
+    "awakenDone": "Hero awakened!",
+    "passive": "Passive ability"
   },
   "team": {
     "title": "Team",
@@ -309,7 +312,9 @@
     "loaded": "Lineup loaded",
     "emptyPreset": "empty",
     "roster": "Your heroes",
-    "hint": "Tap a hero to add or remove them"
+    "hint": "Tap a hero to add or remove them",
+    "leader": "Leader: {name}",
+    "aura": "Leader aura: +{pct}% {stat} to the team. The first slot is the leader."
   },
   "idle": {
     "title": "Welcome back, Warden!",
