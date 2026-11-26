@@ -3,7 +3,7 @@ import type { Battle, BattleEvent, BattleUnit } from '@/core/battle';
 import type { Element } from '@/core/types';
 import type { StatusId } from '@/core/content';
 import { DEBUFFS } from '@/core/content';
-import { unitArtMeta, unitArtUrl, UNIT_FRAME } from '@/assets/art';
+import { rigValue, unitArtMeta, unitArtUrl, unitRig, UNIT_FRAME, type RigPart } from '@/assets/art';
 import type { IdleStyle } from '@/assets/art/meta';
 import { FIELD, sceneTexture, SCENE_TINT, type SceneKey } from './background';
 import { glowTexture, statusLabel, statusTexture } from './textures';
@@ -86,6 +86,8 @@ interface UnitView {
   ring: Graphics;
   sprite: Sprite;
   flashSprite: Sprite;
+  /** Слои «живого» героя (если есть). */
+  rig?: { part: RigPart; holder: Container; sprite: Sprite }[];
   bars: Graphics;
   icons: Container;
   label?: Text;
@@ -232,6 +234,11 @@ export class BattleView {
         if (this.textures.has(k)) return;
         const url = unitArtUrl(k) ?? unitArtUrl('knight')!;
         this.textures.set(k, await Assets.load<Texture>({ src: url, data: { resolution: 2 } }));
+        for (const part of unitRig(k) ?? [])
+          this.textures.set(
+            `${k}/${part.id}`,
+            await Assets.load<Texture>({ src: part.url, data: { resolution: 2 } }),
+          );
       }),
     );
   }
@@ -279,7 +286,27 @@ export class BattleView {
     flashSprite.blendMode = 'add';
     flashSprite.alpha = 0;
     const body = new Container();
-    body.addChild(sprite, flashSprite);
+    // «Живой» герой: слои с точками вращения поверх невидимого цельного спрайта
+    // (он остаётся для нажатий, вспышки удара и шлейфа).
+    const rigParts = unitRig(u.art);
+    let rig: UnitView['rig'];
+    if (rigParts) {
+      sprite.alpha = 0;
+      const rc = new Container();
+      rig = rigParts.map((part) => {
+        const ptex = this.textures.get(`${u.art}/${part.id}`) ?? tex;
+        const ps = new Sprite(ptex);
+        ps.anchor.copyFrom(sprite.anchor);
+        ps.scale.set((UNIT_FRAME.height * scale) / ptex.height);
+        const holder = new Container();
+        holder.position.set(part.pivot[0] * scale, part.pivot[1] * scale);
+        ps.position.set(-part.pivot[0] * scale, -part.pivot[1] * scale);
+        holder.addChild(ps);
+        rc.addChild(holder);
+        return { part, holder, sprite: ps };
+      });
+      body.addChild(sprite, rc, flashSprite);
+    } else body.addChild(sprite, flashSprite);
     const aura = new Graphics();
     aura.blendMode = 'add';
     root.addChild(shadow, aura, ring, body);
@@ -348,6 +375,7 @@ export class BattleView {
       ring,
       sprite,
       flashSprite,
+      rig,
       bars,
       icons,
       label,
@@ -1507,6 +1535,44 @@ export class BattleView {
         .fill({ color: this.flashColor, alpha: this.flashA });
   }
 
+  /** Анимация слоёв: дыхание торса, покачивание волос и плащей, моргание, свечение, замах оружием. */
+  private drawRig(v: UnitView, t: number) {
+    const alive = v.alive ? 1 : 0;
+    const torso = v.rig!.find((r) => r.part.motion?.kind === 'breathe');
+    const breath = torso && alive ? rigValue(torso.part.motion!, t) : 0;
+    const tpy = torso?.part.pivot[1] ?? 0;
+    for (const r of v.rig!) {
+      const m = r.part.motion;
+      const py = r.part.pivot[1];
+      let y = py * v.scale;
+      if (r.part.follow) y += breath * (tpy - py) * v.scale;
+      r.holder.y = y;
+      if (!m) continue;
+      const val = alive ? rigValue(m, t) : 0;
+      switch (m.kind) {
+        case 'sway':
+          r.holder.rotation = (val * Math.PI) / 180;
+          break;
+        case 'swing':
+          // Замах: в бою оружие «догоняет» наклон тела и уходит дальше него.
+          r.holder.rotation = (val * Math.PI) / 180 - v.lean * 2.4;
+          break;
+        case 'breathe':
+          r.holder.scale.y = 1 + val;
+          break;
+        case 'bob':
+          r.holder.y += val * v.scale;
+          break;
+        case 'pulse':
+          r.holder.alpha = alive ? val : 0;
+          break;
+        case 'blink':
+          r.holder.alpha = val;
+          break;
+      }
+    }
+  }
+
   private drawUnit(v: UnitView, dt: number) {
     const body = v.root.children[3] as Container;
     const t = this.time + v.phase * 400;
@@ -1515,7 +1581,8 @@ export class BattleView {
       sx = v.pulse,
       sy = v.pulse,
       rot = v.lean;
-    if (v.alive) {
+    if (v.rig) this.drawRig(v, t);
+    else if (v.alive) {
       switch (v.idle) {
         case 'float':
           by += Math.sin(t / 520) * 4 - 4;

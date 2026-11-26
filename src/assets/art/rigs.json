@@ -1,0 +1,447 @@
+{
+ "knight": {
+  "parts": [
+   {
+    "id": "cape",
+    "pivot": [
+     0,
+     -60
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.2,
+     "period": 3.2,
+     "phase": 0.6
+    }
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -20
+    ]
+   },
+   {
+    "id": "shield",
+    "pivot": [
+     -18,
+     -58
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.4,
+     "period": 3.2,
+     "phase": 1.2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -26
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.016,
+     "period": 3.2
+    }
+   },
+   {
+    "id": "emblem",
+    "pivot": [
+     0,
+     -45
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.45,
+     "period": 2.4
+    },
+    "follow": true
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -62
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.6,
+     "period": 3.2,
+     "phase": 0.3
+    },
+    "follow": true
+   },
+   {
+    "id": "plume",
+    "pivot": [
+     4,
+     -98
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 7,
+     "period": 2.1,
+     "phase": 1.0
+    },
+    "follow": true
+   },
+   {
+    "id": "sword",
+    "pivot": [
+     19,
+     -56
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2,
+     "period": 3.2,
+     "phase": 0.9
+    },
+    "follow": true
+   },
+   {
+    "id": "shard",
+    "pivot": [
+     31,
+     -40
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.7,
+     "period": 1.6
+    },
+    "follow": true
+   }
+  ]
+ },
+ "ifrita": {
+  "parts": [
+   {
+    "id": "hairBack",
+    "pivot": [
+     0,
+     -84
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 4.5,
+     "period": 1.7,
+     "phase": 0.5
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -30
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -12,
+     -70
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 1.2,
+     "period": 3,
+     "phase": 2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -44
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.02,
+     "period": 3
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -76
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2.2,
+     "period": 3,
+     "phase": 0.4
+    },
+    "follow": true
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -88
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 4.2
+    },
+    "follow": true
+   },
+   {
+    "id": "hairFront",
+    "pivot": [
+     0,
+     -98
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 1.7,
+     "phase": 1.1
+    },
+    "follow": true
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     10,
+     -70
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.5,
+     "period": 3,
+     "phase": 1.5
+    },
+    "follow": true
+   },
+   {
+    "id": "fire",
+    "pivot": [
+     29,
+     -116
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.35,
+     "period": 0.9
+    },
+    "follow": true
+   }
+  ]
+ },
+ "grom": {
+  "parts": [
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -20
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -30,
+     -66
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2,
+     "period": 3.6,
+     "phase": 2.2
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -22
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.03,
+     "period": 3.6
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -80
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2,
+     "period": 3.6,
+     "phase": 0.8
+    },
+    "follow": true
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -88
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 5.3
+    },
+    "follow": true
+   },
+   {
+    "id": "topknot",
+    "pivot": [
+     0,
+     -103
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 9,
+     "period": 1.8,
+     "phase": 1.3
+    },
+    "follow": true
+   },
+   {
+    "id": "club",
+    "pivot": [
+     30,
+     -66
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.5,
+     "period": 3.6,
+     "phase": 0.2
+    },
+    "follow": true
+   }
+  ]
+ },
+ "nocta": {
+  "parts": [
+   {
+    "id": "sash",
+    "pivot": [
+     -6,
+     -48
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 6,
+     "period": 2.2,
+     "phase": 0.4
+    },
+    "follow": true
+   },
+   {
+    "id": "ponytail",
+    "pivot": [
+     -4,
+     -96
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 7,
+     "period": 1.9,
+     "phase": 1.0
+    },
+    "follow": true
+   },
+   {
+    "id": "legs",
+    "pivot": [
+     0,
+     -40
+    ]
+   },
+   {
+    "id": "armBack",
+    "pivot": [
+     -9,
+     -72
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 3,
+     "period": 2.6,
+     "phase": 2.1
+    },
+    "follow": true
+   },
+   {
+    "id": "torso",
+    "pivot": [
+     0,
+     -46
+    ],
+    "motion": {
+     "kind": "breathe",
+     "amp": 0.018,
+     "period": 2.6
+    }
+   },
+   {
+    "id": "head",
+    "pivot": [
+     0,
+     -80
+    ],
+    "motion": {
+     "kind": "sway",
+     "amp": 2,
+     "period": 2.6,
+     "phase": 0.6
+    },
+    "follow": true
+   },
+   {
+    "id": "eyes",
+    "pivot": [
+     0,
+     -91
+    ],
+    "motion": {
+     "kind": "blink",
+     "period": 3.7
+    },
+    "follow": true
+   },
+   {
+    "id": "armFront",
+    "pivot": [
+     9,
+     -72
+    ],
+    "motion": {
+     "kind": "swing",
+     "amp": 2.5,
+     "period": 2.6,
+     "phase": 1.3
+    },
+    "follow": true
+   },
+   {
+    "id": "glow",
+    "pivot": [
+     40,
+     -48
+    ],
+    "motion": {
+     "kind": "pulse",
+     "amp": 0.75,
+     "period": 1.3
+    },
+    "follow": true
+   }
+  ]
+ }
+}

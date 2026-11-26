@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -130 120 135" width="240" height="270"><defs><linearGradient id="if-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a3a"/><stop offset="1" stop-color="#7a1020"/></linearGradient><linearGradient id="if-bd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a8202e"/><stop offset="1" stop-color="#4a0a18"/></linearGradient><linearGradient id="if-sn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe0c8"/><stop offset="1" stop-color="#d99c7c"/></linearGradient></defs><g stroke="#0d0912" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M-9 -46 Q-20 -40 -22 -24 Q-24 -10 -22 -4 Q-14 -2 -10 -8 Q-8 -22 -2 -36 L2 -36 Q4 -24 4 -12 L22 -6 Q24 -20 18 -36 Q14 -44 9 -46 Z" fill="url(#if-sk)"/>
+<path d="M-22 -4 Q-18 0 -14 -4 Q-12 0 -10 -8 M4 -12 Q8 -4 12 -8 Q16 -2 22 -6" fill="none" stroke="#ffd36b" stroke-width="1.6"/>
+<path d="M-10 -74 Q-12 -66 -9 -60 Q-12 -54 -9 -46 L9 -46 Q12 -54 9 -60 Q12 -66 10 -74 Q0 -78 -10 -74 Z" fill="url(#if-sn)"/>
+<path d="M-9 -64 Q-12 -58 -9 -50 L-8 -46 L8 -46 L9 -50 Q12 -58 9 -64 Q4 -60 0 -62 Q-4 -60 -9 -64 Z" fill="url(#if-bd)"/>
+<path d="M-11 -66 Q-6 -71 0 -66 Q6 -71 11 -66 Q8 -60 0 -62 Q-8 -60 -11 -66 Z" fill="url(#if-bd)"/>
+<path d="M-8 -66 Q-4 -69 -1 -66 M1 -66 Q4 -69 8 -66" fill="none" stroke="#ff9a7a" stroke-width="1.2"/>
+<path d="M0 -62 L0 -47 M-3 -59 L3 -56 M3 -59 L-3 -56 M-3 -53 L3 -50 M3 -53 L-3 -50" stroke="#f0c860" stroke-width="1.2"/>
+<path d="M-9 -47 Q0 -44 9 -47" fill="none" stroke="#f0c860" stroke-width="2"/>
+<circle cx="0" cy="-70" r="2" fill="#ff7a2a" stroke-width="1"/></g></svg>
