@@ -14,6 +14,7 @@ import { ConflictModal } from './components/ConflictModal';
 import './screens/battle.css';
 import './screens/summon.css';
 import './app.css';
+import './theme.css';
 
 // Экраны грузятся лениво: первый экран (лагерь) приходит быстро, остальные — по требованию.
 const CampScreen = lazy(() => import('./screens/CampScreen'));

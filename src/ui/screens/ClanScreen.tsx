@@ -110,7 +110,7 @@ export default function ClanScreen() {
             <div className="rw-list">
               {popup.lines.map((l, i) => (
                 <div className="rw-line" key={i}>
-                  <RewardIcon icon={l.icon} />
+                  <RewardIcon icon={l.icon} mat={l.mat} />
                   <span>{l.label}</span>
                   <b>{l.value}</b>
                 </div>

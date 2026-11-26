@@ -1348,6 +1348,8 @@
     "lvl": "lv. {n}",
     "perDay": "/ day",
     "heroesShort": "{n} heroes",
-    "turnOrder": "Turn order"
+    "turnOrder": "Turn order",
+    "resetFilters": "Reset filters",
+    "rarity": "Rarity"
   }
 }

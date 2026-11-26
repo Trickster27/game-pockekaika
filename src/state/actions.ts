@@ -1,3 +1,4 @@
+import type { MaterialId } from '@/save/schema';
 import {
   stageById,
   nextStage,
@@ -166,7 +167,7 @@ export function dungeonFinish(id: DungeonId, level: number, result: BattleResult
     if (r.gold) lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
     for (const it of r.items) lines.push(itemLine(it));
     for (const [m, n] of Object.entries(r.materials))
-      lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
+      lines.push({ icon: 'star', mat: m as MaterialId, label: tr(`labels.material.${m}`), value: `×${n}` });
     if (r.firstClear) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: '+20' });
   });
   return lines;
@@ -307,7 +308,12 @@ export function startTower(floor: number): boolean {
           lines.push({ icon: 'gold', label: tr('rewards.gold'), value: `+${formatNumber(r.gold)}` });
         if (r?.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
         for (const [m, n] of Object.entries(r?.materials ?? {}))
-          lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
+          lines.push({
+            icon: 'star',
+            mat: m as MaterialId,
+            label: tr(`labels.material.${m}`),
+            value: `×${n}`,
+          });
         if (r?.item) {
           const it = r.item;
           lines.push({

@@ -1,3 +1,4 @@
+import { EnergyArt, GoldArt, ShardArt } from './ItemArt';
 /** Иконки интерфейса. Цвет берут из currentColor, где это уместно. */
 const s = {
   fill: 'none',
@@ -51,35 +52,9 @@ export const IconBack = () => (
     <path d="M15 4 L7 12 L15 20" {...s} strokeWidth={2.2} />
   </svg>
 );
-export const IconGold = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <circle cx="12" cy="12" r="9" fill="#e8c060" stroke="#0a0710" strokeWidth="1.6" />
-    <circle cx="12" cy="12" r="5.5" fill="none" stroke="#a8742a" strokeWidth="1.5" />
-  </svg>
-);
-export const IconShard = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path
-      d="M12 2 L4 11 L12 22 L20 11 Z"
-      fill="#a37cff"
-      stroke="#0a0710"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-    <path d="M12 2 L4 11 L12 11 Z" fill="#d6b8ff" />
-  </svg>
-);
-export const IconEnergy = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path
-      d="M13 2 L5 13 L11 13 L10 22 L19 10 L13 10 Z"
-      fill="#7fe7ff"
-      stroke="#0a0710"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+export const IconGold = () => <GoldArt />;
+export const IconShard = () => <ShardArt />;
+export const IconEnergy = () => <EnergyArt />;
 export const IconCrystal = () => (
   <svg viewBox="0 0 64 64" aria-hidden="true">
     <circle cx="32" cy="32" r="24" fill="#f0c860" opacity=".15" />

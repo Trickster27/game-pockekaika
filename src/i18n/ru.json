@@ -1348,6 +1348,8 @@
     "lvl": "{n} ур.",
     "perDay": "/ день",
     "heroesShort": "{n} гер.",
-    "turnOrder": "Очередь ходов"
+    "turnOrder": "Очередь ходов",
+    "resetFilters": "Сбросить фильтры",
+    "rarity": "Редкость"
   }
 }

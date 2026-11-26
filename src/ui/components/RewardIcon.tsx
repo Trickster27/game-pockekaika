@@ -1,7 +1,9 @@
 import type { RewardLine } from '@/state/store';
 import { IconEnergy, IconGold, IconShard } from './icons';
+import { ClanCoinArt, GearArt, MaterialArt, XpArt } from './ItemArt';
 
-export function RewardIcon({ icon }: { icon: RewardLine['icon'] }) {
+export function RewardIcon({ icon, mat }: { icon: RewardLine['icon']; mat?: RewardLine['mat'] }) {
+  if (mat) return <MaterialArt id={mat} />;
   switch (icon) {
     case 'gold':
       return <IconGold />;
@@ -10,17 +12,7 @@ export function RewardIcon({ icon }: { icon: RewardLine['icon'] }) {
     case 'energy':
       return <IconEnergy />;
     case 'xp':
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M12 3 L20 8 L20 16 L12 21 L4 16 L4 8 Z"
-            fill="#6fb3ff"
-            stroke="#0a0710"
-            strokeWidth="1.6"
-          />
-          <path d="M8 13 L11 16 L16 9" stroke="#fff" strokeWidth="2" fill="none" />
-        </svg>
-      );
+      return <XpArt />;
     case 'level':
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -33,23 +25,9 @@ export function RewardIcon({ icon }: { icon: RewardLine['icon'] }) {
         </svg>
       );
     case 'coin':
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" fill="#5fbfb2" stroke="#0a0710" strokeWidth="1.6" />
-          <path
-            d="M8 9 L12 6 L16 9 L16 14 L12 18 L8 14 Z"
-            fill="#d9fff6"
-            stroke="#0a0710"
-            strokeWidth="1.2"
-          />
-        </svg>
-      );
+      return <ClanCoinArt />;
     case 'item':
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 19 L17 7 L19 3 L15 5 L3 17 Z" fill="#e6ebf3" stroke="#0a0710" strokeWidth="1.5" />
-        </svg>
-      );
+      return <GearArt slot="weapon" rarity="rare" gem="#7fe7ff" />;
     default:
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true">

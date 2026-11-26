@@ -7,6 +7,8 @@ import { RARITY_COLOR } from '../colors';
 import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { MaterialIcon } from '../components/MaterialIcon';
+import { FilterBar, FilterGroup } from '../components/FilterBar';
+import { GearArt } from '../components/ItemArt';
 import { GearIcon } from '../components/GearIcon';
 import { ItemSheet } from '../components/ItemSheet';
 import { ForgePanel } from '../components/ForgePanel';
@@ -45,9 +47,9 @@ export default function BagScreen() {
   return (
     <>
       <h2 className="screen-title">{t('nav.bag')}</h2>
-      <div className="chips" style={{ margin: '8px 0 12px' }}>
+      <div className="segtabs" role="tablist">
         <button type="button" aria-pressed={tab === 'gear'} onClick={() => setTab('gear')}>
-          {t('bag.gear')} ({t('bag.count', { n: save.items.length, max: INVENTORY_LIMIT })})
+          {t('bag.gear')}
         </button>
         <button type="button" aria-pressed={tab === 'forge'} onClick={() => setTab('forge')}>
           {t('bag.forge')}
@@ -72,45 +74,67 @@ export default function BagScreen() {
         </div>
       ) : (
         <>
-          <div className="chips" style={{ marginBottom: 12 }}>
-            <button type="button" aria-pressed={slot === 'all'} onClick={() => setSlot('all')}>
-              {t('bag.all')}
-            </button>
-            {SLOTS.map((s) => (
-              <button key={s} type="button" aria-pressed={slot === s} onClick={() => setSlot(s)}>
-                {SLOT_NAME[s]}
+          <FilterBar
+            active={[set !== 'all', rarity !== 'all', freeOnly, sort !== 'rarity'].filter(Boolean).length}
+            onReset={() => {
+              setSet('all');
+              setRarity('all');
+              setFreeOnly(false);
+              setSort('rarity');
+            }}
+            primary={
+              <>
+                <button type="button" aria-pressed={slot === 'all'} onClick={() => setSlot('all')}>
+                  {t('bag.all')}
+                </button>
+                {SLOTS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    aria-pressed={slot === s}
+                    onClick={() => setSlot(s)}
+                    className="chip-ic"
+                  >
+                    <GearArt slot={s} rarity="rare" gem="#7fe7ff" />
+                    {SLOT_NAME[s]}
+                  </button>
+                ))}
+              </>
+            }
+          >
+            <FilterGroup label={t('gear.sets')}>
+              <button type="button" aria-pressed={set === 'all'} onClick={() => setSet('all')}>
+                {t('gear.allSets')}
               </button>
-            ))}
-          </div>
-          <div className="chips" style={{ marginBottom: 8 }}>
-            <button type="button" aria-pressed={set === 'all'} onClick={() => setSet('all')}>
-              {t('gear.allSets')}
-            </button>
-            {SETS.map((x) => (
-              <button key={x.id} type="button" aria-pressed={set === x.id} onClick={() => setSet(x.id)}>
-                <i style={{ ['--c' as string]: x.color }} />
-                {x.name}
+              {SETS.map((x) => (
+                <button key={x.id} type="button" aria-pressed={set === x.id} onClick={() => setSet(x.id)}>
+                  <i style={{ ['--c' as string]: x.color }} />
+                  {x.name}
+                </button>
+              ))}
+            </FilterGroup>
+            <FilterGroup label={t('ui.rarity')}>
+              {(['all', ...RARITY_ORDER] as const).map((r) => (
+                <button key={r} type="button" aria-pressed={rarity === r} onClick={() => setRarity(r)}>
+                  {r !== 'all' && <i style={{ ['--c' as string]: RARITY_COLOR[r] }} />}
+                  {r === 'all' ? t('bag.all') : t(`labels.rarity.${r}`)}
+                </button>
+              ))}
+              <button type="button" aria-pressed={freeOnly} onClick={() => setFreeOnly((v) => !v)}>
+                {t('gear.free')}
               </button>
-            ))}
-          </div>
-          <div className="chips" style={{ marginBottom: 8 }}>
-            {(['all', ...RARITY_ORDER] as const).map((r) => (
-              <button key={r} type="button" aria-pressed={rarity === r} onClick={() => setRarity(r)}>
-                {r !== 'all' && <i style={{ ['--c' as string]: RARITY_COLOR[r] }} />}
-                {r === 'all' ? t('bag.all') : t(`labels.rarity.${r}`)}
-              </button>
-            ))}
-            <button type="button" aria-pressed={freeOnly} onClick={() => setFreeOnly((v) => !v)}>
-              {t('gear.free')}
-            </button>
-          </div>
-          <div className="chips" style={{ marginBottom: 12 }}>
-            {(['rarity', 'level', 'score'] as const).map((k) => (
-              <button key={k} type="button" aria-pressed={sort === k} onClick={() => setSort(k)}>
-                {t(`gear.sort${k[0]!.toUpperCase()}${k.slice(1)}`)}
-              </button>
-            ))}
-            <button type="button" onClick={() => setMass(true)}>
+            </FilterGroup>
+            <FilterGroup label={t('gear.sort')}>
+              {(['rarity', 'level', 'score'] as const).map((k) => (
+                <button key={k} type="button" aria-pressed={sort === k} onClick={() => setSort(k)}>
+                  {t(`gear.sort${k[0]!.toUpperCase()}${k.slice(1)}`)}
+                </button>
+              ))}
+            </FilterGroup>
+          </FilterBar>
+          <div className="bag-tools">
+            <span>{t('bag.count', { n: save.items.length, max: INVENTORY_LIMIT })}</span>
+            <button type="button" className="btn" onClick={() => setMass(true)}>
               ♻ {t('gear.mass')}
             </button>
           </div>

@@ -24,6 +24,7 @@ import { platform } from '@/state/services';
 import { unitArtUrl } from '@/assets/art';
 import type { OwnedHero, SaveData } from '@/save/schema';
 import { HeroTile, Stars } from '../components/HeroTile';
+import { FilterBar, FilterGroup } from '../components/FilterBar';
 import { ELEMENT_COLOR, FACTION_COLOR, RARITY_COLOR } from '../colors';
 import { HeroGear } from '../components/HeroGear';
 import { HeroSkills, HeroTalents } from '../components/HeroDepth';
@@ -91,19 +92,33 @@ export default function HeroesScreen() {
         </button>
       </div>
       <p className="screen-sub">{t('heroes.owned', { n: distinct, total: HEROES.length })}</p>
-      <div className="filters">
-        <div className="chips">
-          <button type="button" aria-pressed={faction === 'all'} onClick={() => setFaction('all')}>
-            {t('heroes.all')}
-          </button>
-          {FACTIONS.map((f) => (
-            <button key={f} type="button" aria-pressed={faction === f} onClick={() => setFaction(f)}>
-              <i style={{ ['--c' as string]: FACTION_COLOR[f] }} />
-              {t(`labels.factionShort.${f}`)}
+      <FilterBar
+        active={
+          [element !== 'all', rarity !== 'all', role !== 'all', sort !== 'power', collection].filter(Boolean)
+            .length
+        }
+        onReset={() => {
+          setElement('all');
+          setRarity('all');
+          setRole('all');
+          setSort('power');
+          setCollection(false);
+        }}
+        primary={
+          <>
+            <button type="button" aria-pressed={faction === 'all'} onClick={() => setFaction('all')}>
+              {t('heroes.all')}
             </button>
-          ))}
-        </div>
-        <div className="chips">
+            {FACTIONS.map((f) => (
+              <button key={f} type="button" aria-pressed={faction === f} onClick={() => setFaction(f)}>
+                <i style={{ ['--c' as string]: FACTION_COLOR[f] }} />
+                {t(`labels.factionShort.${f}`)}
+              </button>
+            ))}
+          </>
+        }
+      >
+        <FilterGroup label={t('codex.element')}>
           {(['all', ...ELEMENTS] as const).map((e) => (
             <button key={e} type="button" aria-pressed={element === e} onClick={() => setElement(e)}>
               {e !== 'all' && (
@@ -114,14 +129,16 @@ export default function HeroesScreen() {
               {e === 'all' ? t('heroes.all') : t(`labels.element.${e}`)}
             </button>
           ))}
-        </div>
-        <div className="chips">
+        </FilterGroup>
+        <FilterGroup label={t('ui.rarity')}>
           {(['all', ...HERO_RARITY_ORDER] as const).map((r) => (
             <button key={r} type="button" aria-pressed={rarity === r} onClick={() => setRarity(r)}>
               {r !== 'all' && <i style={{ ['--c' as string]: RARITY_COLOR[r] }} />}
               {r === 'all' ? t('heroes.all') : t(`labels.rarity.${r}`)}
             </button>
           ))}
+        </FilterGroup>
+        <FilterGroup label={t('codex.role')}>
           {ROLES.map((r) => (
             <button
               key={r}
@@ -132,8 +149,8 @@ export default function HeroesScreen() {
               {t(`labels.role.${r}`)}
             </button>
           ))}
-        </div>
-        <div className="chips">
+        </FilterGroup>
+        <FilterGroup label={t('heroes.sort')}>
           {(['power', 'level', 'rarity'] as Sort[]).map((s) => (
             <button key={s} type="button" aria-pressed={sort === s} onClick={() => setSort(s)}>
               {t(`heroes.sort${s[0]!.toUpperCase()}${s.slice(1)}`)}
@@ -142,8 +159,8 @@ export default function HeroesScreen() {
           <button type="button" aria-pressed={collection} onClick={() => setCollection((c) => !c)}>
             {t('heroes.collection')}
           </button>
-        </div>
-      </div>
+        </FilterGroup>
+      </FilterBar>
       <div className="hgrid">
         {list.owned.map((h) => (
           <HeroTile

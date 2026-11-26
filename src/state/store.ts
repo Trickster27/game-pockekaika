@@ -1,3 +1,4 @@
+import type { MaterialId } from '@/save/schema';
 import { create } from 'zustand';
 import type { SaveData, LoadSource } from '@/save';
 import type { BattleResult, BattleSetup } from '@/core/battle';
@@ -33,6 +34,8 @@ export type ScreenId =
 
 export interface RewardLine {
   icon: 'gold' | 'shards' | 'xp' | 'energy' | 'level' | 'star' | 'item' | 'coin';
+  /** Материал: строка награды показывает его собственную иконку. */
+  mat?: MaterialId;
   label: string;
   value: string;
 }

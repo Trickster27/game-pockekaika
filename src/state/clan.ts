@@ -1,3 +1,4 @@
+import type { MaterialId } from '@/save/schema';
 import { create } from 'zustand';
 import type {
   BossAttempt,
@@ -209,7 +210,8 @@ export function rewardLines(r: ClanReward, item?: Item): RewardLine[] {
   if (r.shards) lines.push({ icon: 'shards', label: tr('rewards.shards'), value: `+${r.shards}` });
   if (r.energy) lines.push({ icon: 'energy', label: tr('currency.energy'), value: `+${r.energy}` });
   for (const [m, n] of Object.entries(r.materials ?? {}))
-    if (n) lines.push({ icon: 'star', label: tr(`labels.material.${m}`), value: `×${n}` });
+    if (n)
+      lines.push({ icon: 'star', mat: m as MaterialId, label: tr(`labels.material.${m}`), value: `×${n}` });
   if (item)
     lines.push({
       icon: 'item',

@@ -3,14 +3,14 @@ import { useT } from '@/i18n';
 import { useGame, type ScreenId } from '@/state/store';
 import { platform } from '@/state/services';
 import { useBadges } from '../badges';
-import { IconBag, IconCamp, IconHeroes, IconSummon, IconTeam } from './icons';
+import { NavBag, NavCamp, NavHeroes, NavSummon, NavTeam } from './icons_nav';
 
 const ITEMS: { id: ScreenId; label: string; icon: ReactNode }[] = [
-  { id: 'camp', label: 'nav.camp', icon: <IconCamp /> },
-  { id: 'heroes', label: 'nav.heroes', icon: <IconHeroes /> },
-  { id: 'team', label: 'nav.team', icon: <IconTeam /> },
-  { id: 'summon', label: 'nav.summon', icon: <IconSummon /> },
-  { id: 'bag', label: 'nav.bag', icon: <IconBag /> },
+  { id: 'camp', label: 'nav.camp', icon: <NavCamp /> },
+  { id: 'heroes', label: 'nav.heroes', icon: <NavHeroes /> },
+  { id: 'team', label: 'nav.team', icon: <NavTeam /> },
+  { id: 'summon', label: 'nav.summon', icon: <NavSummon /> },
+  { id: 'bag', label: 'nav.bag', icon: <NavBag /> },
 ];
 
 export function BottomNav() {

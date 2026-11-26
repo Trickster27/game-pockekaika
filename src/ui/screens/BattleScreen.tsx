@@ -390,8 +390,11 @@ export default function BattleScreen() {
                     disabled={!isAllyTurn || cd > 0}
                     onClick={() => onSkill(i)}
                   >
-                    <SkillIcon skill={s} color={ELEMENT_COLOR[shown.element] ?? '#fff'} />
-                    {s.name}
+                    <span className="sk__medal">
+                      <SkillIcon skill={s} color={ELEMENT_COLOR[shown.element] ?? '#fff'} />
+                    </span>
+                    <span className="sk__name">{s.name}</span>
+                    {i > 0 && s.cooldown > 0 && cd === 0 && <i className="sk__ready" />}
                   </button>
                 );
               })
@@ -498,7 +501,7 @@ export default function BattleScreen() {
               <div className="rw-list">
                 {(repeat?.stop ? mergeRewardLines(repeat.lines) : result.lines).map((l) => (
                   <div className="rw-line" key={l.label}>
-                    <RewardIcon icon={l.icon} />
+                    <RewardIcon icon={l.icon} mat={l.mat} />
                     <span>{l.label}</span>
                     <b>{l.value}</b>
                   </div>

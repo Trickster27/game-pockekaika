@@ -2,7 +2,8 @@ import { formatNumber, useT } from '@/i18n';
 import { useGame } from '@/state/store';
 import { unitStillUrl } from '@/assets/art';
 import { IconBack, IconEnergy, IconGear, IconGold, IconShard } from './icons';
-import { ENERGY_MAX, energyRegenMs, nextEnergyIn, regenEnergy } from '@/game';
+import { ENERGY_MAX, energyRegenMs, nextEnergyIn, playerXpToNext, regenEnergy, teamHeroes } from '@/game';
+import { heroDef } from '@/content';
 import { formatDuration, useNow } from '../hooks';
 import { useOnline } from '@/state/online';
 
@@ -54,12 +55,21 @@ export function TopBar() {
               aria-label={t('online.account')}
               onClick={() => go('account')}
             >
-              <img src={unitStillUrl('knight')} alt="" />
+              <img
+                src={unitStillUrl(teamHeroes(save)[0] ? heroDef(teamHeroes(save)[0]!.heroId).art : 'knight')}
+                alt=""
+              />
               <span className="topbar__lvl">{save.player.level}</span>
             </button>
             <div className="topbar__who">
               <b>{online.profile?.nickname ?? save.player.name}</b>
-              <span>{t('camp.level', { level: save.player.level })}</span>
+              <span className="topbar__xp" title={`${save.player.xp}/${playerXpToNext(save.player.level)}`}>
+                <i
+                  style={{
+                    width: `${Math.min(100, (save.player.xp / playerXpToNext(save.player.level)) * 100)}%`,
+                  }}
+                />
+              </span>
             </div>
             <button
               className="icon-btn"
@@ -138,9 +148,25 @@ export function TopBar() {
         <div className="pill" title={t('currency.shards')}>
           <IconShard />
           <b>{formatNumber(save.currencies.shards)}</b>
+          <button
+            type="button"
+            className="pill__plus"
+            aria-label={t('shop.title')}
+            onClick={() => go('shop')}
+          >
+            +
+          </button>
         </div>
         <div className="pill" title={t('currency.energy')}>
           <IconEnergy />
+          <button
+            type="button"
+            className="pill__plus"
+            aria-label={t('shop.title')}
+            onClick={() => go('shop')}
+          >
+            +
+          </button>
           <b>
             {energy.energy}/{ENERGY_MAX}
             {nextIn > 0 && (

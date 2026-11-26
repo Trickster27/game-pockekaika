@@ -18,7 +18,7 @@ export function SummaryModal() {
         <div className="sum-list">
           {summary.lines.map((l, i) => (
             <div className="sum-line" key={i}>
-              <RewardIcon icon={l.icon} />
+              <RewardIcon icon={l.icon} mat={l.mat} />
               <span>{l.label}</span>
               <b>{l.value}</b>
             </div>
